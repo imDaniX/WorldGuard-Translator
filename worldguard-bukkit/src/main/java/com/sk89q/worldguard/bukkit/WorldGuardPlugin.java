@@ -74,6 +74,7 @@ import com.sk89q.worldguard.protection.managers.storage.sql.SQLDriver;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.util.logging.RecordMessagePrefixer;
+import me.imdanix.wgtranslator.I18n;
 import me.imdanix.wgtranslator.Msg;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -92,6 +93,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -135,6 +137,11 @@ public class WorldGuardPlugin extends JavaPlugin {
         configureLogger();
 
         getDataFolder().mkdirs(); // Need to create the plugins/WorldGuard folder
+
+        // WGTranslator start
+        I18n translator = new I18n();
+        Objects.requireNonNull(getCommand("wgtranslator")).setExecutor(translator);
+        // WGTranslator end
 
         PermissionsResolverManager.initialize(this);
 
@@ -291,12 +298,12 @@ public class WorldGuardPlugin extends JavaPlugin {
         } catch (MissingNestedCommandException e) {
             sender.sendMessage(Msg.COMMAND_ERROR_USAGE.get(e.getUsage()));
         } catch (CommandUsageException e) {
-            sender.sendMessage(Msg.COMMANd_ERROR_INFO.get(e.getMessage()));
+            sender.sendMessage(Msg.COMMAND_ERROR_INFO.get(e.getMessage()));
             sender.sendMessage(Msg.COMMAND_ERROR_USAGE.get(e.getUsage()));
         } catch (WrappedCommandException e) {
-            sender.sendMessage(Msg.COMMANd_ERROR_INFO.get(e.getCause().getMessage()));
+            sender.sendMessage(Msg.COMMAND_ERROR_INFO.get(e.getCause().getMessage()));
         } catch (CommandException e) {
-            sender.sendMessage(Msg.COMMANd_ERROR_INFO.get(e.getMessage()));
+            sender.sendMessage(Msg.COMMAND_ERROR_INFO.get(e.getMessage()));
         }
 
         return true;
