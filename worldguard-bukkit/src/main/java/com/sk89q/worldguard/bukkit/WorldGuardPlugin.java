@@ -74,9 +74,9 @@ import com.sk89q.worldguard.protection.managers.storage.sql.SQLDriver;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.util.logging.RecordMessagePrefixer;
+import me.imdanix.wgtranslator.Msg;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -287,16 +287,16 @@ public class WorldGuardPlugin extends JavaPlugin {
                 throw t;
             }
         } catch (CommandPermissionsException e) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission.");
+            sender.sendMessage(Msg.COMMAND_ERROR_NOPERMISSIONS.get());
         } catch (MissingNestedCommandException e) {
-            sender.sendMessage(ChatColor.RED + e.getUsage());
+            sender.sendMessage(Msg.COMMAND_ERROR_USAGE.get(e.getUsage()));
         } catch (CommandUsageException e) {
-            sender.sendMessage(ChatColor.RED + e.getMessage());
-            sender.sendMessage(ChatColor.RED + e.getUsage());
+            sender.sendMessage(Msg.COMMANd_ERROR_INFO.get(e.getMessage()));
+            sender.sendMessage(Msg.COMMAND_ERROR_USAGE.get(e.getUsage()));
         } catch (WrappedCommandException e) {
-            sender.sendMessage(ChatColor.RED + e.getCause().getMessage());
+            sender.sendMessage(Msg.COMMANd_ERROR_INFO.get(e.getCause().getMessage()));
         } catch (CommandException e) {
-            sender.sendMessage(ChatColor.RED + e.getMessage());
+            sender.sendMessage(Msg.COMMANd_ERROR_INFO.get(e.getMessage()));
         }
 
         return true;

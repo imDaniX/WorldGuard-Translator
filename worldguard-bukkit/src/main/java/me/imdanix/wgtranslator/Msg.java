@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -16,26 +17,32 @@ import java.util.logging.Logger;
 public enum Msg {
 
     // com.sk89q.worldguard.bukkit.BukkitStringMatcher
-    MATCHER_NO_NORMAL_WORLD("No normal world found."),
-    MATCHER_NO_NETHER_WORLD("No nether world found."),
-    MATCHER_NO_END_WORLD("No end world found."),
-    MATCHER_EXPECT_ARG("Argument expected for #player."),
-    MATCHER_INVALID_ID("Invalid identifier '{identifier}'.", "identifier"),
-    MATCHER_NO_WORLD("No world by that exact name found."),
-    MATCHER_NO_PLAYERS("No players matched query."),
-    MATCHER_INVALID_GROUP("Invalid group '{group}'.", "group");
+    COMMAND_ERROR_MATCHER_NONORMALWORLD("No normal world found."),
+    COMMAND_ERROR_MATCHER_NONETHERWORLD("No nether world found."),
+    COMMAND_ERROR_MATCHER_NOENDWORLD("No end world found."),
+    COMMAND_ERROR_MATCHER_EXPECTARG("Argument expected for #player."),
+    COMMAND_ERROR_MATCHER_INVALIDID("Invalid identifier '{identifier}'.", "identifier"),
+    COMMAND_ERROR_MATCHER_NOWORLD("No world by that exact name found."),
+    COMMAND_ERROR_MATCHER_NOPLAYERS("No players matched query."),
+    COMMAND_ERROR_MATCHER_INVALIDGROUP("Invalid group '{group}'.", "group"),
 
+    // com.sk89q.worldguard.bukkit.WorldGuardPlugin
+    COMMAND_ERROR_NOPERMISSIONS("&cYou don't have permission."),
+    COMMAND_ERROR_USAGE("&c{usage}", "usage"),
+    COMMANd_ERROR_INFO("&c{message}", "message")
+
+    ;
     private final String defaultMsg;
     private final String[] placeholders;
     private String currentMsg;
 
     Msg(String def, String... phs) {
-        defaultMsg = ChatColor.translateAlternateColorCodes('&', def);
-        currentMsg = defaultMsg;
+        defaultMsg = def;
         placeholders = new String[phs.length];
         for (int i = 0; i < phs.length; i++) {
             placeholders[i] = "{" + phs[i] + "}";
         }
+        setMessage(defaultMsg);
     }
 
     public String get(Object... args) {
@@ -60,7 +67,7 @@ public enum Msg {
         FileConfiguration cfg = getConfig();
         List<String> errors = new ArrayList<>();
         for(Msg msg : Msg.values()) {
-            String section = StringUtils.replaceChars(msg.name().toLowerCase(Locale.ENGLISH), '_', '.');
+            String section = toSection(msg);
             if (!msg.setMessage(cfg.getString(section))) {
                 errors.add(section);
             }
@@ -70,7 +77,7 @@ public enum Msg {
             log.info("[WGTranslator] Successfully reloaded all the messages.");
             return true;
         } else {
-            log.warning("[WGTranslator] Some messages don't have its translation in the config. " +
+            log.warning("[WGTranslator] Some messages don't have its translation in translator.yml. " +
                     "Using default ones for these: " + String.join(", ", errors));
             return false;
         }
@@ -79,8 +86,24 @@ public enum Msg {
     private static FileConfiguration getConfig() {
         File file = new File(WorldGuardPlugin.inst().getDataFolder(), "translator.yml");
         file.getParentFile().mkdirs();
-        if (!file.exists())
-            WorldGuardPlugin.inst().saveResource("translator.yml", false);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+                FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+                for (Msg msg : Msg.values()) {
+                    cfg.set(toSection(msg), msg.defaultMsg);
+                }
+                cfg.save(file);
+                return cfg;
+            } catch (IOException e) {
+                Bukkit.getLogger().warning("[WGTranslator] Something went wrong during translation config creation.");
+                e.printStackTrace();
+            }
+        }
         return YamlConfiguration.loadConfiguration(file);
+    }
+
+    private static String toSection(Msg msg) {
+        return StringUtils.replaceChars(msg.name().toLowerCase(Locale.ENGLISH), '_', '.');
     }
 }
