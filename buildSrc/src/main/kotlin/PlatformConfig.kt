@@ -1,9 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import net.minecrell.gradle.licenser.LicenseExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginConvention
-import org.gradle.api.plugins.quality.CheckstyleExtension
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.javadoc.Javadoc
 import org.gradle.api.tasks.testing.Test
@@ -23,21 +21,14 @@ fun Project.applyPlatformAndCoreConfiguration() {
     apply(plugin = "eclipse")
     apply(plugin = "idea")
     apply(plugin = "maven")
-    apply(plugin = "checkstyle")
     apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "com.jfrog.artifactory")
-    apply(plugin = "net.minecrell.licenser")
 
     ext["internalVersion"] = "$version+${rootProject.ext["gitCommitHash"]}"
 
     configure<JavaPluginConvention> {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    configure<CheckstyleExtension> {
-        configFile = rootProject.file("config/checkstyle/checkstyle.xml")
-        toolVersion = "7.6.1"
     }
 
     tasks.withType<Test>().configureEach {
@@ -86,16 +77,7 @@ fun Project.applyPlatformAndCoreConfiguration() {
         }
     }
 
-    tasks.named("check").configure {
-        dependsOn("checkstyleMain", "checkstyleTest")
-    }
-
     applyCommonArtifactoryConfig()
-
-    configure<LicenseExtension> {
-        header = rootProject.file("HEADER.txt")
-        include("**/*.java")
-    }
 
 }
 
