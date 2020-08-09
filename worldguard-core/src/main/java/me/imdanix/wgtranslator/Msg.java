@@ -1,19 +1,5 @@
 package me.imdanix.wgtranslator;
 
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.logging.Logger;
-
 public enum Msg {
 
     // com.sk89q.worldguard.bukkit.BukkitStringMatcher
@@ -49,6 +35,12 @@ public enum Msg {
     PROTECTION_CHEST_PROTECTED("&eA chest or double chest above is now protected."),
     PROTECTION_CHEST_DISABLED("&cWorldGuard's sign chest protection is disabled."),
 
+    // com.sk89q.worldguard.blacklist.action...
+    BLACKLIST_ACTION_BAN_REASONED("Banned: {reason}", "reason"),
+    BLACKLIST_ACTION_BAN_DEFAULT("Banned: You can't {action} {type}", "action", "type"),
+    BLACKLIST_ACTION_KICK_REASONED("Banned: {reason}", "reason"),
+    BLACKLIST_ACTION_KICK_DEFAULT("Banned: You can't {action} {type}", "action", "type"),
+
     ;
     private final String defaultMsg;
     private final String[] placeholders;
@@ -63,10 +55,14 @@ public enum Msg {
         setMessage(defaultMsg);
     }
 
+    public String getDefault() {
+        return defaultMsg;
+    }
+
     public String get(Object... args) {
         String result = currentMsg;
         for (int i = 0; i < placeholders.length; i++) {
-            result = StringUtils.replace(result, placeholders[i], String.valueOf(args[i]));
+            result = replace(result, placeholders[i], String.valueOf(args[i]));
         }
         return result;
     }
@@ -76,53 +72,44 @@ public enum Msg {
             currentMsg = defaultMsg;
             return false;
         } else {
-            currentMsg = ChatColor.translateAlternateColorCodes('&', msg);
+            currentMsg = colorize(msg);
             return true;
         }
     }
 
-    public static boolean reload() {
-        FileConfiguration cfg = getConfig();
-        List<String> errors = new ArrayList<>();
-        for(Msg msg : Msg.values()) {
-            String section = toSection(msg);
-            if (!msg.setMessage(cfg.getString(section))) {
-                errors.add(section);
+    // org.apache.commons.lang.StringUtils#replace
+    private static String replace(String text, String searchString, String replacement) {
+        int max = -1;
+        int start = 0;
+        int end = text.indexOf(searchString, start);
+        if (end == -1) {
+            return text;
+        }
+        int replLength = searchString.length();
+        int increase = replacement.length() - replLength;
+        increase = (increase < 0 ? 0 : increase) * 16;
+        StringBuilder buf = new StringBuilder(text.length() + increase);
+        while (end != -1) {
+            buf.append(text, start, end).append(replacement);
+            start = end + replLength;
+            if (--max == 0) {
+                break;
             }
+            end = text.indexOf(searchString, start);
         }
-        Logger log = Bukkit.getLogger();
-        if(errors.isEmpty()) {
-            log.info("[WGTranslator] Successfully reloaded all the messages.");
-            return true;
-        } else {
-            log.warning("[WGTranslator] Some messages don't have its translation in translator.yml. " +
-                    "Using default ones for these: " + String.join(", ", errors));
-            return false;
-        }
+        buf.append(text.substring(start));
+        return buf.toString();
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static FileConfiguration getConfig() {
-        File file = new File(WorldGuardPlugin.inst().getDataFolder(), "translator.yml");
-        file.getParentFile().mkdirs();
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-                FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-                for (Msg msg : Msg.values()) {
-                    cfg.set(toSection(msg), msg.defaultMsg);
-                }
-                cfg.save(file);
-                return cfg;
-            } catch (IOException e) {
-                Bukkit.getLogger().warning("[WGTranslator] Something went wrong during translation config creation.");
-                e.printStackTrace();
+    // org.bukkit.ChatColor#translateAlternateColorCodes
+    private static String colorize(String textToTranslate) {
+        char[] b = textToTranslate.toCharArray();
+        for (int i = 0; i < b.length - 1; i++) {
+            if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx".indexOf(b[i + 1]) > -1) {
+                b[i] = '\u00A7';
+                b[i + 1] = Character.toLowerCase(b[i + 1]);
             }
         }
-        return YamlConfiguration.loadConfiguration(file);
-    }
-
-    private static String toSection(Msg msg) {
-        return StringUtils.replaceChars(msg.name().toLowerCase(Locale.ENGLISH), '_', '.');
+        return new String(b);
     }
 }
