@@ -37,9 +37,11 @@ public enum Msg {
 
     // com.sk89q.worldguard.blacklist.action...
     BLACKLIST_ACTION_BAN_REASONED("Banned: {reason}", "reason"),
-    BLACKLIST_ACTION_BAN_DEFAULT("Banned: You can't {action} {type}", "action", "type"),
-    BLACKLIST_ACTION_KICK_REASONED("Banned: {reason}", "reason"),
-    BLACKLIST_ACTION_KICK_DEFAULT("Banned: You can't {action} {type}", "action", "type"),
+    BLACKLIST_ACTION_BAN_DEFAULT("Banned: You can't {action} {type}.", "action", "type"),
+    BLACKLIST_ACTION_KICK_REASONED("{reason}", "reason"),
+    BLACKLIST_ACTION_KICK_DEFAULT("You can't {action} {type}.", "action", "type"),
+    BLACKLIST_ACTION_TELL_TEXT("{text}", "text"),
+    BLACKLIST_ACTION_TELL_DEFAULT("You're not allowed to {action} {type}.", "action", "type")
 
     ;
     private final String defaultMsg;

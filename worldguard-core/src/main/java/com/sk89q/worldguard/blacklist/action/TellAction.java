@@ -21,6 +21,7 @@ package com.sk89q.worldguard.blacklist.action;
 
 import com.sk89q.worldguard.blacklist.BlacklistEntry;
 import com.sk89q.worldguard.blacklist.event.BlacklistEvent;
+import me.imdanix.wgtranslator.Msg;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -44,9 +45,9 @@ public class TellAction extends RepeatGuardedAction {
         if (event.getPlayer() != null) {
             if (message != null) {
                 message = message.replaceAll("(?!<\\\\)\\\\n", "\n").replaceAll("\\\\\\\\n", "\\n");
-                event.getPlayer().print(String.format(message, event.getTarget().getFriendlyName()));
+                event.getPlayer().print(Msg.BLACKLIST_ACTION_TELL_TEXT.get(String.format(message, event.getTarget().getFriendlyName())));
             } else {
-                event.getPlayer().printError("You're not allowed to " + event.getDescription() + " " + event.getTarget().getFriendlyName() + ".");
+                event.getPlayer().printError(Msg.BLACKLIST_ACTION_TELL_DEFAULT.get(event.getDescription(), event.getTarget().getFriendlyName()));
             }
         }
 
