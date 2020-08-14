@@ -31,5 +31,5 @@ jobs:
         run: ./gradlew clean shadowJar
       - uses: actions/upload-artifact@main
         with:
-          name: WorldGuard jar
+          name: WorldGuard
           path: worldguard-bukkit/build/libs
