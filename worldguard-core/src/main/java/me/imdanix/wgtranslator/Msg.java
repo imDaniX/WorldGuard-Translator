@@ -35,13 +35,45 @@ public enum Msg {
     PROTECTION_CHEST_PROTECTED("&eA chest or double chest above is now protected."),
     PROTECTION_CHEST_DISABLED("&cWorldGuard's sign chest protection is disabled."),
 
+    // com.sk89q.worldguard.bukkit.listener.RegionProtectionListener
+    PROTECTION_REGION_ACTION_FIRE("place fire"),
+    PROTECTION_REGION_ACTION_FROSTWALKER("use frostwalker"),
+    PROTECTION_REGION_ACTION_PLACE("place that block"),
+    PROTECTION_REGION_ACTION_DYNAMITE("use dynamite"),
+    PROTECTION_REGION_ACTION_BREAK("break that block"),
+
+    PROTECTION_REGION_ACTION_USE("use that"),
+    PROTECTION_REGION_ACTION_OPEN("open that"),
+    PROTECTION_REGION_ACTION_TAKE("take that"),
+    PROTECTION_REGION_ACTION_SLEEP("sleep"),
+    PROTECTION_REGION_ACTION_ANCHOR("use anchor"),
+    PROTECTION_REGION_ACTION_EXPLOSIVES("use explosives"),
+    PROTECTION_REGION_ACTION_CHANGE("change that"),
+
+    PROTECTION_REGION_ACTION_ITEMDROP("drop items"),
+    PROTECTION_REGION_ACTION_ITEMPICKUP("pick up items"),
+    PROTECTION_REGION_ACTION_XPDROP("drop xp"),
+    PROTECTION_REGION_ACTION_POTION("use lingering potions"),
+    PROTECTION_REGION_ACTION_THINGS("place things"),
+    PROTECTION_REGION_ACTION_ENTITYBREAK("break things"),
+
+    PROTECTION_REGION_ACTION_HIT("hit that"),
+    PROTECTION_REGION_ACTION_PVP("PvP"),
+    PROTECTION_REGION_ACTION_DAMAGE("damage that"),
+    PROTECTION_REGION_ACTION_HARM("harm that"),
+
+    PROTECTION_REGION_ACTION_VEHICLEPLACE("place vehicles"),
+    PROTECTION_REGION_ACTION_VEHICLEBREAK("break vehicles"),
+    PROTECTION_REGION_ACTION_RIDE("ride that"),
+    PROTECTION_REGION_ACTION_DISEMBARK("&6Don't disembark here!&7 You can't get back on."),
+
     // com.sk89q.worldguard.blacklist.action...
     BLACKLIST_ACTION_BAN_REASONED("Banned: {reason}", "reason"),
     BLACKLIST_ACTION_BAN_DEFAULT("Banned: You can't {action} {type}.", "action", "type"),
     BLACKLIST_ACTION_KICK_REASONED("{reason}", "reason"),
     BLACKLIST_ACTION_KICK_DEFAULT("You can't {action} {type}.", "action", "type"),
     BLACKLIST_ACTION_TELL_TEXT("{text}", "text"),
-    BLACKLIST_ACTION_TELL_DEFAULT("You're not allowed to {action} {type}.", "action", "type")
+    BLACKLIST_ACTION_TELL_DEFAULT("You're not allowed to {action} {type}.", "action", "type"),
 
     ;
     private final String defaultMsg;
@@ -59,6 +91,10 @@ public enum Msg {
 
     public String getDefault() {
         return defaultMsg;
+    }
+
+    public String get() {
+        return currentMsg;
     }
 
     public String get(Object... args) {
