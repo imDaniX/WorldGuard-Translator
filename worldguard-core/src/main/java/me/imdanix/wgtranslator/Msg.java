@@ -1,5 +1,9 @@
 package me.imdanix.wgtranslator;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 public enum Msg {
 
     // com.sk89q.worldguard.bukkit.BukkitStringMatcher
@@ -108,6 +112,15 @@ public enum Msg {
     BLACKLIST_ACTION_TELL_DEFAULT("You're not allowed to {action} {type}.", "action", "type"),
 
     ;
+    private static final Map<String, Msg> BY_NAME;
+    static {
+        Map<String, Msg> byName = new HashMap<>();
+        for (Msg msg : values()) {
+            byName.put(msg.name(), msg);
+        }
+        BY_NAME = Collections.unmodifiableMap(byName);
+    }
+
     private final String defaultMsg;
     private final String[] placeholders;
     private String currentMsg;
@@ -181,5 +194,9 @@ public enum Msg {
             }
         }
         return new String(b);
+    }
+
+    public static Msg getByName(String name) {
+        return BY_NAME.get(name);
     }
 }

@@ -1,6 +1,13 @@
 package me.imdanix.wgtranslator;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.commands.DebuggingCommands;
+import com.sk89q.worldguard.commands.GeneralCommands;
+import com.sk89q.worldguard.commands.ProtectionCommands;
+import com.sk89q.worldguard.commands.ToggleCommands;
+import com.sk89q.worldguard.commands.WorldGuardCommands;
+import com.sk89q.worldguard.commands.region.MemberCommands;
+import com.sk89q.worldguard.commands.region.RegionCommands;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,6 +28,7 @@ public class I18n implements CommandExecutor {
     public I18n() {
         Bukkit.getLogger().info("[WGTranslator] Initializing translation from the file. By imDaniX.");
         reload();
+        reloadCommands();
     }
 
     @Override
@@ -53,8 +61,28 @@ public class I18n implements CommandExecutor {
             return true;
         } else {
             log.warning("[WGTranslator] Some messages don't have its translation in translator.yml. " +
-                    "Using default ones for these: " + String.join(", ", errors));
+                    "Using default ones for these: " + String.join(", ", errors) + ".");
             return false;
+        }
+    }
+
+    private static void reloadCommands() {
+        List<String> errors = new ArrayList<>();
+        errors.addAll(CommandPatcher.redefine(MemberCommands.class));
+        errors.addAll(CommandPatcher.redefine(RegionCommands.class));
+        errors.addAll(CommandPatcher.redefine(DebuggingCommands.class));
+        errors.addAll(CommandPatcher.redefine(GeneralCommands.class));
+        errors.addAll(CommandPatcher.redefine(ProtectionCommands.class));
+        errors.addAll(CommandPatcher.redefine(ToggleCommands.class));
+        errors.addAll(CommandPatcher.redefine(WorldGuardCommands.class));
+        Logger log = Bukkit.getLogger();
+        if (errors.isEmpty()) {
+            log.info("[WGTranslator] Successfully reloaded all command messages. " +
+                    "Commands are reloaded only on server startup.");
+        } else {
+            log.warning("[WGTranslator] Some command messages don't have its translation in translator.yml. " +
+                    "Using default ones for these: " + String.join(", ", errors) + ". " +
+                    "Commands are reloaded only on server startup.");
         }
     }
 
