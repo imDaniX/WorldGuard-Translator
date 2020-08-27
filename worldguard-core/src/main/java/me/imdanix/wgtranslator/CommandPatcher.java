@@ -13,7 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public final class CommandPatcher {
-    public static List<String> redefine(Class<?> commandClass) {
+    public static List<String> redefine(String prefix, Class<?> commandClass) {
         List<String> errors = new ArrayList<>();
         try {
             for (Method method : commandClass.getDeclaredMethods()) {
@@ -22,23 +22,20 @@ public final class CommandPatcher {
                 }
 
                 Command command = method.getAnnotation(Command.class);
-                String label = command.aliases()[0].toUpperCase(Locale.ENGLISH);
+                String label = "COMMAND_" + prefix.toUpperCase(Locale.ENGLISH) + "_" + command.aliases()[0].toUpperCase(Locale.ENGLISH);
 
-                String usageStr = "COMMAND_" + label + "_USAGE";
+                String usageStr = label + "_USAGE";
+                String descStr = label + "_DESCRIPTION";
+                String helpStr = label + "_HELP";
+
                 Msg usage = Msg.getByName(usageStr);
-                if (usage == null) {
-                    errors.add(usageStr);
-                }
-                String descStr = "COMMAND_" + label + "_DESCRIPTION";
                 Msg desc = Msg.getByName(descStr);
-                if (desc == null) {
-                    errors.add(descStr);
+                Msg help = Msg.getByName(helpStr);
+
+                if (usage == null || desc == null || help == null) {
+                    errors.add(label);
                 }
-                String helpStr = "COMMAND_" + label + "_HELP";
-                Msg help = Msg.getByName(descStr);
-                if (help == null) {
-                    errors.add(descStr);
-                }
+
                 changeAnnotationValue(command, usage, desc, help);
             }
             return errors;

@@ -68,20 +68,21 @@ public class I18n implements CommandExecutor {
 
     private static void reloadCommands() {
         List<String> errors = new ArrayList<>();
-        errors.addAll(CommandPatcher.redefine(MemberCommands.class));
-        errors.addAll(CommandPatcher.redefine(RegionCommands.class));
-        errors.addAll(CommandPatcher.redefine(DebuggingCommands.class));
-        errors.addAll(CommandPatcher.redefine(GeneralCommands.class));
-        errors.addAll(CommandPatcher.redefine(ProtectionCommands.class));
-        errors.addAll(CommandPatcher.redefine(ToggleCommands.class));
-        errors.addAll(CommandPatcher.redefine(WorldGuardCommands.class));
+        errors.addAll(CommandPatcher.redefine("REGION", MemberCommands.class));
+        errors.addAll(CommandPatcher.redefine("REGION", RegionCommands.class));
+        errors.addAll(CommandPatcher.redefine("DEBUG", DebuggingCommands.class));
+        errors.addAll(CommandPatcher.redefine("", GeneralCommands.class));
+        errors.addAll(CommandPatcher.redefine("", ProtectionCommands.class));
+        errors.addAll(CommandPatcher.redefine("", ToggleCommands.class));
+        errors.addAll(CommandPatcher.redefine("WORLDGUARD", WorldGuardCommands.class));
         Logger log = Bukkit.getLogger();
         if (errors.isEmpty()) {
             log.info("[WGTranslator] Successfully reloaded all command messages. " +
                     "Commands are reloaded only on server startup.");
         } else {
             log.warning("[WGTranslator] Some command messages don't have its translation in translator.yml. " +
-                    "Using default ones for these: " + String.join(", ", errors) + ". " +
+                    "Using default ones for these: " + String.join(", ", errors) +
+                    "(USAGE, DESCRIPTION, HELP). " +
                     "Commands are reloaded only on server startup.");
         }
     }
