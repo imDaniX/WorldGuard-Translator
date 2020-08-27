@@ -11,9 +11,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Function;
 
 public final class CommandPatcher {
-    public static List<String> redefine(String prefix, Class<?> commandClass) {
+    public static List<String> redefine(String prefix, Class<?> commandClass, Function<String, String> getter) {
         List<String> errors = new ArrayList<>();
         try {
             for (Method method : commandClass.getDeclaredMethods()) {
@@ -24,19 +25,18 @@ public final class CommandPatcher {
                 Command command = method.getAnnotation(Command.class);
                 String label = "COMMAND_" + prefix.toUpperCase(Locale.ENGLISH) + "_" + command.aliases()[0].toUpperCase(Locale.ENGLISH);
 
-                String usageStr = label + "_USAGE";
-                String descStr = label + "_DESCRIPTION";
-                String helpStr = label + "_HELP";
+                String usagePath = label + "_USAGE";
+                String descPath = label + "_DESCRIPTION";
 
-                Msg usage = Msg.getByName(usageStr);
-                Msg desc = Msg.getByName(descStr);
-                Msg help = Msg.getByName(helpStr);
+                String usage = getter.apply(usagePath);
+                String desc = getter.apply(descPath);
 
-                if (usage == null || desc == null || help == null) {
+                if (usage == null && desc == null) {
                     errors.add(label);
+                    continue;
                 }
 
-                changeAnnotationValue(command, usage, desc, help);
+                changeAnnotationValue(command, usage, desc);
             }
             return errors;
         } catch (Exception ignored) {}
@@ -49,7 +49,7 @@ public final class CommandPatcher {
      * https://stackoverflow.com/questions/14268981/modify-a-class-definitions-annotation-string-parameter-at-runtime/28118436#28118436
      */
     @SuppressWarnings("unchecked")
-    private static void changeAnnotationValue(Annotation annotation, Msg usage, Msg desc, Msg help) {
+    private static void changeAnnotationValue(Annotation annotation, String usage, String desc) {
         Object handler = Proxy.getInvocationHandler(annotation);
         Field f;
         try {
@@ -65,13 +65,10 @@ public final class CommandPatcher {
             throw new IllegalStateException(e);
         }
         if (usage != null) {
-            memberValues.put("usage", usage.get());
+            memberValues.put("usage", usage);
         }
         if (desc != null) {
-            memberValues.put("desc", desc.get());
-        }
-        if (help != null) {
-            memberValues.put("help", help.get());
+            memberValues.put("desc", desc);
         }
     }
 }

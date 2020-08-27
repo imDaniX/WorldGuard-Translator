@@ -2,6 +2,7 @@ package me.imdanix.wgtranslator;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public enum Msg {
@@ -186,6 +187,9 @@ public enum Msg {
 
     // org.bukkit.ChatColor#translateAlternateColorCodes
     public static String colorize(String textToTranslate) {
+        if(textToTranslate == null) {
+            return null;
+        }
         char[] b = textToTranslate.toCharArray();
         for (int i = 0; i < b.length - 1; i++) {
             if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx".indexOf(b[i + 1]) > -1) {
@@ -198,5 +202,13 @@ public enum Msg {
 
     public static Msg getByName(String name) {
         return BY_NAME.get(name);
+    }
+
+    public static String toSection(Msg msg) {
+        return toSection(msg.name());
+    }
+
+    public static String toSection(String msg) {
+        return msg.toLowerCase(Locale.ENGLISH).replace('_', '.');
     }
 }
