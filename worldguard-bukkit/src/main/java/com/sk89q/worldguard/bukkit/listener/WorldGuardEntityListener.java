@@ -35,6 +35,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
+import me.imdanix.wgtranslator.Msg;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -705,7 +706,7 @@ public class WorldGuardEntityListener implements Listener {
                 if (associable != null) {
                     // NB there is no way to cancel the teleport without PTA (since PlayerPortal doesn't have block info)
                     // removing PTA was a mistake
-                    associable.print("Destination is an a protected area.");
+                    associable.print(Msg.PROTECTION_REGION_PROTECTEDPORTAL.get());
                 }
                 event.setCancelled(true);
             }

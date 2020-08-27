@@ -24,6 +24,27 @@ public enum Msg {
     PROTECTION_BLOCKED_POTIONS("&cSorry, potions with {effect} are presently disabled.", "effect"),
     PROTECTION_BLOCKED_ARROWS("&cSorry, arrows with {effect} are presently disabled.", "effect"),
 
+    // com.sk89q.worldguard.bukkit.listener.WorldGuardCommandBookListener
+    COMMANDBOOK_WHOIS_CURRENT("Current Regions"),
+    COMMANDBOOK_WHOIS_BUILD("Can build"),
+
+    // com.sk89q.worldguard.bukkit.listener.WorldGuardEntityListener
+    PROTECTION_REGION_PROTECTEDPORTAL("Destination is an a protected area."),
+
+    // com.sk89q.worldguard.bukkit.listener.WorldGuardPlayerListener
+    HALT_SERVERHALTED("&eIntensive server activity has been HALTED."),
+    HALT_AUTOREMOVE("Halt-Act: {removed} entities (>10) auto-removed from {world}", "removed", "world"),
+    CONFIG_WORLD_FIREDISABLED("&eFire spread is currently globally disabled for this world."),
+    INVALIDHOST_KICK("You did not join with the valid host key!"),
+    INFINITYSTACK_REMOVE("&cInfinite stack removed."),
+    INFINITYSTACK_REMOVESLOT("&cInfinite stack in slot #{slot} removed.", "slot"),
+    WAND_BUILD_INFO("&eCan you build? {check}", "check"),
+    WAND_BUILD_NO("No"),
+    WAND_BUILD_YES("Yes"),
+    WAND_REGIONS_LIST("Applicable regions: {regions}", "regions"),
+    WAND_REGIONS_EMPTY("WorldGuard: No defined regions here!"),
+    COMMAND_ERROR_OPDEOP("&c/op and /deop can only be used in console (as set by a WG setting)."),
+
     // com.sk89q.worldguard.bukkit.listener.ChestProtectionListener
     PROTECTION_CHEST_LOCK("[Lock]"),
     PROTECTION_CHEST_SPOT("&4This spot is for a chest that you don't have permission for."),
@@ -66,6 +87,17 @@ public enum Msg {
     PROTECTION_REGION_ACTION_VEHICLEBREAK("break vehicles"),
     PROTECTION_REGION_ACTION_RIDE("ride that"),
     PROTECTION_REGION_ACTION_DISEMBARK("&6Don't disembark here!&7 You can't get back on."),
+
+    // com.sk89q.worldguard.blacklist.event...
+    PROTECTION_REGION_BLACKLIST_BREAK("break"),
+    PROTECTION_REGION_BLACKLIST_DISPENSE("dispense"),
+    PROTECTION_REGION_BLACKLIST_INTERACT("interact with"),
+    PROTECTION_REGION_BLACKLIST_PLACE("place"),
+    PROTECTION_REGION_BLACKLIST_ACQUIRE("acquire"),
+    PROTECTION_REGION_BLACKLIST_DESTROY("destroy with"),
+    PROTECTION_REGION_BLACKLIST_DROP("drop"),
+    PROTECTION_REGION_BLACKLIST_EQUIP("equip"),
+    PROTECTION_REGION_BLACKLIST_USE("use"),
 
     // com.sk89q.worldguard.blacklist.action...
     BLACKLIST_ACTION_BAN_REASONED("Banned: {reason}", "reason"),

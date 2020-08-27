@@ -22,6 +22,7 @@ package com.sk89q.worldguard.blacklist.event;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.blacklist.target.Target;
+import me.imdanix.wgtranslator.Msg;
 
 import javax.annotation.Nullable;
 
@@ -40,7 +41,7 @@ public final class ItemAcquireBlacklistEvent extends ItemBlacklistEvent {
 
     @Override
     public String getDescription() {
-        return "acquire";
+        return Msg.PROTECTION_REGION_BLACKLIST_ACQUIRE.get();
     }
 
     @Override
