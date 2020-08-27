@@ -140,7 +140,7 @@ public enum Msg {
     }
 
     // org.bukkit.ChatColor#translateAlternateColorCodes
-    private static String colorize(String textToTranslate) {
+    public static String colorize(String textToTranslate) {
         char[] b = textToTranslate.toCharArray();
         for (int i = 0; i < b.length - 1; i++) {
             if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx".indexOf(b[i + 1]) > -1) {

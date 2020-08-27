@@ -19,13 +19,13 @@ import java.util.logging.Logger;
 public class I18n implements CommandExecutor {
 
     public I18n() {
-        Bukkit.getLogger().info("[WGTranslator] Initializing translation from the file.");
+        Bukkit.getLogger().info("[WGTranslator] Initializing translation from the file. By imDaniX.");
         reload();
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        sender.sendMessage("&6&lWGTranslator &f&oby imDaniX");
+        sender.sendMessage(Msg.colorize("&6&lWGTranslator &f&oby imDaniX"));
         if (!reload()) {
             sender.sendMessage(ChatColor.YELLOW + "Translation is reloaded, but something went wrong. " +
                     "Please check the console.");
