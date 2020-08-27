@@ -23,7 +23,7 @@ public final class CommandPatcher {
                 }
 
                 Command command = method.getAnnotation(Command.class);
-                String label = "COMMAND_" + prefix.toUpperCase(Locale.ENGLISH) + "_" + command.aliases()[0].toUpperCase(Locale.ENGLISH);
+                String label = "COMMAND_" + (prefix.isEmpty() ? "" : prefix.toUpperCase(Locale.ENGLISH) + "_") + command.aliases()[0].toUpperCase(Locale.ENGLISH);
 
                 String usagePath = label + "_USAGE";
                 String descPath = label + "_DESCRIPTION";
