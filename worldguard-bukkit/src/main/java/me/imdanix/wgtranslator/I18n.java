@@ -68,13 +68,13 @@ public class I18n implements CommandExecutor {
     private static void reloadCommands(FileConfiguration cfg) {
         List<String> errors = new ArrayList<>();
         Function<String, String> getter = (s) -> Msg.colorize(cfg.getString(Msg.toSection(s)));
-        errors.addAll(CommandPatcher.redefine("REGION", MemberCommands.class, getter));
-        errors.addAll(CommandPatcher.redefine("REGION", RegionCommands.class, getter));
-        errors.addAll(CommandPatcher.redefine("DEBUG", DebuggingCommands.class, getter));
+        errors.addAll(CommandPatcher.redefine("REGION_", MemberCommands.class, getter));
+        errors.addAll(CommandPatcher.redefine("REGION_", RegionCommands.class, getter));
+        errors.addAll(CommandPatcher.redefine("DEBUG_", DebuggingCommands.class, getter));
         errors.addAll(CommandPatcher.redefine("", GeneralCommands.class, getter));
         errors.addAll(CommandPatcher.redefine("", ProtectionCommands.class, getter));
         errors.addAll(CommandPatcher.redefine("", ToggleCommands.class, getter));
-        errors.addAll(CommandPatcher.redefine("WORLDGUARD", WorldGuardCommands.class, getter));
+        errors.addAll(CommandPatcher.redefine("WORLDGUARD_", WorldGuardCommands.class, getter));
         Logger log = Bukkit.getLogger();
         if (errors.isEmpty()) {
             log.info("[WGTranslator] Successfully reloaded all command messages." +

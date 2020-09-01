@@ -23,7 +23,7 @@ public final class CommandPatcher {
                 }
 
                 Command command = method.getAnnotation(Command.class);
-                String label = "COMMAND_" + (prefix.isEmpty() ? "" : prefix.toUpperCase(Locale.ENGLISH) + "_") + command.aliases()[0].toUpperCase(Locale.ENGLISH);
+                String label = "COMMAND_" + prefix.toUpperCase(Locale.ENGLISH) + command.aliases()[0].toUpperCase(Locale.ENGLISH);
 
                 String usagePath = label + "_USAGE";
                 String descPath = label + "_DESCRIPTION";
@@ -36,7 +36,9 @@ public final class CommandPatcher {
                     continue;
                 }
 
+                System.out.println("Change " + command.aliases()[0] + ". usage: \"" + command.usage() + "\", desc: \"" + command.desc() + "\"");
                 changeAnnotationValue(command, usage, desc);
+                System.out.println("Updated " + command.aliases()[0] + ". usage: \"" + command.usage() + "\", desc: \"" + command.desc() + "\"");
             }
             return errors;
         } catch (Exception ignored) {}
