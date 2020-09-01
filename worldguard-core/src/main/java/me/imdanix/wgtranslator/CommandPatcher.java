@@ -39,6 +39,8 @@ public final class CommandPatcher {
                 System.out.println("Change " + command.aliases()[0] + ". usage: \"" + command.usage() + "\", desc: \"" + command.desc() + "\"");
                 changeAnnotationValue(command, usage, desc);
                 System.out.println("Updated " + command.aliases()[0] + ". usage: \"" + command.usage() + "\", desc: \"" + command.desc() + "\"");
+                command = method.getAnnotation(Command.class);
+                System.out.println("Recheck " + command.aliases()[0] + ". usage: \"" + command.usage() + "\", desc: \"" + command.desc() + "\"");
             }
             return errors;
         } catch (Exception ignored) {}
