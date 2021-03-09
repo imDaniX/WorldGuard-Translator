@@ -269,6 +269,11 @@ public class RegionProtectionListener extends AbstractListener {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.CHEST_ACCESS));
                 what = Msg.PROTECTION_REGION_ACTION_TAKE.get();
 
+            /* Anvils */
+            } else if (Materials.isAnvil(type)) {
+                canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.USE_ANVIL));
+                what = Msg.PROTECTION_REGION_ACTION_ANVIL.get();
+
             /* Beds */
             } else if (Materials.isBed(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT, Flags.SLEEP));
@@ -292,7 +297,7 @@ public class RegionProtectionListener extends AbstractListener {
             /* Everything else */
             } else {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT));
-                what = Msg.PROTECTION_REGION_ACTION_USE.get();
+                what = Msg.PROTECTION_REGION_ACTION_OTHER.get();
             }
 
             if (!canUse) {

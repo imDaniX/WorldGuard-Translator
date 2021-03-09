@@ -390,7 +390,7 @@ public class WorldGuardPlayerListener implements Listener {
                         message = set.queryValue(localPlayer, Flags.ENTRY_DENY_MESSAGE);
                     }
                     if (cancel) {
-                        if (message != null) {
+                        if (message != null && !message.isEmpty()) {
                             player.sendMessage(message);
                         }
                         event.setCancelled(true);
@@ -409,7 +409,7 @@ public class WorldGuardPlayerListener implements Listener {
                         message = set.queryValue(localPlayer, Flags.ENTRY_DENY_MESSAGE);
                     }
                     if (cancel) {
-                        if (message != null) {
+                        if (message != null && !message.isEmpty()) {
                             player.sendMessage(message);
                         }
                         event.setCancelled(true);

@@ -22,8 +22,11 @@ package com.sk89q.worldguard.session;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.sk89q.worldedit.util.Location;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.config.ConfigurationManager;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -31,10 +34,10 @@ import com.sk89q.worldguard.protection.regions.RegionQuery;
 import com.sk89q.worldguard.session.handler.Handler;
 import com.sk89q.worldguard.util.Locations;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.annotation.Nullable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -66,7 +69,7 @@ public class Session {
      * @param handler A new handler
      */
     public void register(Handler handler) {
-        handlers.put(handler.getClass(), handler);
+        handlers.put(handler.getWrappedHandler().getClass(), handler);
     }
 
     /**
@@ -88,7 +91,7 @@ public class Session {
     @Nullable
     @SuppressWarnings("unchecked")
     public <T extends Handler> T getHandler(Class<T> type) {
-        return (T) handlers.get(type);
+        return (T) handlers.get(type).getWrappedHandler();
     }
 
     /**
@@ -103,6 +106,14 @@ public class Session {
 
         lastValid = location;
         lastRegionSet = set.getRegions();
+        ConfigurationManager cfg = WorldGuard.getInstance().getPlatform().getGlobalStateManager();
+        disableBypass = cfg.disableDefaultBypass;
+        if (cfg.announceBypassStatus && player.hasPermission("worldguard.region.toggle-bypass")) {
+            player.printInfo(TextComponent.of(
+                    "You are " + (disableBypass ? "not" : "") + " bypassing region protection. " +
+                    "You can toggle this with /rg bypass", TextColor.DARK_PURPLE));
+        }
+
 
         for (Handler handler : handlers.values()) {
             handler.initialize(player, location, set);
