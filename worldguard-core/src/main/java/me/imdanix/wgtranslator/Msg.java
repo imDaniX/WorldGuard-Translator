@@ -115,6 +115,7 @@ public enum Msg {
     BLACKLIST_ACTION_TELL_DEFAULT("You're not allowed to {action} {type}.", "action", "type"),
 
     ;
+
     private static final Map<String, Msg> BY_NAME;
     static {
         Map<String, Msg> byName = new HashMap<>();

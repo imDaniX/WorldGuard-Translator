@@ -138,10 +138,9 @@ public class WorldGuardPlugin extends JavaPlugin {
 
         getDataFolder().mkdirs(); // Need to create the plugins/WorldGuard folder
 
-        // WGTranslator start
-        I18n translator = new I18n();
+        // WGTranslator
+        I18n translator = new I18n(this);
         Objects.requireNonNull(getCommand("wgtranslator")).setExecutor(translator);
-        // WGTranslator end
 
         PermissionsResolverManager.initialize(this);
 

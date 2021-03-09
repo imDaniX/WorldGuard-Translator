@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 public final class CommandPatcher {
+
     public static List<String> redefine(String prefix, Class<?> commandClass, Function<String, String> getter) {
         List<String> errors = new ArrayList<>();
         try {
@@ -36,11 +37,7 @@ public final class CommandPatcher {
                     continue;
                 }
 
-                System.out.println("Change " + command.aliases()[0] + ". usage: \"" + command.usage() + "\", desc: \"" + command.desc() + "\"");
                 changeAnnotationValue(command, usage, desc);
-                System.out.println("Updated " + command.aliases()[0] + ". usage: \"" + command.usage() + "\", desc: \"" + command.desc() + "\"");
-                command = method.getAnnotation(Command.class);
-                System.out.println("Recheck " + command.aliases()[0] + ". usage: \"" + command.usage() + "\", desc: \"" + command.desc() + "\"");
             }
             return errors;
         } catch (Exception ignored) {}
@@ -48,8 +45,7 @@ public final class CommandPatcher {
     }
 
     /**
-     * Changes the annotation value for the given key of the given annotation to newValue and returns
-     * the previous value.
+     * Changes the annotation value for the given key of the given annotation to newValue and returns the previous value.
      * https://stackoverflow.com/questions/14268981/modify-a-class-definitions-annotation-string-parameter-at-runtime/28118436#28118436
      */
     @SuppressWarnings("unchecked")

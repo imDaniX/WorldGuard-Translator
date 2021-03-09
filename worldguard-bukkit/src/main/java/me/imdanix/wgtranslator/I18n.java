@@ -1,6 +1,5 @@
 package me.imdanix.wgtranslator;
 
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.commands.DebuggingCommands;
 import com.sk89q.worldguard.commands.GeneralCommands;
 import com.sk89q.worldguard.commands.ProtectionCommands;
@@ -15,6 +14,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,12 +23,17 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 
 public class I18n implements CommandExecutor {
+    private final File file;
 
-    public I18n() {
+    public I18n(Plugin plugin) {
         Bukkit.getLogger().info("[WGTranslator] Initializing translation from the file. By imDaniX.");
+        this.file = new File(plugin.getDataFolder(), "translator.yml");
+
         FileConfiguration cfg = getConfig();
         reload(cfg);
-        reloadCommands(cfg);
+        if (false) {
+            reloadCommands(cfg);
+        }
     }
 
     @Override
@@ -43,7 +48,7 @@ public class I18n implements CommandExecutor {
         return true;
     }
 
-    private static boolean reload(FileConfiguration cfg) {
+    private boolean reload(FileConfiguration cfg) {
         if (cfg == null) {
             return false;
         }
@@ -65,7 +70,7 @@ public class I18n implements CommandExecutor {
         }
     }
 
-    private static void reloadCommands(FileConfiguration cfg) {
+    private void reloadCommands(FileConfiguration cfg) {
         List<String> errors = new ArrayList<>();
         Function<String, String> getter = (s) -> Msg.colorize(cfg.getString(Msg.toSection(s)));
         errors.addAll(CommandPatcher.redefine("REGION_", MemberCommands.class, getter));
@@ -75,24 +80,23 @@ public class I18n implements CommandExecutor {
         errors.addAll(CommandPatcher.redefine("", ProtectionCommands.class, getter));
         errors.addAll(CommandPatcher.redefine("", ToggleCommands.class, getter));
         errors.addAll(CommandPatcher.redefine("WORLDGUARD_", WorldGuardCommands.class, getter));
-        Logger log = Bukkit.getLogger();
+
         if (errors.isEmpty()) {
-            log.info("[WGTranslator] Successfully reloaded all command messages." +
+            Bukkit.getLogger().info("[WGTranslator] Successfully reloaded all command messages." +
                     " Commands are reloaded only on server startup.");
         } else {
-            log.warning("[WGTranslator] Some command messages don't have its translation in translator.yml." +
-                    " Using default ones for these: " + String.join(", ", errors) +
+            Bukkit.getLogger().warning("[WGTranslator] Some command messages don't have its translation in translator.yml." +
+                    " Using default ones for those: " + String.join(", ", errors) +
                     " (_USAGE, _DESCRIPTION)" +
                     " Commands can be reloaded only on server startup.");
         }
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static FileConfiguration getConfig() {
-        File file = new File(WorldGuardPlugin.inst().getDataFolder(), "translator.yml");
+    private FileConfiguration getConfig() {
         if (!file.exists()) {
+            Bukkit.getLogger().info("[WGTranslator] Creating new file with default messages.");
             try {
-                Bukkit.getLogger().info("[WGTranslator] Creating new file with default messages.");
                 file.createNewFile();
                 FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
                 for (Msg msg : Msg.values()) {
