@@ -73,7 +73,7 @@ public class TranslatableCommandsRegistration extends CommandsManagerRegistratio
                 cfg.set(commandName + ".usage", command.usage());
                 cfg.set(commandName + ".description.short", command.desc());
                 cfg.set(commandName + ".description.full", commands.getCommands().get(commandName));
-                cfg.set(commandName + ".help", commands.getHelpMessages().get(commandName));
+                cfg.set(commandName + ".help", commands.getHelpMessages().get(commandName).replace("\\n", "\n"));
 
                 toRegister.add(new CommandInfo(command.usage(), command.desc(), command.aliases(), commands, permissions == null ? null : permissions.toArray(new String[permissions.size()])));
             } else {
