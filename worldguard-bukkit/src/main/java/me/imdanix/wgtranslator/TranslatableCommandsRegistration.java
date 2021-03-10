@@ -37,21 +37,20 @@ import java.util.Map;
 
 @Deprecated
 public class TranslatableCommandsRegistration extends CommandsManagerRegistration {
-    private final I18n translator;
+    private final File file;
+    private final FileConfiguration cfg;
+    private final boolean firstTime;
 
     public TranslatableCommandsRegistration(Plugin plugin, CommandsManager<?> commands, I18n translator) {
         super(plugin, commands);
-        this.translator = translator;
+
+        file = new File(plugin.getDataFolder(), "translator-commands.yml");
+        firstTime = !file.exists();
+        cfg = translator.getConfig(file, true);
     }
 
     public boolean registerAll(List<Command> registered) {
         List<CommandInfo> toRegister = new ArrayList<>();
-
-        // WGTranslator
-        File file = new File(plugin.getDataFolder(), "translator-commands.yml");
-        boolean firstTime = !file.exists();
-        FileConfiguration cfg = translator.getConfig(file, true);
-
         for (Command command : registered) {
             List<String> permissions = null;
             Method cmdMethod = commands.getMethods().get(null).get(command.aliases()[0]);
@@ -82,6 +81,8 @@ public class TranslatableCommandsRegistration extends CommandsManagerRegistratio
                 String desc = cfg.getString(commandName + ".description.short", command.desc());
                 if (cfg.contains(commandName + ".description.full")) commands.getCommands().put(commandName, cfg.getString(commandName + ".description.full", command.desc()));
                 if (cfg.contains(commandName + ".help")) commands.getHelpMessages().put(commandName, cfg.getString(commandName + ".help"));
+
+                toRegister.add(new CommandInfo(usage, desc, command.aliases(), commands, permissions == null ? null : permissions.toArray(new String[permissions.size()])));
             }
         }
         if (firstTime) {

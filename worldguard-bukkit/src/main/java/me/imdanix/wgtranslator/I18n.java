@@ -1,12 +1,5 @@
 package me.imdanix.wgtranslator;
 
-import com.sk89q.worldguard.commands.DebuggingCommands;
-import com.sk89q.worldguard.commands.GeneralCommands;
-import com.sk89q.worldguard.commands.ProtectionCommands;
-import com.sk89q.worldguard.commands.ToggleCommands;
-import com.sk89q.worldguard.commands.WorldGuardCommands;
-import com.sk89q.worldguard.commands.region.MemberCommands;
-import com.sk89q.worldguard.commands.region.RegionCommands;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -20,7 +13,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.logging.Logger;
 
 public class I18n implements CommandExecutor {
@@ -71,10 +63,12 @@ public class I18n implements CommandExecutor {
             try {
                 file.createNewFile();
                 FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-                for (Msg msg : Msg.values()) {
-                    cfg.set(Msg.toSection(msg), msg.getDefault());
+                if (!cmds) {
+                    for (Msg msg : Msg.values()) {
+                        cfg.set(Msg.toSection(msg), msg.getDefault());
+                    }
+                    cfg.save(file);
                 }
-                cfg.save(file);
                 return cfg;
             } catch (Exception e) {
                 Bukkit.getLogger().warning("[WGTranslator] Something went wrong during translation file creation.");
@@ -82,7 +76,7 @@ public class I18n implements CommandExecutor {
                 return null;
             }
         }
-        Bukkit.getLogger().info("[WGTranslator] Loading file with current messages.");
+        Bukkit.getLogger().info("[WGTranslator] Loading file with current messages" + (cmds ? " for commands." : "."));
         return YamlConfiguration.loadConfiguration(file);
     }
 
