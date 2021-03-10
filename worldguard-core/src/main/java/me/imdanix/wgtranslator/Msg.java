@@ -22,6 +22,25 @@ public enum Msg {
     COMMAND_ERROR_USAGE("&c{usage}", "usage"),
     COMMAND_ERROR_INFO("&c{message}", "message"),
 
+    // com.sk89q.worldguard.commands.region.MemberCommands
+    COMMAND_REGION_ADDMEMBER_ADDING("Adding members to the region '{region}' on '{world}'", "region", "world"),
+    COMMAND_REGION_ADDMEMBER_SUCCESS("Region '{region}' updated with new members.", "region"),
+    COMMAND_REGION_ADDMEMBER_FAIL("Failed to add new members"),
+    COMMAND_REGION_ADDOWNER_ADDING("Adding owners to the region '{region}' on '{world}'", "region", "world"),
+    COMMAND_REGION_ADDOWNER_SUCCESS("Region '{region}' updated with new owners.", "region"),
+    COMMAND_REGION_ADDOWNER_FAIL("Failed to add new owners"),
+    COMMAND_REGION_ADDOWNER_MAXIMUM("You already own the maximum allowed amount of regions."),
+    COMMAND_REGION_REMOVEMEMBER_LIST("List some names to remove, or use -a to remove all."),
+    COMMAND_REGION_REMOVEMEMBER_REMOVING("Removing members from the region '{region}' on '{world}'", "region", "world"),
+    COMMAND_REGION_REMOVEMEMBER_WAIT("(Please wait... querying player names...)"),
+    COMMAND_REGION_REMOVEMEMBER_SUCCESS("Region '{region}' updated with members removed.", "region"),
+    COMMAND_REGION_REMOVEMEMBER_FAIL("Failed to remove members"),
+    COMMAND_REGION_REMOVEOWNER_LIST("List some names to remove, or use -a to remove all."),
+    COMMAND_REGION_REMOVEOWNER_REMOVING("Removing owners from the region '{region}' on '{world}'", "region", "world"),
+    COMMAND_REGION_REMOVEOWNER_WAIT("(Please wait... querying player names...)"),
+    COMMAND_REGION_REMOVEOWNER_SUCCESS("Region '{region}' updated with owners removed.", "region"),
+    COMMAND_REGION_REMOVEOWNER_FAIL("Failed to remove owners"),
+
     // com.sk89q.worldguard.bukkit.listener.BlockedPotionsListener
     PROTECTION_BLOCKED_POTIONSBYPASS("&cSorry, potions with {effect} can't be thrown, " +
             "even if you have a permission to bypass it, " +
