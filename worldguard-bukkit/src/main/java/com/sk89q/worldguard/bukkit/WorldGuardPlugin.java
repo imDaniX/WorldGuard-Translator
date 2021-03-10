@@ -76,6 +76,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.util.logging.RecordMessagePrefixer;
 import me.imdanix.wgtranslator.I18n;
 import me.imdanix.wgtranslator.Msg;
+import me.imdanix.wgtranslator.TranslatableCommandsRegistration;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -157,7 +158,7 @@ public class WorldGuardPlugin extends JavaPlugin {
         verifier.reportMismatches(ImmutableList.of(ProtectedRegion.class, ProtectedCuboidRegion.class, Flag.class));
 
         // Register command classes
-        final CommandsManagerRegistration reg = new CommandsManagerRegistration(this, commands);
+        final CommandsManagerRegistration reg = new TranslatableCommandsRegistration(this, commands, translator); // WGTranslator
         reg.register(ToggleCommands.class);
         reg.register(ProtectionCommands.class);
 
