@@ -27,13 +27,14 @@ public class TranslatableCommandsManager extends CommandsManager<Actor> {
             List<Command> nestedList = super.registerMethods(cls, parent);
             String parentName = parent.getAnnotation(Command.class).aliases()[0];
             for (Command nested : nestedList) {
-                String nestedPath = parentName + ".nested." + nested.aliases()[0];
+                String nestedName = nested.aliases()[0];
+                String nestedPath = parentName + ".nested." + nestedName;
                 if (!cfg.contains(nestedPath)) {
-                    cfg.set(nestedPath + ".description", descs.get(nestedPath));
-                    cfg.set(nestedPath + ".help", helpMessages.get(nestedPath).replace("\\n", "\n"));
+                    cfg.set(nestedPath + ".description", descs.get(nestedName));
+                    cfg.set(nestedPath + ".help", helpMessages.get(nestedName).replace("\\n", "\n"));
                 } else {
-                    if (cfg.contains(nestedPath + ".description")) descs.put(nestedPath, cfg.getString(nestedPath + ".description", nested.desc()));
-                    if (cfg.contains(nestedPath + ".help")) helpMessages.put(nestedPath, cfg.getString(nestedPath + ".help"));
+                    if (cfg.contains(nestedPath + ".description")) descs.put(nestedName, cfg.getString(nestedPath + ".description", nested.desc()));
+                    if (cfg.contains(nestedPath + ".help")) helpMessages.put(nestedName, cfg.getString(nestedPath + ".help"));
                 }
             }
             return nestedList;
