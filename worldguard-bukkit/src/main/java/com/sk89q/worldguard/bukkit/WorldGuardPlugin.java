@@ -77,7 +77,6 @@ import com.sk89q.worldguard.util.logging.RecordMessagePrefixer;
 import me.imdanix.wgtranslator.I18n;
 import me.imdanix.wgtranslator.Msg;
 import me.imdanix.wgtranslator.TranslatableCommandsManager;
-import me.imdanix.wgtranslator.TranslatableCommandsRegistration;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -138,6 +137,7 @@ public class WorldGuardPlugin extends JavaPlugin {
         // WGTranslator
         I18n translator = new I18n(this);
         Objects.requireNonNull(getCommand("wgtranslator")).setExecutor(translator);
+        ((TranslatableCommandsManager)commands).load(this, translator);
 
         PermissionsResolverManager.initialize(this);
 
@@ -154,7 +154,7 @@ public class WorldGuardPlugin extends JavaPlugin {
         verifier.reportMismatches(ImmutableList.of(ProtectedRegion.class, ProtectedCuboidRegion.class, Flag.class));
 
         // Register command classes
-        final CommandsManagerRegistration reg = new TranslatableCommandsRegistration(this, commands, translator); // WGTranslator
+        final CommandsManagerRegistration reg = new CommandsManagerRegistration(this, commands);
         reg.register(ToggleCommands.class);
         reg.register(ProtectionCommands.class);
 
