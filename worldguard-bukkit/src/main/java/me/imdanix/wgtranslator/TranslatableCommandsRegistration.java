@@ -47,6 +47,10 @@ public class TranslatableCommandsRegistration extends CommandsManagerRegistratio
         file = new File(plugin.getDataFolder(), "translator-commands.yml");
         firstTime = !file.exists();
         cfg = translator.getConfig(file, true);
+
+        if (commands instanceof TranslatableCommandsManager) {
+            ((TranslatableCommandsManager) commands).setConfig(cfg);
+        }
     }
 
     public boolean registerAll(List<Command> registered) {

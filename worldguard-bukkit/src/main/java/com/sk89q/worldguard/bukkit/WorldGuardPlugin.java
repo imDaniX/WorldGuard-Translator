@@ -76,6 +76,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.util.logging.RecordMessagePrefixer;
 import me.imdanix.wgtranslator.I18n;
 import me.imdanix.wgtranslator.Msg;
+import me.imdanix.wgtranslator.TranslatableCommandsManager;
 import me.imdanix.wgtranslator.TranslatableCommandsRegistration;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -114,12 +115,7 @@ public class WorldGuardPlugin extends JavaPlugin {
      */
     public WorldGuardPlugin() {
         inst = this;
-        commands = new CommandsManager<Actor>() {
-            @Override
-            public boolean hasPermission(Actor player, String perm) {
-                return player.hasPermission(perm);
-            }
-        };
+        commands = new TranslatableCommandsManager();
     }
 
     /**
