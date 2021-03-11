@@ -51,6 +51,11 @@ public class TranslatableCommandsManager extends CommandsManager<Actor> {
         cfg = translator.getConfig(file, true);
     }
 
+    public void clean() {
+        cfg = null;
+        file = null;
+    }
+
     @Override
     public boolean hasPermission(Actor player, String permission) {
         return player.hasPermission(permission);
@@ -61,8 +66,10 @@ public class TranslatableCommandsManager extends CommandsManager<Actor> {
         List<Command> commandsList = super.registerMethods(cls, parent);
         if (parent != null) {
             String parentName = parent.getAnnotation(Command.class).aliases()[0];
+
             for (Command nested : commandsList) {
                 String nestedName = nested.aliases()[0];
+
                 String nestedPath = parentName + ".nested." + nestedName;
                 if (firstTime) {
                     cfg.set(nestedPath + ".description", nested.desc());
@@ -86,11 +93,12 @@ public class TranslatableCommandsManager extends CommandsManager<Actor> {
                     cfg.set(commandName + ".description.short", command.desc());
                     cfg.set(commandName + ".description.full", descs.get(commandName));
                     cfg.set(commandName + ".usage", command.usage());
-                    cfg.set(commandName + "help", helpMessages.get(commandName).replace("\\n", "\n"));
+                    cfg.set(commandName + ".help", helpMessages.get(commandName).replace("\\n", "\n"));
                     alternativeCommands.put(command, command);
                 } else {
                     if (cfg.isString(commandName + ".description.full")) descs.put(commandName, cfg.getString(commandName + ".description.full"));
-                    if (cfg.isString(commandName + ".help")) helpMessages.put(commandName, cfg.getString(commandName + ".help"));
+                    if (cfg.isString(commandName + ".help")) for(String alias : command.aliases())
+                            helpMessages.put(alias, cfg.getString(commandName + ".help"));
                     alternativeCommands.put(
                             command,
                             new AltCommand(

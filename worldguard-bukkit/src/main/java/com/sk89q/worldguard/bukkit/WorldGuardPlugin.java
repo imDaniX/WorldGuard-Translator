@@ -162,6 +162,7 @@ public class WorldGuardPlugin extends JavaPlugin {
             if (!platform.getGlobalStateManager().hasCommandBookGodMode()) {
                 reg.register(GeneralCommands.class);
             }
+            ((TranslatableCommandsManager)commands).clean();
         }, 0L);
 
         getServer().getScheduler().scheduleSyncRepeatingTask(this, sessionManager, BukkitSessionManager.RUN_DELAY, BukkitSessionManager.RUN_DELAY);
