@@ -99,6 +99,13 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
         newline();
     }
 
+    public void appendVolume() {
+        builder.append(TextComponent.of("Volume: ", TextColor.BLUE));
+        builder.append(TextComponent.of(region.volume(), TextColor.YELLOW));
+
+        newline();
+    }
+
     /**
      * Add information about flags.
      */
@@ -346,6 +353,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
         appendFlags();
         appendParents();
         appendDomain();
+        appendVolume();
         appendBounds();
 
         if (cache != null && perms == null) {
