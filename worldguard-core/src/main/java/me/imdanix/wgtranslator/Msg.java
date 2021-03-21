@@ -41,7 +41,7 @@ public enum Msg {
     COMMAND_REGION_MEMBERSHIP_REMOVEOWNER_SUCCESS("Region '{region}' updated with owners removed.", "region"),
     COMMAND_REGION_MEMBERSHIP_REMOVEOWNER_FAIL("Failed to remove owners"),
 
-    // com.sk89q.worldguard.commands.region.FlagHelperBox nb=
+    // com.sk89q.worldguard.commands.region.FlagHelperBox
     COMMAND_REGION_FLAGS_TITLE("Flags for {region}", "region"),
     COMMAND_REGION_FLAGS_PAGECOMMAND("/rg flags -w \"{world}\" -p %page% {region}", "region", "world"),
     COMMAND_REGION_FLAGS_THIRDPARTY("Third-Party Flags"),
@@ -69,6 +69,30 @@ public enum Msg {
     COMMAND_REGION_FLAGS_VALUE_STRING_UNSET("unset string"),
     COMMAND_REGION_FLAGS_VALUE_STRING_DEFAULT("Default value:"),
     COMMAND_REGION_FLAGS_VALUE_STRING_CURRENT("Current value:"),
+
+    // com.sk89q.worldguard.commands.region.RegionCommand
+    COMMAND_REGION_DEFINE_ADDING("Adding region '{region}'", "region"),
+    COMMAND_REGION_DEFINE_SUCCESS("A new region has been made named '{region}'", "region"),
+    COMMAND_REGION_DEFINE_FAIL("Failed to add the region '{region}'", "region"),
+    COMMAND_REGION_REDEFINE_ADDING("Updating region '{region}'", "region"),
+    COMMAND_REGION_REDEFINE_WAIT("(Please wait... {description})", "description"),
+    COMMAND_REGION_REDEFINE_SUCCESS("Region '{region}' has been updated with a new area.", "region"),
+    COMMAND_REGION_REDEFINE_FAIL("Failed to update the region '{region}'", "region"),
+    COMMAND_REGION_CLAIM_ERROR_TOOMANY("You own too many regions, delete one first to claim a new one."),
+    COMMAND_REGION_CLAIM_ERROR_ALREADYEXIST("This region already exists and you don't own it."),
+    COMMAND_REGION_CLAIM_ERROR_OVERLAPS("This region overlaps with someone else's region."),
+    COMMAND_REGION_CLAIM_ERROR_ONLYINSIDE("You may only claim regions inside existing regions that you or your group own."),
+    COMMAND_REGION_CLAIM_ERROR_MAXINTEGER("The maximum claim volume get in the configuration is higher than is supported. Currently, it must be " + Integer.MAX_VALUE + " or smaller. Please contact a server administrator."),
+    COMMAND_REGION_CLAIM_ERROR_NOPOLYGONS("Polygons are currently not supported for /rg claim."),
+    COMMAND_REGION_CLAIM_ERROR_TOOLARGE1("This region is too large to claim."),
+    COMMAND_REGION_CLAIM_ERROR_TOOLARGE2("Max. volume: {max}, your volume: {current}", "max", "current"),
+    COMMAND_REGION_CLAIM_ADDING("Claiming region '{region}'", "region"),
+    COMMAND_REGION_CLAIM_SUCCESS("A new region has been claimed named '{region}'", "region"),
+    COMMAND_REGION_CLAIM_WAIT("(Please wait... {description})", "description"),
+    COMMAND_REGION_CLAIM_FAIL("Failed to claim region"),
+    COMMAND_REGION_SELECT_SPECIFY("Please specify a region name."),
+    COMMAND_REGION_SELECT_SELECTED("Region selected as {region}", "region"),
+    COMMAND_REGION_SELECT_TYPEFAIL("Can't select that region! The region type '{type}' can't be selected.", "type"),
 
     // com.sk89q.worldguard.bukkit.listener.BlockedPotionsListener
     PROTECTION_BLOCKED_POTIONSBYPASS("&cSorry, potions with {effect} can't be thrown, " +

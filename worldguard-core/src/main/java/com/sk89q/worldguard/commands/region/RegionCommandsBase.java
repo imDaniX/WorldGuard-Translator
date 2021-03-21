@@ -56,6 +56,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.util.WorldEditRegionConverter;
+import me.imdanix.wgtranslator.Msg;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -403,10 +404,9 @@ class RegionCommandsBase {
             selector.setWorld(world);
             session.setRegionSelector(world, selector);
             selector.explainRegionAdjust(actor, session);
-            actor.print("Region selected as " + region.getType().getName());
+            actor.print(Msg.COMMAND_REGION_SELECT_SELECTED.get(region.getType().getName()));
         } else {
-            throw new CommandException("Can't select that region! " +
-                    "The region type '" + region.getType().getName() + "' can't be selected.");
+            throw new CommandException(Msg.COMMAND_REGION_SELECT_TYPEFAIL.get(region.getType().getName()));
         }
     }
 

@@ -75,6 +75,7 @@ import com.sk89q.worldguard.protection.util.DomainInputResolver.UserLocatorPolic
 import com.sk89q.worldguard.session.Session;
 import com.sk89q.worldguard.util.Enums;
 import com.sk89q.worldguard.util.logging.LoggerToChatHandler;
+import me.imdanix.wgtranslator.Msg;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -157,17 +158,17 @@ public final class RegionCommands extends RegionCommandsBase {
         RegionAdder task = new RegionAdder(manager, region);
         task.addOwnersFromCommand(args, 2);
 
-        final String description = String.format("Adding region '%s'", region.getId());
+        final String description = Msg.COMMAND_REGION_DEFINE_ADDING.get(region.getId());
         AsyncCommandBuilder.wrap(task, sender)
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
                 .onSuccess((Component) null,
                         t -> {
-                            sender.print(String.format("A new region has been made named '%s'.", region.getId()));
+                            sender.print(Msg.COMMAND_REGION_DEFINE_SUCCESS.get(region.getId()));
                             warnAboutDimensions(sender, region);
                             informNewUser(sender, manager, region);
                             checkSpawnOverlap(sender, world, region);
                         })
-                .onFailure(String.format("Failed to add the region '%s'", region.getId()), worldGuard.getExceptionConverter())
+                .onFailure(Msg.COMMAND_REGION_DEFINE_FAIL.get(region.getId()), worldGuard.getExceptionConverter())
                 .buildAndExec(worldGuard.getExecutorService());
     }
 
@@ -210,18 +211,18 @@ public final class RegionCommands extends RegionCommandsBase {
 
         RegionAdder task = new RegionAdder(manager, region);
 
-        final String description = String.format("Updating region '%s'", region.getId());
+        final String description = Msg.COMMAND_REGION_REDEFINE_ADDING.get(region.getId());
         AsyncCommandBuilder.wrap(task, sender)
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
-                .sendMessageAfterDelay("(Please wait... " + description + ")")
+                .sendMessageAfterDelay(Msg.COMMAND_REGION_REDEFINE_WAIT.get(description))
                 .onSuccess((Component) null,
                         t -> {
-                            sender.print(String.format("Region '%s' has been updated with a new area.", region.getId()));
+                            sender.print(Msg.COMMAND_REGION_REDEFINE_SUCCESS.get(region.getId()));
                             warnAboutDimensions(sender, region);
                             informNewUser(sender, manager, region);
                             checkSpawnOverlap(sender, world, region);
                         })
-                .onFailure(String.format("Failed to update the region '%s'", region.getId()), worldGuard.getExceptionConverter())
+                .onFailure(Msg.COMMAND_REGION_REDEFINE_FAIL.get(region.getId()), worldGuard.getExceptionConverter())
                 .buildAndExec(worldGuard.getExecutorService());
     }
 
@@ -264,8 +265,7 @@ public final class RegionCommands extends RegionCommandsBase {
             int maxRegionCount = wcfg.getMaxRegionCount(player);
             if (maxRegionCount >= 0
                     && manager.getRegionCountOfPlayer(player) >= maxRegionCount) {
-                throw new CommandException(
-                        "You own too many regions, delete one first to claim a new one.");
+                throw new CommandException(Msg.COMMAND_REGION_CLAIM_ERROR_TOOMANY.get());
             }
         }
 
@@ -274,8 +274,7 @@ public final class RegionCommands extends RegionCommandsBase {
         // Check for an existing region
         if (existing != null) {
             if (!existing.getOwners().contains(player)) {
-                throw new CommandException(
-                        "This region already exists and you don't own it.");
+                throw new CommandException(Msg.COMMAND_REGION_CLAIM_ERROR_ALREADYEXIST.get());
             }
         }
 
@@ -285,29 +284,27 @@ public final class RegionCommands extends RegionCommandsBase {
         // Check if this region overlaps any other region
         if (regions.size() > 0) {
             if (!regions.isOwnerOfAll(player)) {
-                throw new CommandException("This region overlaps with someone else's region.");
+                throw new CommandException(Msg.COMMAND_REGION_CLAIM_ERROR_OVERLAPS.get());
             }
         } else {
             if (wcfg.claimOnlyInsideExistingRegions) {
-                throw new CommandException("You may only claim regions inside " +
-                        "existing regions that you or your group own.");
+                throw new CommandException(Msg.COMMAND_REGION_CLAIM_ERROR_ONLYINSIDE.get());
             }
         }
 
         if (wcfg.maxClaimVolume >= Integer.MAX_VALUE) {
-            throw new CommandException("The maximum claim volume get in the configuration is higher than is supported. " +
-                    "Currently, it must be " + Integer.MAX_VALUE + " or smaller. Please contact a server administrator.");
+            throw new CommandException(Msg.COMMAND_REGION_CLAIM_ERROR_MAXINTEGER.get());
         }
 
         // Check claim volume
         if (!permModel.mayClaimRegionsUnbounded()) {
             if (region instanceof ProtectedPolygonalRegion) {
-                throw new CommandException("Polygons are currently not supported for /rg claim.");
+                throw new CommandException(Msg.COMMAND_REGION_CLAIM_ERROR_NOPOLYGONS.get());
             }
 
             if (region.volume() > wcfg.maxClaimVolume) {
-                player.printError("This region is too large to claim.");
-                player.printError("Max. volume: " + wcfg.maxClaimVolume + ", your volume: " + region.volume());
+                player.printError(Msg.COMMAND_REGION_CLAIM_ERROR_TOOLARGE1.get());
+                player.printError(Msg.COMMAND_REGION_CLAIM_ERROR_TOOLARGE2.get(wcfg.maxClaimVolume, region.volume()));
                 return;
             }
         }
@@ -316,12 +313,12 @@ public final class RegionCommands extends RegionCommandsBase {
         task.setLocatorPolicy(UserLocatorPolicy.UUID_ONLY);
         task.setOwnersInput(new String[]{player.getName()});
 
-        final String description = String.format("Claiming region '%s'", id);
+        final String description = Msg.COMMAND_REGION_CLAIM_ADDING.get(id);
         AsyncCommandBuilder.wrap(task, sender)
                 .registerWithSupervisor(WorldGuard.getInstance().getSupervisor(), description)
-                .sendMessageAfterDelay("(Please wait... " + description + ")")
-                .onSuccess(TextComponent.of(String.format("A new region has been claimed named '%s'.", id)), null)
-                .onFailure("Failed to claim region", WorldGuard.getInstance().getExceptionConverter())
+                .sendMessageAfterDelay(Msg.COMMAND_REGION_CLAIM_WAIT.get(description))
+                .onSuccess(TextComponent.of(Msg.COMMAND_REGION_CLAIM_SUCCESS.get(id)), null)
+                .onFailure(Msg.COMMAND_REGION_CLAIM_FAIL.get(), WorldGuard.getInstance().getExceptionConverter())
                 .buildAndExec(WorldGuard.getInstance().getExecutorService());
     }
 
@@ -346,7 +343,7 @@ public final class RegionCommands extends RegionCommandsBase {
         if (args.argsLength() == 0) {
             LocalPlayer player = worldGuard.checkPlayer(sender);
             if (!player.getWorld().equals(world)) { // confusing to get current location regions in another world
-                throw new CommandException("Please specify a region name."); // just don't allow that
+                throw new CommandException(Msg.COMMAND_REGION_SELECT_SPECIFY.get()); // just don't allow that
             }
             world = player.getWorld();
             existing = checkRegionStandingIn(manager, player, "/rg select -w \"" + world.getName() + "\" %id%");
