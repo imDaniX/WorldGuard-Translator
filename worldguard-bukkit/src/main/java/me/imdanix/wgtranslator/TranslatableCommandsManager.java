@@ -72,16 +72,16 @@ public class TranslatableCommandsManager extends CommandsManager<Actor> {
 
                 String nestedPath = parentName + ".nested." + nestedName;
                 if (firstTime) {
-                    cfg.set(nestedPath + ".description", nested.desc());
                     cfg.set(nestedPath + ".usage", nested.usage());
+                    cfg.set(nestedPath + ".description", nested.desc());
                     alternativeCommands.put(nested, nested);
                 } else {
                     alternativeCommands.put(
                             nested,
                             new AltCommand(
                                     nested,
-                                    cfg.getString(nestedPath + ".description", nested.desc()),
-                                    cfg.getString(nestedPath + ".usage", nested.usage())
+                                    cfg.getString(nestedPath + ".usage", nested.usage()),
+                                    cfg.getString(nestedPath + ".description", nested.desc())
                             )
                     );
                 }
@@ -90,9 +90,9 @@ public class TranslatableCommandsManager extends CommandsManager<Actor> {
             for (Command command : commandsList) {
                 String commandName = command.aliases()[0];
                 if (firstTime) {
+                    cfg.set(commandName + ".usage", command.usage());
                     cfg.set(commandName + ".description.short", command.desc());
                     cfg.set(commandName + ".description.full", descs.get(commandName));
-                    cfg.set(commandName + ".usage", command.usage());
                     cfg.set(commandName + ".help", helpMessages.get(commandName).replace("\\n", "\n"));
                     alternativeCommands.put(command, command);
                 } else {
@@ -103,8 +103,8 @@ public class TranslatableCommandsManager extends CommandsManager<Actor> {
                             command,
                             new AltCommand(
                                     command,
-                                    cfg.getString(commandName + ".description.short", command.desc()),
-                                    cfg.getString(commandName + ".usage", command.usage())
+                                    cfg.getString(commandName + ".usage", command.usage()),
+                                    cfg.getString(commandName + ".description.short", command.desc())
                             )
                     );
                 }
