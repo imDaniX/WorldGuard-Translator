@@ -45,9 +45,9 @@ public class TellAction extends RepeatGuardedAction {
         if (event.getPlayer() != null) {
             if (message != null) {
                 message = message.replaceAll("(?!<\\\\)\\\\n", "\n").replaceAll("\\\\\\\\n", "\\n");
-                event.getPlayer().print(Msg.BLACKLIST_ACTION_TELL_TEXT.get(String.format(message, event.getTarget().getFriendlyName())));
+                event.getPlayer().print(Msg.BLACKLIST_PUNISHMENT_TELL_TEXT.get(String.format(message, event.getTarget().getFriendlyName())));
             } else {
-                event.getPlayer().printError(Msg.BLACKLIST_ACTION_TELL_DEFAULT.get(event.getDescription(), event.getTarget().getFriendlyName()));
+                event.getPlayer().printError(Msg.BLACKLIST_PUNISHMENT_TELL_DEFAULT.get(event.getDescription(), event.getTarget().getFriendlyName()));
             }
         }
 

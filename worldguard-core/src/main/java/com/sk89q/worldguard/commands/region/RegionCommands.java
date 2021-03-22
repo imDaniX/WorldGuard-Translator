@@ -158,17 +158,17 @@ public final class RegionCommands extends RegionCommandsBase {
         RegionAdder task = new RegionAdder(manager, region);
         task.addOwnersFromCommand(args, 2);
 
-        final String description = Msg.COMMAND_REGION_DEFINE_ADDING.get(region.getId());
+        final String description = Msg.REGION_DEFINE_ADDING.get(region.getId());
         AsyncCommandBuilder.wrap(task, sender)
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
                 .onSuccess((Component) null,
                         t -> {
-                            sender.print(Msg.COMMAND_REGION_DEFINE_SUCCESS.get(region.getId()));
+                            sender.print(Msg.REGION_DEFINE_SUCCESS.get(region.getId()));
                             warnAboutDimensions(sender, region);
                             informNewUser(sender, manager, region);
                             checkSpawnOverlap(sender, world, region);
                         })
-                .onFailure(Msg.COMMAND_REGION_DEFINE_FAIL.get(region.getId()), worldGuard.getExceptionConverter())
+                .onFailure(Msg.REGION_DEFINE_FAIL.get(region.getId()), worldGuard.getExceptionConverter())
                 .buildAndExec(worldGuard.getExecutorService());
     }
 
@@ -211,18 +211,18 @@ public final class RegionCommands extends RegionCommandsBase {
 
         RegionAdder task = new RegionAdder(manager, region);
 
-        final String description = Msg.COMMAND_REGION_REDEFINE_ADDING.get(region.getId());
+        final String description = Msg.REGION_REDEFINE_ADDING.get(region.getId());
         AsyncCommandBuilder.wrap(task, sender)
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
-                .sendMessageAfterDelay(Msg.COMMAND_REGION_REDEFINE_WAIT.get(description))
+                .sendMessageAfterDelay(Msg.REGION_REDEFINE_WAIT.get(description))
                 .onSuccess((Component) null,
                         t -> {
-                            sender.print(Msg.COMMAND_REGION_REDEFINE_SUCCESS.get(region.getId()));
+                            sender.print(Msg.REGION_REDEFINE_SUCCESS.get(region.getId()));
                             warnAboutDimensions(sender, region);
                             informNewUser(sender, manager, region);
                             checkSpawnOverlap(sender, world, region);
                         })
-                .onFailure(Msg.COMMAND_REGION_REDEFINE_FAIL.get(region.getId()), worldGuard.getExceptionConverter())
+                .onFailure(Msg.REGION_REDEFINE_FAIL.get(region.getId()), worldGuard.getExceptionConverter())
                 .buildAndExec(worldGuard.getExecutorService());
     }
 
@@ -265,7 +265,7 @@ public final class RegionCommands extends RegionCommandsBase {
             int maxRegionCount = wcfg.getMaxRegionCount(player);
             if (maxRegionCount >= 0
                     && manager.getRegionCountOfPlayer(player) >= maxRegionCount) {
-                throw new CommandException(Msg.COMMAND_REGION_CLAIM_ERROR_TOOMANY.get());
+                throw new CommandException(Msg.REGION_CLAIM_ERROR_TOOMANY.get());
             }
         }
 
@@ -274,7 +274,7 @@ public final class RegionCommands extends RegionCommandsBase {
         // Check for an existing region
         if (existing != null) {
             if (!existing.getOwners().contains(player)) {
-                throw new CommandException(Msg.COMMAND_REGION_CLAIM_ERROR_ALREADYEXIST.get());
+                throw new CommandException(Msg.REGION_CLAIM_ERROR_ALREADYEXIST.get());
             }
         }
 
@@ -284,27 +284,27 @@ public final class RegionCommands extends RegionCommandsBase {
         // Check if this region overlaps any other region
         if (regions.size() > 0) {
             if (!regions.isOwnerOfAll(player)) {
-                throw new CommandException(Msg.COMMAND_REGION_CLAIM_ERROR_OVERLAPS.get());
+                throw new CommandException(Msg.REGION_CLAIM_ERROR_OVERLAPS.get());
             }
         } else {
             if (wcfg.claimOnlyInsideExistingRegions) {
-                throw new CommandException(Msg.COMMAND_REGION_CLAIM_ERROR_ONLYINSIDE.get());
+                throw new CommandException(Msg.REGION_CLAIM_ERROR_ONLYINSIDE.get());
             }
         }
 
         if (wcfg.maxClaimVolume >= Integer.MAX_VALUE) {
-            throw new CommandException(Msg.COMMAND_REGION_CLAIM_ERROR_MAXINTEGER.get());
+            throw new CommandException(Msg.REGION_CLAIM_ERROR_MAXINTEGER.get());
         }
 
         // Check claim volume
         if (!permModel.mayClaimRegionsUnbounded()) {
             if (region instanceof ProtectedPolygonalRegion) {
-                throw new CommandException(Msg.COMMAND_REGION_CLAIM_ERROR_NOPOLYGONS.get());
+                throw new CommandException(Msg.REGION_CLAIM_ERROR_NOPOLYGONS.get());
             }
 
             if (region.volume() > wcfg.maxClaimVolume) {
-                player.printError(Msg.COMMAND_REGION_CLAIM_ERROR_TOOLARGE1.get());
-                player.printError(Msg.COMMAND_REGION_CLAIM_ERROR_TOOLARGE2.get(wcfg.maxClaimVolume, region.volume()));
+                player.printError(Msg.REGION_CLAIM_ERROR_TOOLARGE1.get());
+                player.printError(Msg.REGION_CLAIM_ERROR_TOOLARGE2.get(wcfg.maxClaimVolume, region.volume()));
                 return;
             }
         }
@@ -313,12 +313,12 @@ public final class RegionCommands extends RegionCommandsBase {
         task.setLocatorPolicy(UserLocatorPolicy.UUID_ONLY);
         task.setOwnersInput(new String[]{player.getName()});
 
-        final String description = Msg.COMMAND_REGION_CLAIM_ADDING.get(id);
+        final String description = Msg.REGION_CLAIM_ADDING.get(id);
         AsyncCommandBuilder.wrap(task, sender)
                 .registerWithSupervisor(WorldGuard.getInstance().getSupervisor(), description)
-                .sendMessageAfterDelay(Msg.COMMAND_REGION_CLAIM_WAIT.get(description))
-                .onSuccess(TextComponent.of(Msg.COMMAND_REGION_CLAIM_SUCCESS.get(id)), null)
-                .onFailure(Msg.COMMAND_REGION_CLAIM_FAIL.get(), WorldGuard.getInstance().getExceptionConverter())
+                .sendMessageAfterDelay(Msg.REGION_CLAIM_WAIT.get(description))
+                .onSuccess(TextComponent.of(Msg.REGION_CLAIM_SUCCESS.get(id)), null)
+                .onFailure(Msg.REGION_CLAIM_FAIL.get(), WorldGuard.getInstance().getExceptionConverter())
                 .buildAndExec(WorldGuard.getInstance().getExecutorService());
     }
 
@@ -343,7 +343,7 @@ public final class RegionCommands extends RegionCommandsBase {
         if (args.argsLength() == 0) {
             LocalPlayer player = worldGuard.checkPlayer(sender);
             if (!player.getWorld().equals(world)) { // confusing to get current location regions in another world
-                throw new CommandException(Msg.COMMAND_REGION_SELECT_SPECIFY.get()); // just don't allow that
+                throw new CommandException(Msg.REGION_SELECT_SPECIFY.get()); // just don't allow that
             }
             world = player.getWorld();
             existing = checkRegionStandingIn(manager, player, "/rg select -w \"" + world.getName() + "\" %id%");

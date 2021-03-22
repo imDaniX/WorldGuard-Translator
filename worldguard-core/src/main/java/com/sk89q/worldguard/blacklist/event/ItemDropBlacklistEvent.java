@@ -41,7 +41,7 @@ public final class ItemDropBlacklistEvent extends ItemBlacklistEvent {
 
     @Override
     public String getDescription() {
-        return Msg.PROTECTION_REGION_BLACKLIST_DROP.get();
+        return Msg.BLACKLIST_ACTION_DROP.get();
     }
 
     @Override

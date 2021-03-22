@@ -183,16 +183,16 @@ public class RegionProtectionListener extends AbstractListener {
                 if (fire) flags.add(Flags.FIRE_SPREAD);
                 if (lava) flags.add(Flags.LAVA_FIRE);
                 canPlace = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, flags.toArray(new StateFlag[0])));
-                what = Msg.PROTECTION_REGION_ACTION_FIRE.get();
+                what = Msg.REGION_PROTECTION_ACTION_FIRE.get();
 
             } else if (type == Material.FROSTED_ICE) {
                 event.setSilent(true); // gets spammy
                 canPlace = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.BLOCK_PLACE, Flags.FROSTED_ICE_FORM));
-                what = Msg.PROTECTION_REGION_ACTION_FROSTWALKER.get(); // hidden anyway
+                what = Msg.REGION_PROTECTION_ACTION_FROSTWALKER.get(); // hidden anyway
             /* Everything else */
             } else {
                 canPlace = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.BLOCK_PLACE));
-                what = Msg.PROTECTION_REGION_ACTION_PLACE.get();
+                what = Msg.REGION_PROTECTION_ACTION_PLACE.get();
             }
 
             if (!canPlace) {
@@ -222,12 +222,12 @@ public class RegionProtectionListener extends AbstractListener {
                 /* TNT */
                 if (event.getCause().find(EntityType.PRIMED_TNT, EntityType.MINECART_TNT) != null) {
                     canBreak = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.BLOCK_BREAK, Flags.TNT));
-                    what = Msg.PROTECTION_REGION_ACTION_DYNAMITE.get();
+                    what = Msg.REGION_PROTECTION_ACTION_DYNAMITE.get();
 
                 /* Everything else */
                 } else {
                     canBreak = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.BLOCK_BREAK));
-                    what = Msg.PROTECTION_REGION_ACTION_BREAK.get();
+                    what = Msg.REGION_PROTECTION_ACTION_BREAK.get();
                 }
 
                 if (!canBreak) {
@@ -257,47 +257,47 @@ public class RegionProtectionListener extends AbstractListener {
             /* Saplings, etc. */
             if (Materials.isConsideredBuildingIfUsed(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event));
-                what = Msg.PROTECTION_REGION_ACTION_USE.get();
+                what = Msg.REGION_PROTECTION_ACTION_USE.get();
 
             /* Inventory */
             } else if (Materials.isInventoryBlock(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.CHEST_ACCESS));
-                what = Msg.PROTECTION_REGION_ACTION_OPEN.get();
+                what = Msg.REGION_PROTECTION_ACTION_OPEN.get();
 
             /* Inventory for blocks with the possibility to be only use, e.g. lectern */
             } else if (handleAsInventoryUsage(event.getOriginalEvent())) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.CHEST_ACCESS));
-                what = Msg.PROTECTION_REGION_ACTION_TAKE.get();
+                what = Msg.REGION_PROTECTION_ACTION_TAKE.get();
 
             /* Anvils */
             } else if (Materials.isAnvil(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.USE_ANVIL));
-                what = Msg.PROTECTION_REGION_ACTION_ANVIL.get();
+                what = Msg.REGION_PROTECTION_ACTION_ANVIL.get();
 
             /* Beds */
             } else if (Materials.isBed(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT, Flags.SLEEP));
-                what = Msg.PROTECTION_REGION_ACTION_SLEEP.get();
+                what = Msg.REGION_PROTECTION_ACTION_SLEEP.get();
 
             /* Respawn Anchors */
             } else if(type == Material.RESPAWN_ANCHOR) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT, Flags.RESPAWN_ANCHORS));
-                what = Msg.PROTECTION_REGION_ACTION_ANCHOR.get();
+                what = Msg.REGION_PROTECTION_ACTION_ANCHOR.get();
 
             /* TNT */
             } else if (type == Material.TNT) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT, Flags.TNT));
-                what = Msg.PROTECTION_REGION_ACTION_EXPLOSIVES.get();
+                what = Msg.REGION_PROTECTION_ACTION_EXPLOSIVES.get();
 
             /* Legacy USE flag */
             } else if (Materials.isUseFlagApplicable(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT, Flags.USE));
-                what = Msg.PROTECTION_REGION_ACTION_USE.get();
+                what = Msg.REGION_PROTECTION_ACTION_USE.get();
 
             /* Everything else */
             } else {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT));
-                what = Msg.PROTECTION_REGION_ACTION_OTHER.get();
+                what = Msg.REGION_PROTECTION_ACTION_OTHER.get();
             }
 
             if (!canUse) {
@@ -327,26 +327,26 @@ public class RegionProtectionListener extends AbstractListener {
         /* Vehicles */
         if (Entities.isVehicle(type)) {
             canSpawn = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.PLACE_VEHICLE));
-            what = Msg.PROTECTION_REGION_ACTION_VEHICLEPLACE.get();
+            what = Msg.REGION_PROTECTION_ACTION_VEHICLEPLACE.get();
 
         /* Item pickup */
         } else if (event.getEntity() instanceof Item) {
             canSpawn = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.ITEM_DROP));
-            what = Msg.PROTECTION_REGION_ACTION_ITEMDROP.get();
+            what = Msg.REGION_PROTECTION_ACTION_ITEMDROP.get();
 
         /* XP drops */
         } else if (type == EntityType.EXPERIENCE_ORB) {
             canSpawn = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.EXP_DROPS));
-            what = Msg.PROTECTION_REGION_ACTION_XPDROP.get();
+            what = Msg.REGION_PROTECTION_ACTION_XPDROP.get();
 
         } else if (Entities.isAoECloud(type)) {
             canSpawn = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.POTION_SPLASH));
-            what = Msg.PROTECTION_REGION_ACTION_POTION.get();
+            what = Msg.REGION_PROTECTION_ACTION_POTION.get();
 
         /* Everything else */
         } else {
             canSpawn = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event));
-            what = Msg.PROTECTION_REGION_ACTION_THINGS.get();
+            what = Msg.REGION_PROTECTION_ACTION_THINGS.get();
         }
 
         if (!canSpawn) {
@@ -372,17 +372,17 @@ public class RegionProtectionListener extends AbstractListener {
         /* Vehicles */
         if (Entities.isVehicle(type)) {
             canDestroy = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.DESTROY_VEHICLE));
-            what = Msg.PROTECTION_REGION_ACTION_VEHICLEBREAK.get();
+            what = Msg.REGION_PROTECTION_ACTION_VEHICLEBREAK.get();
 
         /* Item pickup */
         } else if (event.getEntity() instanceof Item || event.getEntity() instanceof ExperienceOrb) {
             canDestroy = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.ITEM_PICKUP));
-            what = Msg.PROTECTION_REGION_ACTION_ITEMPICKUP.get();
+            what = Msg.REGION_PROTECTION_ACTION_ITEMPICKUP.get();
 
         /* Everything else */
         } else {
             canDestroy = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event));
-            what = Msg.PROTECTION_REGION_ACTION_ENTITYBREAK.get();
+            what = Msg.REGION_PROTECTION_ACTION_ENTITYBREAK.get();
         }
 
         if (!canDestroy) {
@@ -410,29 +410,29 @@ public class RegionProtectionListener extends AbstractListener {
         if (Entities.isHostile(entity) || Entities.isAmbient(entity)
                 || Entities.isNPC(entity) || entity instanceof Player) {
             canUse = event.getRelevantFlags().isEmpty() || query.queryState(BukkitAdapter.adapt(target), associable, combine(event)) != State.DENY;
-            what = Msg.PROTECTION_REGION_ACTION_USE.get();
+            what = Msg.REGION_PROTECTION_ACTION_USE.get();
         /* Paintings, item frames, etc. */
         } else if (Entities.isConsideredBuildingIfUsed(entity)) {
             if (type == EntityType.ITEM_FRAME && event.getCause().getFirstPlayer() != null
                     && ((ItemFrame) entity).getItem().getType() != Material.AIR) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.ITEM_FRAME_ROTATE));
-                what = Msg.PROTECTION_REGION_ACTION_CHANGE.get();
+                what = Msg.REGION_PROTECTION_ACTION_CHANGE.get();
             } else if (Entities.isMinecart(type)) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.CHEST_ACCESS));
-                what = Msg.PROTECTION_REGION_ACTION_OPEN.get();
+                what = Msg.REGION_PROTECTION_ACTION_OPEN.get();
             } else {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event));
-                what = Msg.PROTECTION_REGION_ACTION_CHANGE.get();
+                what = Msg.REGION_PROTECTION_ACTION_CHANGE.get();
             }
         /* Ridden on use */
         } else if (Entities.isRiddenOnUse(entity)) {
             canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.RIDE, Flags.INTERACT));
-            what = Msg.PROTECTION_REGION_ACTION_RIDE.get();
+            what = Msg.REGION_PROTECTION_ACTION_RIDE.get();
 
         /* Everything else */
         } else {
             canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.INTERACT));
-            what = Msg.PROTECTION_REGION_ACTION_USE.get();
+            what = Msg.REGION_PROTECTION_ACTION_USE.get();
         }
 
         if (!canUse) {
@@ -467,12 +467,12 @@ public class RegionProtectionListener extends AbstractListener {
         if (Entities.isHostile(event.getEntity()) || Entities.isAmbient(event.getEntity())
                 || Entities.isVehicle(event.getEntity().getType())) {
             canDamage = event.getRelevantFlags().isEmpty() || query.queryState(target, associable, combine(event)) != State.DENY;
-            what = Msg.PROTECTION_REGION_ACTION_HIT.get();
+            what = Msg.REGION_PROTECTION_ACTION_HIT.get();
 
         /* Paintings, item frames, etc. */
         } else if (Entities.isConsideredBuildingIfUsed(event.getEntity())) {
             canDamage = query.testBuild(target, associable, combine(event));
-            what = Msg.PROTECTION_REGION_ACTION_CHANGE.get();
+            what = Msg.REGION_PROTECTION_ACTION_CHANGE.get();
 
         /* PVP */
         } else if (pvp) {
@@ -493,22 +493,22 @@ public class RegionProtectionListener extends AbstractListener {
                 canDamage = true;
             }
 
-            what = Msg.PROTECTION_REGION_ACTION_PVP.get();
+            what = Msg.REGION_PROTECTION_ACTION_PVP.get();
 
         /* Player damage not caused  by another player */
         } else if (event.getEntity() instanceof Player) {
             canDamage = event.getRelevantFlags().isEmpty() || query.queryState(target, associable, combine(event)) != State.DENY;
-            what = Msg.PROTECTION_REGION_ACTION_DAMAGE.get();
+            what = Msg.REGION_PROTECTION_ACTION_DAMAGE.get();
 
         /* damage to non-hostile mobs (e.g. animals) */
         } else if (Entities.isNonHostile(event.getEntity())) {
             canDamage = query.testBuild(target, associable, combine(event, Flags.DAMAGE_ANIMALS));
-            what = Msg.PROTECTION_REGION_ACTION_HARM.get();
+            what = Msg.REGION_PROTECTION_ACTION_HARM.get();
 
         /* Everything else */
         } else {
             canDamage = query.testBuild(target, associable, combine(event, Flags.INTERACT));
-            what = Msg.PROTECTION_REGION_ACTION_HIT.get();
+            what = Msg.REGION_PROTECTION_ACTION_HIT.get();
         }
 
         if (!canDamage) {

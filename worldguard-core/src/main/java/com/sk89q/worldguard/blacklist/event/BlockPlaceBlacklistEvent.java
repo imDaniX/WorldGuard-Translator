@@ -41,7 +41,7 @@ public final class BlockPlaceBlacklistEvent extends BlockBlacklistEvent {
 
     @Override
     public String getDescription() {
-        return Msg.PROTECTION_REGION_BLACKLIST_PLACE.get();
+        return Msg.BLACKLIST_ACTION_PLACE.get();
     }
 
     @Override

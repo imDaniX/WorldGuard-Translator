@@ -85,7 +85,7 @@ class FlagHelperBox extends PaginationBox {
     private boolean monoSpace;
 
     FlagHelperBox(World world, ProtectedRegion region, RegionPermissionModel perms) {
-        super(Msg.COMMAND_REGION_FLAGS_TITLE.get(region.getId()), Msg.COMMAND_REGION_FLAGS_PAGECOMMAND.get(region.getId(), world.getName()));
+        super(Msg.REGION_FLAGS_TITLE.get(region.getId()), Msg.REGION_FLAGS_PAGECOMMAND.get(region.getId(), world.getName()));
         this.world = world;
         this.region = region;
         this.perms = perms;
@@ -94,7 +94,7 @@ class FlagHelperBox extends PaginationBox {
     @Override
     public Component getComponent(int number) {
         if (number == Flags.INBUILT_FLAGS.size()) {
-            return centerAndBorder(TextComponent.of(Msg.COMMAND_REGION_FLAGS_THIRDPARTY.get(), TextColor.AQUA));
+            return centerAndBorder(TextComponent.of(Msg.REGION_FLAGS_THIRDPARTY.get(), TextColor.AQUA));
         } else if (number > Flags.INBUILT_FLAGS.size()) {
             number -= 1;
         }
@@ -122,13 +122,13 @@ class FlagHelperBox extends PaginationBox {
         if (flag.usesMembershipAsDefault()) {
             builder.append(TextComponent.empty().append(TextComponent.of("*", TextColor.AQUA))
                     .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT,
-                            TextComponent.of(Msg.COMMAND_REGION_FLAGS_SPECIAL_MEMBER.get()))));
+                            TextComponent.of(Msg.REGION_FLAGS_SPECIAL_MEMBER.get()))));
             length += monoSpace ? 1 : FlagFontInfo.getPxLength('*');
         }
         if (flag == Flags.PASSTHROUGH) {
             builder.append(TextComponent.empty().append(TextComponent.of("*", TextColor.AQUA))
                     .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT,
-                            TextComponent.of(Msg.COMMAND_REGION_FLAGS_SPECIAL_BUILD.get()))));
+                            TextComponent.of(Msg.REGION_FLAGS_SPECIAL_BUILD.get()))));
             length += monoSpace ? 1 : FlagFontInfo.getPxLength('*');
         }
         int leftover = (monoSpace ? PAD_PX_SIZE / 3 : PAD_PX_SIZE) - length;
@@ -200,15 +200,15 @@ class FlagHelperBox extends PaginationBox {
             List<Component> hoverTexts = new ArrayList<>();
             if (maySet) {
                 if (isExplicitSet) {
-                    hoverTexts.add(TextComponent.of(Msg.COMMAND_REGION_FLAGS_UNSET.get(), TextColor.GOLD));
+                    hoverTexts.add(TextComponent.of(Msg.REGION_FLAGS_UNSET.get(), TextColor.GOLD));
                 } else if (DANGER_ZONE.contains(flag) && !(ProtectedRegion.GLOBAL_REGION.equals(region.getId()) && flag == Flags.PASSTHROUGH)) {
-                    hoverTexts.add(TextComponent.of(Msg.COMMAND_REGION_FLAGS_CONSEQUENCES1.get(), TextColor.RED)
+                    hoverTexts.add(TextComponent.of(Msg.REGION_FLAGS_CONSEQUENCES1.get(), TextColor.RED)
                             .append(TextComponent.newline())
-                            .append(TextComponent.of(Msg.COMMAND_REGION_FLAGS_CONSEQUENCES2.get())
+                            .append(TextComponent.of(Msg.REGION_FLAGS_CONSEQUENCES2.get())
                             .append(TextComponent.newline())
-                            .append(TextComponent.of(Msg.COMMAND_REGION_FLAGS_CONSEQUENCES3.get()))));
+                            .append(TextComponent.of(Msg.REGION_FLAGS_CONSEQUENCES3.get()))));
                 } else {
-                    hoverTexts.add(TextComponent.of(Msg.COMMAND_REGION_FLAGS_SET.get(), TextColor.GOLD));
+                    hoverTexts.add(TextComponent.of(Msg.REGION_FLAGS_SET.get(), TextColor.GOLD));
                 }
             }
             Component valType = getToolTipHint(defVal, choice, inherited);
@@ -239,7 +239,7 @@ class FlagHelperBox extends PaginationBox {
         if (suggestChoice != null && perms.maySetFlag(region, flag)) {
             builder.append(TextComponent.of(suggestChoice, TextColor.DARK_GRAY)
                     .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT,
-                            TextComponent.of(Msg.COMMAND_REGION_FLAGS_SETCUSTOM.get(), TextColor.GOLD)))
+                            TextComponent.of(Msg.REGION_FLAGS_SETCUSTOM.get(), TextColor.GOLD)))
                     .clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND, makeCommand(flag, ""))));
         }
     }
@@ -267,9 +267,9 @@ class FlagHelperBox extends PaginationBox {
         List<Component> hoverTexts = new ArrayList<>();
         if (maySet) {
             if (isExplicitSet) {
-                hoverTexts.add(TextComponent.of(Msg.COMMAND_REGION_FLAGS_CHANGE.get(), TextColor.GOLD));
+                hoverTexts.add(TextComponent.of(Msg.REGION_FLAGS_CHANGE.get(), TextColor.GOLD));
             } else {
-                hoverTexts.add(TextComponent.of(Msg.COMMAND_REGION_FLAGS_SET.get(), TextColor.GOLD));
+                hoverTexts.add(TextComponent.of(Msg.REGION_FLAGS_SET.get(), TextColor.GOLD));
             }
         }
         Component valType = getToolTipHint(defVal, currVal, inherited);
@@ -320,19 +320,19 @@ class FlagHelperBox extends PaginationBox {
         Component valType;
         if (inherited) {
             if (currVal == defVal) {
-                valType = TextComponent.of(Msg.COMMAND_REGION_FLAGS_INHERITED_INHERITEDDEFAULT1.get())
-                        .append(TextComponent.of(Msg.COMMAND_REGION_FLAGS_INHERITED_INHERITEDDEFAULT2.get())
+                valType = TextComponent.of(Msg.REGION_FLAGS_INHERITED_INHERITEDDEFAULT1.get())
+                        .append(TextComponent.of(Msg.REGION_FLAGS_INHERITED_INHERITEDDEFAULT2.get())
                                 .decoration(TextDecoration.UNDERLINED, true))
-                        .append(TextComponent.of(Msg.COMMAND_REGION_FLAGS_INHERITED_INHERITEDDEFAULT3.get()));
+                        .append(TextComponent.of(Msg.REGION_FLAGS_INHERITED_INHERITEDDEFAULT3.get()));
             } else {
-                valType = TextComponent.of(Msg.COMMAND_REGION_FLAGS_INHERITED_INHERITED.get());
+                valType = TextComponent.of(Msg.REGION_FLAGS_INHERITED_INHERITED.get());
             }
         } else {
             if (currVal == defVal) {
                 valType = TextComponent.empty()
-                        .append(TextComponent.of(Msg.COMMAND_REGION_FLAGS_INHERITED_DEFAULT1.get())
+                        .append(TextComponent.of(Msg.REGION_FLAGS_INHERITED_DEFAULT1.get())
                                 .decoration(TextDecoration.UNDERLINED, true))
-                        .append(TextComponent.of(Msg.COMMAND_REGION_FLAGS_INHERITED_DEFAULT2.get()));
+                        .append(TextComponent.of(Msg.REGION_FLAGS_INHERITED_DEFAULT2.get()));
             } else {
                 valType = null;
             }
@@ -366,7 +366,7 @@ class FlagHelperBox extends PaginationBox {
                 : currVal.stream().map(String::valueOf).collect(Collectors.joining(","));
         TextComponent hoverComp = TextComponent.of("");
         if (currVal != null) {
-            hoverComp = hoverComp.append(TextComponent.of(Msg.COMMAND_REGION_FLAGS_VALUES.get()))
+            hoverComp = hoverComp.append(TextComponent.of(Msg.REGION_FLAGS_VALUES.get()))
                     .append(TextComponent.newline()).append(TextComponent.of(stringValue));
         }
         appendValueText(builder, flag, display, hoverComp);
@@ -391,13 +391,13 @@ class FlagHelperBox extends PaginationBox {
         if (currVal == null) {
             final Location defVal = flag.getDefault();
             if (defVal == null) {
-                appendValueText(builder, flag, Msg.COMMAND_REGION_FLAGS_VALUE_LOCATION_UNSET.get(), null);
+                appendValueText(builder, flag, Msg.REGION_FLAGS_VALUE_LOCATION_UNSET.get(), null);
             } else {
-                appendValueText(builder, flag, defVal.toString(), TextComponent.of(Msg.COMMAND_REGION_FLAGS_VALUE_LOCATION_DEFAULT.get())
+                appendValueText(builder, flag, defVal.toString(), TextComponent.of(Msg.REGION_FLAGS_VALUE_LOCATION_DEFAULT.get())
                         .append(TextComponent.newline()).append(TextComponent.of(defVal.toString())));
             }
         } else {
-            appendValueText(builder, flag, currVal.toString(), TextComponent.of(Msg.COMMAND_REGION_FLAGS_VALUE_LOCATION_CURRENT.get())
+            appendValueText(builder, flag, currVal.toString(), TextComponent.of(Msg.REGION_FLAGS_VALUE_LOCATION_CURRENT.get())
                     .append(TextComponent.newline()).append(TextComponent.of(currVal.toString())));
         }
     }
@@ -420,7 +420,7 @@ class FlagHelperBox extends PaginationBox {
             choices.addAll(Arrays.asList(suggested));
         }
         //noinspection unchecked
-        appendValueChoices(builder, flag, (Iterator<V>) choices.iterator(), choices.isEmpty() ? Msg.COMMAND_REGION_FLAGS_VALUE_NUMERIC_UNSET.get() : Msg.COMMAND_REGION_FLAGS_VALUE_NUMERIC_CUSTOM.get());
+        appendValueChoices(builder, flag, (Iterator<V>) choices.iterator(), choices.isEmpty() ? Msg.REGION_FLAGS_VALUE_NUMERIC_UNSET.get() : Msg.REGION_FLAGS_VALUE_NUMERIC_CUSTOM.get());
     }
 
     private void appendStringFlagValue(TextComponent.Builder builder, StringFlag flag) {
@@ -431,7 +431,7 @@ class FlagHelperBox extends PaginationBox {
         if (currVal == null) {
             final String defVal = flag.getDefault();
             if (defVal == null) {
-                appendValueText(builder, flag, Msg.COMMAND_REGION_FLAGS_VALUE_STRING_UNSET.get(), null);
+                appendValueText(builder, flag, Msg.REGION_FLAGS_VALUE_STRING_UNSET.get(), null);
             } else {
                 final TextComponent defComp = LegacyComponentSerializer.INSTANCE.deserialize(defVal);
                 String display = reduceToText(defComp);
@@ -439,7 +439,7 @@ class FlagHelperBox extends PaginationBox {
                 if (display.length() > 23) {
                     display = display.substring(0, 20) + "...";
                 }
-                appendValueText(builder, flag, display, TextComponent.of(Msg.COMMAND_REGION_FLAGS_VALUE_STRING_DEFAULT.get())
+                appendValueText(builder, flag, display, TextComponent.of(Msg.REGION_FLAGS_VALUE_STRING_DEFAULT.get())
                         .append(TextComponent.newline()).append(defComp));
             }
         } else {
@@ -449,7 +449,7 @@ class FlagHelperBox extends PaginationBox {
             if (display.length() > 23) {
                 display = display.substring(0, 20) + "...";
             }
-            appendValueText(builder, flag, display, TextComponent.of(Msg.COMMAND_REGION_FLAGS_VALUE_STRING_CURRENT.get())
+            appendValueText(builder, flag, display, TextComponent.of(Msg.REGION_FLAGS_VALUE_STRING_CURRENT.get())
                     .append(TextComponent.newline()).append(currComp));
         }
     }

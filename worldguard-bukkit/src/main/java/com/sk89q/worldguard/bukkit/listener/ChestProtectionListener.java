@@ -69,7 +69,7 @@ public class ChestProtectionListener extends AbstractListener {
             event.filter(target -> {
                 if (wcfg.getChestProtection().isChest(BukkitAdapter.asBlockType(event.getEffectiveMaterial())) && wcfg.isChestProtected(BukkitAdapter.adapt(target.getBlock().getLocation()),
                         WorldGuardPlugin.inst().wrapPlayer(player))) {
-                    sendMessage(event, player, Msg.PROTECTION_CHEST_SPOT.get());
+                    sendMessage(event, player, Msg.CHESTLOCK_SPOT.get());
                     return false;
                 }
 
@@ -93,7 +93,7 @@ public class ChestProtectionListener extends AbstractListener {
             final LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
             event.filter(target -> {
                 if (wcfg.isChestProtected(BukkitAdapter.adapt(target.getBlock().getLocation()), localPlayer)) {
-                    sendMessage(event, player, Msg.PROTECTION_CHEST_PROTECTEDCHEST.get());
+                    sendMessage(event, player, Msg.CHESTLOCK_PROTECTEDCHEST.get());
                     return false;
                 }
 
@@ -119,7 +119,7 @@ public class ChestProtectionListener extends AbstractListener {
             final LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
             event.filter(target -> {
                 if (wcfg.isChestProtected(BukkitAdapter.adapt(target.getBlock().getLocation()), localPlayer)) {
-                    sendMessage(event, player, Msg.PROTECTION_CHEST_PROTECTEDCHEST.get());
+                    sendMessage(event, player, Msg.CHESTLOCK_PROTECTEDCHEST.get());
                     return false;
                 }
 
@@ -136,16 +136,16 @@ public class ChestProtectionListener extends AbstractListener {
         BukkitWorldConfiguration wcfg = (BukkitWorldConfiguration) getWorldConfig(WorldGuardPlugin.inst().wrapPlayer(player));
 
         if (wcfg.signChestProtection) {
-            if (Msg.PROTECTION_CHEST_LOCK.get().equalsIgnoreCase(event.getLine(0))) {
+            if (Msg.CHESTLOCK_LOCK.get().equalsIgnoreCase(event.getLine(0))) {
                 if (wcfg.isChestProtectedPlacement(BukkitAdapter.adapt(event.getBlock().getLocation()), WorldGuardPlugin.inst().wrapPlayer(player))) {
-                    player.sendMessage(Msg.PROTECTION_CHEST_NOTOWNADJACENT.get());
+                    player.sendMessage(Msg.CHESTLOCK_NOTOWNADJACENT.get());
                     event.getBlock().breakNaturally();
                     event.setCancelled(true);
                     return;
                 }
 
                 if (!Tag.STANDING_SIGNS.isTagged(event.getBlock().getType())) {
-                    player.sendMessage(Msg.PROTECTION_CHEST_LOCKPOST.get(Msg.PROTECTION_CHEST_LOCK.get()));
+                    player.sendMessage(Msg.CHESTLOCK_LOCKPOST.get(Msg.CHESTLOCK_LOCK.get()));
 
                     event.getBlock().breakNaturally();
                     event.setCancelled(true);
@@ -153,7 +153,7 @@ public class ChestProtectionListener extends AbstractListener {
                 }
 
                 if (!player.getName().equalsIgnoreCase(event.getLine(1))) {
-                    player.sendMessage(Msg.PROTECTION_CHEST_OWNERLINE.get());
+                    player.sendMessage(Msg.CHESTLOCK_OWNERLINE.get());
 
                     event.getBlock().breakNaturally();
                     event.setCancelled(true);
@@ -164,19 +164,19 @@ public class ChestProtectionListener extends AbstractListener {
 
                 if (below == Material.TNT || below == Material.SAND
                         || below == Material.GRAVEL || Tag.STANDING_SIGNS.isTagged(below)) {
-                    player.sendMessage(Msg.PROTECTION_CHEST_UNSAFE.get());
+                    player.sendMessage(Msg.CHESTLOCK_UNSAFE.get());
 
                     event.getBlock().breakNaturally();
                     event.setCancelled(true);
                     return;
                 }
 
-                event.setLine(0, Msg.PROTECTION_CHEST_LOCK.get());
-                player.sendMessage(Msg.PROTECTION_CHEST_PROTECTED.get());
+                event.setLine(0, Msg.CHESTLOCK_LOCK.get());
+                player.sendMessage(Msg.CHESTLOCK_PROTECTED.get());
             }
         } else if (!wcfg.disableSignChestProtectionCheck) {
-            if (Msg.PROTECTION_CHEST_LOCK.get().equalsIgnoreCase(event.getLine(0))) {
-                player.sendMessage(Msg.PROTECTION_CHEST_DISABLED.get());
+            if (Msg.CHESTLOCK_LOCK.get().equalsIgnoreCase(event.getLine(0))) {
+                player.sendMessage(Msg.CHESTLOCK_DISABLED.get());
 
                 event.getBlock().breakNaturally();
                 event.setCancelled(true);

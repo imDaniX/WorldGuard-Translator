@@ -291,16 +291,16 @@ public class WorldGuardPlugin extends JavaPlugin {
                 throw t;
             }
         } catch (CommandPermissionsException e) {
-            sender.sendMessage(Msg.COMMAND_ERROR_NOPERMISSIONS.get());
+            sender.sendMessage(Msg.ERROR_NOPERMISSIONS.get());
         } catch (MissingNestedCommandException e) {
-            sender.sendMessage(Msg.COMMAND_ERROR_USAGE.get(e.getUsage()));
+            sender.sendMessage(Msg.ERROR_USAGE.get(e.getUsage()));
         } catch (CommandUsageException e) {
-            sender.sendMessage(Msg.COMMAND_ERROR_INFO.get(e.getMessage()));
-            sender.sendMessage(Msg.COMMAND_ERROR_USAGE.get(e.getUsage()));
+            sender.sendMessage(Msg.ERROR_INFO.get(e.getMessage()));
+            sender.sendMessage(Msg.ERROR_USAGE.get(e.getUsage()));
         } catch (WrappedCommandException e) {
-            sender.sendMessage(Msg.COMMAND_ERROR_INFO.get(e.getCause().getMessage()));
+            sender.sendMessage(Msg.ERROR_INFO.get(e.getCause().getMessage()));
         } catch (CommandException e) {
-            sender.sendMessage(Msg.COMMAND_ERROR_INFO.get(e.getMessage()));
+            sender.sendMessage(Msg.ERROR_INFO.get(e.getMessage()));
         }
 
         return true;

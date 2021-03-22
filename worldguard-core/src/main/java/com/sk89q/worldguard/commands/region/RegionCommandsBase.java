@@ -404,9 +404,9 @@ class RegionCommandsBase {
             selector.setWorld(world);
             session.setRegionSelector(world, selector);
             selector.explainRegionAdjust(actor, session);
-            actor.print(Msg.COMMAND_REGION_SELECT_SELECTED.get(region.getType().getName()));
+            actor.print(Msg.REGION_SELECT_SELECTED.get(region.getType().getName()));
         } else {
-            throw new CommandException(Msg.COMMAND_REGION_SELECT_TYPEFAIL.get(region.getType().getName()));
+            throw new CommandException(Msg.REGION_SELECT_TYPEFAIL.get(region.getType().getName()));
         }
     }
 

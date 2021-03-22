@@ -450,7 +450,7 @@ public class WorldGuardPlayerListener implements Listener {
 
         if (cfg.blockInGameOp) {
             if (opPattern.matcher(event.getMessage()).matches()) {
-                player.sendMessage(Msg.COMMAND_ERROR_OPDEOP.get());
+                player.sendMessage(Msg.ERROR_OPDEOP.get());
                 event.setCancelled(true);
                 return;
             }

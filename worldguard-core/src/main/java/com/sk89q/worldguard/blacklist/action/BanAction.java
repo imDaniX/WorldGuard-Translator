@@ -44,9 +44,9 @@ public class BanAction implements Action {
             String message = entry.getMessage();
 
             if (message != null) {
-                event.getPlayer().ban(Msg.BLACKLIST_ACTION_BAN_REASONED.get(String.format(message, event.getTarget().getFriendlyName())));
+                event.getPlayer().ban(Msg.BLACKLIST_PUNISHMENT_BAN_REASONED.get(String.format(message, event.getTarget().getFriendlyName())));
             } else {
-                event.getPlayer().ban(Msg.BLACKLIST_ACTION_BAN_DEFAULT.get(event.getDescription(), event.getTarget().getFriendlyName()));
+                event.getPlayer().ban(Msg.BLACKLIST_PUNISHMENT_BAN_DEFAULT.get(event.getDescription(), event.getTarget().getFriendlyName()));
             }
         }
 

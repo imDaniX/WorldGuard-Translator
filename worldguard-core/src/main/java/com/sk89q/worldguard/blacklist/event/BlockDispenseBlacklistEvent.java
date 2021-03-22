@@ -41,7 +41,7 @@ public final class BlockDispenseBlacklistEvent extends BlockBlacklistEvent {
 
     @Override
     public String getDescription() {
-        return Msg.PROTECTION_REGION_BLACKLIST_DISPENSE.get();
+        return Msg.BLACKLIST_ACTION_DISPENSE.get();
     }
 
     @Override

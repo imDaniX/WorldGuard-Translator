@@ -69,11 +69,11 @@ public class MemberCommands extends RegionCommandsBase {
         resolver.setLocatorPolicy(args.hasFlag('n') ? UserLocatorPolicy.NAME_ONLY : UserLocatorPolicy.UUID_ONLY);
 
 
-        final String description = Msg.COMMAND_REGION_MEMBERSHIP_ADDMEMBER_ADDING.get(region.getId(), world.getName());
+        final String description = Msg.REGION_MEMBERSHIP_ADDMEMBER_ADDING.get(region.getId(), world.getName());
         AsyncCommandBuilder.wrap(resolver, sender)
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
-                .onSuccess(Msg.COMMAND_REGION_MEMBERSHIP_ADDMEMBER_SUCCESS.get(region.getId()), region.getMembers()::addAll)
-                .onFailure(Msg.COMMAND_REGION_MEMBERSHIP_ADDMEMBER_FAIL.get(), worldGuard.getExceptionConverter())
+                .onSuccess(Msg.REGION_MEMBERSHIP_ADDMEMBER_SUCCESS.get(region.getId()), region.getMembers()::addAll)
+                .onFailure(Msg.REGION_MEMBERSHIP_ADDMEMBER_FAIL.get(), worldGuard.getExceptionConverter())
                 .buildAndExec(worldGuard.getExecutorService());
     }
 
@@ -103,11 +103,11 @@ public class MemberCommands extends RegionCommandsBase {
         resolver.setLocatorPolicy(args.hasFlag('n') ? UserLocatorPolicy.NAME_ONLY : UserLocatorPolicy.UUID_ONLY);
 
 
-        final String description = Msg.COMMAND_REGION_MEMBERSHIP_ADDOWNER_ADDING.get(region.getId(), world.getName());
+        final String description = Msg.REGION_MEMBERSHIP_ADDOWNER_ADDING.get(region.getId(), world.getName());
         AsyncCommandBuilder.wrap(checkedAddOwners(sender, manager, region, world, resolver), sender)
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
-                .onSuccess(Msg.COMMAND_REGION_MEMBERSHIP_ADDOWNER_SUCCESS.get(region.getId()), region.getOwners()::addAll)
-                .onFailure(Msg.COMMAND_REGION_MEMBERSHIP_ADDOWNER_FAIL.get(), worldGuard.getExceptionConverter())
+                .onSuccess(Msg.REGION_MEMBERSHIP_ADDOWNER_SUCCESS.get(region.getId()), region.getOwners()::addAll)
+                .onFailure(Msg.REGION_MEMBERSHIP_ADDOWNER_FAIL.get(), worldGuard.getExceptionConverter())
                 .buildAndExec(worldGuard.getExecutorService());
     }
 
@@ -123,7 +123,7 @@ public class MemberCommands extends RegionCommandsBase {
                             .get(world).getMaxRegionCount(player);
                     if (maxRegionCount >= 0 && manager.getRegionCountOfPlayer(player)
                             >= maxRegionCount) {
-                        throw new CommandException(Msg.COMMAND_REGION_MEMBERSHIP_ADDOWNER_MAXIMUM.get());
+                        throw new CommandException(Msg.REGION_MEMBERSHIP_ADDOWNER_MAXIMUM.get());
                     }
                 }
             }
@@ -167,7 +167,7 @@ public class MemberCommands extends RegionCommandsBase {
             callable = region::getMembers;
         } else {
             if (args.argsLength() < 2) {
-                throw new CommandException(Msg.COMMAND_REGION_MEMBERSHIP_REMOVEMEMBER_LIST.get());
+                throw new CommandException(Msg.REGION_MEMBERSHIP_REMOVEMEMBER_LIST.get());
             }
 
             // Resolve members asynchronously
@@ -178,12 +178,12 @@ public class MemberCommands extends RegionCommandsBase {
             callable = resolver;
         }
 
-        final String description = Msg.COMMAND_REGION_MEMBERSHIP_REMOVEMEMBER_REMOVING.get(region.getId(), world.getName());
+        final String description = Msg.REGION_MEMBERSHIP_REMOVEMEMBER_REMOVING.get(region.getId(), world.getName());
         AsyncCommandBuilder.wrap(callable, sender)
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
-                .sendMessageAfterDelay(Msg.COMMAND_REGION_MEMBERSHIP_REMOVEMEMBER_WAIT.get())
-                .onSuccess(Msg.COMMAND_REGION_MEMBERSHIP_REMOVEMEMBER_SUCCESS.get(region.getId()), region.getMembers()::removeAll)
-                .onFailure(Msg.COMMAND_REGION_MEMBERSHIP_REMOVEMEMBER_FAIL.get(), worldGuard.getExceptionConverter())
+                .sendMessageAfterDelay(Msg.REGION_MEMBERSHIP_REMOVEMEMBER_WAIT.get())
+                .onSuccess(Msg.REGION_MEMBERSHIP_REMOVEMEMBER_SUCCESS.get(region.getId()), region.getMembers()::removeAll)
+                .onFailure(Msg.REGION_MEMBERSHIP_REMOVEMEMBER_FAIL.get(), worldGuard.getExceptionConverter())
                 .buildAndExec(worldGuard.getExecutorService());
     }
 
@@ -210,7 +210,7 @@ public class MemberCommands extends RegionCommandsBase {
             callable = region::getOwners;
         } else {
             if (args.argsLength() < 2) {
-                throw new CommandException(Msg.COMMAND_REGION_MEMBERSHIP_REMOVEOWNER_LIST.get());
+                throw new CommandException(Msg.REGION_MEMBERSHIP_REMOVEOWNER_LIST.get());
             }
 
             // Resolve owners asynchronously
@@ -221,12 +221,12 @@ public class MemberCommands extends RegionCommandsBase {
             callable = resolver;
         }
 
-        final String description = Msg.COMMAND_REGION_MEMBERSHIP_REMOVEOWNER_REMOVING.get(region.getId(), world.getName());
+        final String description = Msg.REGION_MEMBERSHIP_REMOVEOWNER_REMOVING.get(region.getId(), world.getName());
         AsyncCommandBuilder.wrap(callable, sender)
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
-                .sendMessageAfterDelay(Msg.COMMAND_REGION_MEMBERSHIP_REMOVEOWNER_WAIT.get())
-                .onSuccess(Msg.COMMAND_REGION_MEMBERSHIP_REMOVEOWNER_SUCCESS.get(region.getId()), region.getOwners()::removeAll)
-                .onFailure(Msg.COMMAND_REGION_MEMBERSHIP_REMOVEOWNER_FAIL.get(), worldGuard.getExceptionConverter())
+                .sendMessageAfterDelay(Msg.REGION_MEMBERSHIP_REMOVEOWNER_WAIT.get())
+                .onSuccess(Msg.REGION_MEMBERSHIP_REMOVEOWNER_SUCCESS.get(region.getId()), region.getOwners()::removeAll)
+                .onFailure(Msg.REGION_MEMBERSHIP_REMOVEOWNER_FAIL.get(), worldGuard.getExceptionConverter())
                 .buildAndExec(worldGuard.getExecutorService());
     }
 }

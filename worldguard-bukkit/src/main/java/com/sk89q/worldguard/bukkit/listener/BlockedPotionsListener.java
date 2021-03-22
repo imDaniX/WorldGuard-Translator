@@ -85,7 +85,7 @@ public class BlockedPotionsListener extends AbstractListener {
                         if (getPlugin().hasPermission(player, "worldguard.override.potions")) {
                             return;
                         }
-                        player.sendMessage(Msg.PROTECTION_BLOCKED_ARROWS.get(blockedEffect.getName()));
+                        player.sendMessage(Msg.DISABLED_ARROWS.get(blockedEffect.getName()));
                     }
                     event.setCancelled(true);
                 }
@@ -137,11 +137,11 @@ public class BlockedPotionsListener extends AbstractListener {
                     if (getPlugin().hasPermission(player, "worldguard.override.potions")) {
                         if (wcfg.blockPotionsAlways && (item.getType() == Material.SPLASH_POTION
                                 || item.getType() == Material.LINGERING_POTION)) {
-                            player.sendMessage(Msg.PROTECTION_BLOCKED_POTIONSBYPASS.get(blockedEffect.getName()));
+                            player.sendMessage(Msg.DISABLED_POTIONSBYPASS.get(blockedEffect.getName()));
                             event.setCancelled(true);
                         }
                     } else {
-                        player.sendMessage(Msg.PROTECTION_BLOCKED_POTIONS.get(blockedEffect.getName()));
+                        player.sendMessage(Msg.DISABLED_POTIONS.get(blockedEffect.getName()));
                         event.setCancelled(true);
                     }
                 } else {

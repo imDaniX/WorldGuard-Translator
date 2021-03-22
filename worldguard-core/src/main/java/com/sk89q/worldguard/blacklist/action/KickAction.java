@@ -44,9 +44,9 @@ public class KickAction implements Action {
             String message = entry.getMessage();
 
             if (message != null) {
-                event.getPlayer().kick(Msg.BLACKLIST_ACTION_KICK_REASONED.get(String.format(message, event.getTarget().getFriendlyName())));
+                event.getPlayer().kick(Msg.BLACKLIST_PUNISHMENT_KICK_REASONED.get(String.format(message, event.getTarget().getFriendlyName())));
             } else {
-                event.getPlayer().kick(Msg.BLACKLIST_ACTION_KICK_DEFAULT.get(event.getDescription(), event.getTarget().getFriendlyName()));
+                event.getPlayer().kick(Msg.BLACKLIST_PUNISHMENT_KICK_DEFAULT.get(event.getDescription(), event.getTarget().getFriendlyName()));
             }
         }
 
