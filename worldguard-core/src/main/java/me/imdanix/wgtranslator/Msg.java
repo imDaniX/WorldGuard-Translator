@@ -1,9 +1,6 @@
 package me.imdanix.wgtranslator;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public enum Msg {
 
@@ -105,9 +102,6 @@ public enum Msg {
     COMMANDBOOK_WHOIS_CURRENT("Current Regions"),
     COMMANDBOOK_WHOIS_BUILD("Can build"),
 
-    // com.sk89q.worldguard.bukkit.listener.WorldGuardEntityListener
-    REGION_PROTECTION_PROTECTEDPORTAL("Destination is an a protected area."),
-
     // com.sk89q.worldguard.bukkit.listener.WorldGuardPlayerListener
     HALT_SERVERHALTED("&eIntensive server activity has been HALTED."),
     HALT_AUTOREMOVE("Halt-Act: {removed} entities (>10) auto-removed from {world}", "removed", "world"),
@@ -178,6 +172,11 @@ public enum Msg {
     BLACKLIST_ACTION_EQUIP("equip"),
     BLACKLIST_ACTION_USE("use"),
 
+    // com.sk89q.worldguard.bukkit.listener.RegionProtectionListener
+    DENY_CREATEPORTALS("create portals"),
+    DENY_CHAT("chat"),
+    DENY_USE("use {what}"),
+
     // com.sk89q.worldguard.blacklist.action...
     BLACKLIST_PUNISHMENT_BAN_REASONED("Banned: {reason}", "reason"),
     BLACKLIST_PUNISHMENT_BAN_DEFAULT("Banned: You can't {action} {type}.", "action", "type"),
@@ -187,15 +186,6 @@ public enum Msg {
     BLACKLIST_PUNISHMENT_TELL_DEFAULT("You're not allowed to {action} {type}.", "action", "type"),
 
     ;
-
-    private static final Map<String, Msg> BY_NAME;
-    static {
-        Map<String, Msg> byName = new HashMap<>();
-        for (Msg msg : values()) {
-            byName.put(msg.name(), msg);
-        }
-        BY_NAME = Collections.unmodifiableMap(byName);
-    }
 
     private final String defaultMsg;
     private final String[] placeholders;
@@ -221,9 +211,26 @@ public enum Msg {
     public String get(Object... args) {
         String result = currentMsg;
         for (int i = 0; i < placeholders.length; i++) {
-            result = replace(result, placeholders[i], String.valueOf(args[i]));
+            result = result.replace(placeholders[i], String.valueOf(args[i]));
         }
         return result;
+    }
+
+    public String get(Object arg) {
+        return currentMsg
+                .replace(placeholders[0], String.valueOf(arg));
+    }
+
+    public String get(Object arg1, Object arg2) {
+        return currentMsg
+                .replace(placeholders[0], String.valueOf(arg1))
+                .replace(placeholders[1], String.valueOf(arg2));
+    }
+    public String get(Object arg1, Object arg2, Object arg3) {
+        return currentMsg
+                .replace(placeholders[0], String.valueOf(arg1))
+                .replace(placeholders[1], String.valueOf(arg2))
+                .replace(placeholders[2], String.valueOf(arg3));
     }
 
     public boolean setMessage(String msg) {
@@ -234,30 +241,6 @@ public enum Msg {
             currentMsg = colorize(msg);
             return true;
         }
-    }
-
-    // org.apache.commons.lang.StringUtils#replace
-    private static String replace(String text, String searchString, String replacement) {
-        int max = -1;
-        int start = 0;
-        int end = text.indexOf(searchString, start);
-        if (end == -1) {
-            return text;
-        }
-        int replLength = searchString.length();
-        int increase = replacement.length() - replLength;
-        increase = (increase < 0 ? 0 : increase) * 16;
-        StringBuilder buf = new StringBuilder(text.length() + increase);
-        while (end != -1) {
-            buf.append(text, start, end).append(replacement);
-            start = end + replLength;
-            if (--max == 0) {
-                break;
-            }
-            end = text.indexOf(searchString, start);
-        }
-        buf.append(text.substring(start));
-        return buf.toString();
     }
 
     // org.bukkit.ChatColor#translateAlternateColorCodes
@@ -273,10 +256,6 @@ public enum Msg {
             }
         }
         return new String(b);
-    }
-
-    public static Msg getByName(String name) {
-        return BY_NAME.get(name);
     }
 
     public static String toSection(Msg msg) {

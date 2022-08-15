@@ -19,7 +19,7 @@ public class I18n implements CommandExecutor {
     private final File file;
 
     public I18n(Plugin plugin) {
-        Bukkit.getLogger().info("[WGTranslator] Initializing translation from the file. By imDaniX.");
+        Bukkit.getLogger().info("[WGTranslator] Initializing translation from the file.");
         this.file = new File(plugin.getDataFolder(), "translator.yml");
         reload(getConfig(file, false));
     }
