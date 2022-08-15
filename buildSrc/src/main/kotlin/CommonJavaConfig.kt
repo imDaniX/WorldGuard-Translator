@@ -1,6 +1,5 @@
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPluginExtension
-import org.gradle.api.plugins.quality.CheckstyleExtension
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.javadoc.Javadoc
 import org.gradle.api.tasks.testing.Test
@@ -15,7 +14,6 @@ fun Project.applyCommonJavaConfiguration(sourcesJar: Boolean, javaRelease: Int =
     applyCommonConfiguration()
     apply(plugin = "eclipse")
     apply(plugin = "idea")
-    apply(plugin = "checkstyle")
 
     tasks
         .withType<JavaCompile>()
@@ -30,11 +28,6 @@ fun Project.applyCommonJavaConfiguration(sourcesJar: Boolean, javaRelease: Int =
             options.encoding = "UTF-8"
             options.compilerArgs.add("-parameters")
         }
-
-    configure<CheckstyleExtension> {
-        configFile = rootProject.file("config/checkstyle/checkstyle.xml")
-        toolVersion = "9.1"
-    }
 
     tasks.withType<Test>().configureEach {
         useJUnitPlatform()
@@ -78,9 +71,5 @@ fun Project.applyCommonJavaConfiguration(sourcesJar: Boolean, javaRelease: Int =
                 }
             }
         }
-    }
-
-    tasks.named("check").configure {
-        dependsOn("checkstyleMain", "checkstyleTest")
     }
 }
