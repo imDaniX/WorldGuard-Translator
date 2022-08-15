@@ -24,6 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.worldguard.util.profile.Profile;
 import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.util.formatting.component.PaginationBox;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
@@ -33,12 +34,15 @@ import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.internal.permission.RegionPermissionModel;
+import com.sk89q.worldguard.protection.FlagValueCalculator;
+import com.sk89q.worldguard.protection.association.RegionAssociable;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +59,8 @@ public class RegionLister implements Callable<Integer> {
     private final RegionManager manager;
     private final String world;
     private OwnerMatcher ownerMatcher;
+    private String idFilter;
+    private ProtectedRegion filterByIntersecting;
     private int page;
     private String playerName;
     private boolean nameOnly;
@@ -75,6 +81,10 @@ public class RegionLister implements Callable<Integer> {
 
     public void setPage(int page) {
         this.page = page;
+    }
+
+    public void filterByIntersecting(ProtectedRegion region) {
+        this.filterByIntersecting = region;
     }
 
     public void filterOwnedByName(String name, boolean nameOnly) {
@@ -141,20 +151,29 @@ public class RegionLister implements Callable<Integer> {
         };
     }
 
+    public void filterIdByMatch(String idFilter) {
+        this.idFilter = idFilter;
+    }
+
     @Override
     public Integer call() throws Exception {
         Map<String, ProtectedRegion> regions = manager.getRegions();
+        Collection<ProtectedRegion> iterableRegions = regions.values();
+
+        if (filterByIntersecting != null) {
+            iterableRegions = filterByIntersecting.getIntersectingRegions(iterableRegions);
+        }
 
         // Build a list of regions to show
         List<RegionListEntry> entries = new ArrayList<>();
 
-        for (Map.Entry<String, ProtectedRegion> rg : regions.entrySet()) {
-            if (rg.getKey().equals("__global__")) {
+        for (ProtectedRegion rg : iterableRegions) {
+            if (rg.getId().equals("__global__")) {
                 continue;
             }
-            final ProtectedRegion region = rg.getValue();
-            final RegionListEntry entry = new RegionListEntry(region);
-            if (entry.matches(ownerMatcher)) {
+            final RegionListEntry entry = new RegionListEntry(rg);
+
+            if (entry.matches(idFilter) && entry.matches(ownerMatcher)) {
                 entries.add(entry);
             }
         }
@@ -165,7 +184,7 @@ public class RegionLister implements Callable<Integer> {
         // insert global on top
         if (regions.containsKey("__global__")) {
             final RegionListEntry entry = new RegionListEntry(regions.get("__global__"));
-            if (entry.matches(ownerMatcher)) {
+            if (entry.matches(idFilter) && entry.matches(ownerMatcher)) {
                 entries.add(0, entry);
             }
         }
@@ -179,6 +198,8 @@ public class RegionLister implements Callable<Integer> {
         String cmd = "/rg list -w \"" + world + "\""
                 + (playerName != null ? " -p " + playerName : "")
                 + (nameOnly ? " -n" : "")
+                + (filterByIntersecting != null ? " -s" : "")
+                + (idFilter != null ? " -i " + idFilter : "")
                 + " %page%";
         PaginationBox box = new RegionListBox(title, cmd, perms, entries, world);
         sender.print(box.create(page));
@@ -205,6 +226,10 @@ public class RegionLister implements Callable<Integer> {
             return matcher == null
                     || (isOwner = matcher.isContainedWithin(region.getOwners()))
                     || (isMember = matcher.isContainedWithin(region.getMembers()));
+        }
+
+        public boolean matches(String idMatcher) {
+            return idMatcher == null || region.getId().contains(idMatcher);
         }
 
         public ProtectedRegion getRegion() {
@@ -261,11 +286,18 @@ public class RegionLister implements Callable<Integer> {
                         .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND,
                                 "/rg info -w \"" + world + "\" " + entry.region.getId()))));
             }
-            if (perms != null && entry.region.getFlag(Flags.TELE_LOC) != null && perms.mayTeleportTo(entry.region)) {
+            final Location teleFlag = FlagValueCalculator.getEffectiveFlagOf(entry.region, Flags.TELE_LOC, perms != null && perms.getSender() instanceof RegionAssociable ? (RegionAssociable) perms.getSender() : null);
+            if (perms != null && teleFlag != null && perms.mayTeleportTo(entry.region)) {
                 builder.append(TextComponent.space().append(TextComponent.of("[TP]", TextColor.GRAY)
                         .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of("Click to teleport")))
                         .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND,
                                 "/rg tp -w \"" + world + "\" " + entry.region.getId()))));
+            } else if (perms != null && perms.mayTeleportToCenter(entry.getRegion()) && entry.getRegion().isPhysicalArea()) {
+                builder.append(TextComponent.space().append(TextComponent.of("[TP-Center]", TextColor.GRAY)
+                        .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT,
+                                TextComponent.of("Click to teleport to the center")))
+                        .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND,
+                                "/rg tp -c -w \"" + world + "\" " + entry.region.getId()))));
             }
             return builder.build();
         }

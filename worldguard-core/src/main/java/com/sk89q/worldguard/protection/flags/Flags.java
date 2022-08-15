@@ -46,6 +46,7 @@ public final class Flags {
 
     // Overrides membership check
     public static final StateFlag PASSTHROUGH = register(new StateFlag("passthrough", false));
+    public static final SetFlag<String> NONPLAYER_PROTECTION_DOMAINS = register(new SetFlag<>("nonplayer-protection-domains", null, new StringFlag(null)));
 
     // This flag is unlike the others. It forces the checking of region membership
     public static final StateFlag BUILD = register(new BuildFlag("build", true));
@@ -72,6 +73,7 @@ public final class Flags {
     public static final StateFlag TRAMPLE_BLOCKS = register(new StateFlag("block-trampling", false));
     public static final StateFlag FIREWORK_DAMAGE = register(new StateFlag("firework-damage", false));
     public static final StateFlag USE_ANVIL = register(new StateFlag("use-anvil", false));
+    public static final StateFlag USE_DRIPLEAF = register(new StateFlag("use-dripleaf", false));
 
     // These flags are similar to the ones above (used in tandem with BUILD),
     // but their defaults are set to TRUE because it is more user friendly.
@@ -118,6 +120,7 @@ public final class Flags {
     public static final StateFlag GRASS_SPREAD = register(new StateFlag("grass-growth", true));
     public static final StateFlag MYCELIUM_SPREAD = register(new StateFlag("mycelium-spread", true));
     public static final StateFlag VINE_GROWTH = register(new StateFlag("vine-growth", true));
+    public static final StateFlag ROCK_GROWTH = register(new StateFlag("rock-growth", true));
     public static final StateFlag CROP_GROWTH = register(new StateFlag("crop-growth", true));
     public static final StateFlag SOIL_DRY = register(new StateFlag("soil-dry", true));
     public static final StateFlag CORAL_FADE = register(new StateFlag("coral-fade", true));
@@ -134,7 +137,7 @@ public final class Flags {
     public static final SetFlag<String> ALLOWED_CMDS = register(new SetFlag<>("allowed-cmds", new CommandStringFlag(null)));
 
     // locations
-    public static final LocationFlag TELE_LOC = register(new LocationFlag("teleport", RegionGroup.MEMBERS));
+    public static final LocationFlag TELE_LOC = register(new LocationFlag("teleport"));
     public static final LocationFlag SPAWN_LOC = register(new LocationFlag("spawn", RegionGroup.MEMBERS));
 
     /**

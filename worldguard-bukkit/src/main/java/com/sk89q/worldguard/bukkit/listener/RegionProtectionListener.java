@@ -137,15 +137,14 @@ public class RegionProtectionListener extends AbstractListener {
 
         if (rootCause instanceof Player) {
             Player player = (Player) rootCause;
-            LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
-            com.sk89q.worldedit.world.World localWorld = BukkitAdapter.adapt(world);
-            WorldConfiguration config = getWorldConfig(localWorld);
+            WorldConfiguration config = getWorldConfig(world);
 
             if (config.fakePlayerBuildOverride && InteropUtils.isFakePlayer(player)) {
                 return true;
             }
 
-            return !pvp && WorldGuard.getInstance().getPlatform().getSessionManager().hasBypass(localPlayer, localWorld);
+            LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
+            return !pvp && WorldGuard.getInstance().getPlatform().getSessionManager().hasBypass(localPlayer, localPlayer.getWorld());
         } else {
             return false;
         }
@@ -154,7 +153,7 @@ public class RegionProtectionListener extends AbstractListener {
     @EventHandler(ignoreCancelled = true)
     public void onPlaceBlock(final PlaceBlockEvent event) {
         if (event.getResult() == Result.ALLOW) return; // Don't care about events that have been pre-allowed
-        if (!isRegionSupportEnabled(BukkitAdapter.adapt(event.getWorld()))) return; // Region support disabled
+        if (!isRegionSupportEnabled(event.getWorld())) return; // Region support disabled
         if (isWhitelisted(event.getCause(), event.getWorld(), false)) return; // Whitelisted cause
 
         final Material type = event.getEffectiveMaterial();
@@ -164,7 +163,7 @@ public class RegionProtectionListener extends AbstractListener {
         // Don't check liquid flow unless it's enabled
         if (event.getCause().getRootCause() instanceof Block
                 && Materials.isLiquid(type)
-                && !getWorldConfig(BukkitAdapter.adapt(event.getWorld())).checkLiquidFlow) {
+                && !getWorldConfig(event.getWorld()).checkLiquidFlow) {
             return;
         }
 
@@ -207,7 +206,7 @@ public class RegionProtectionListener extends AbstractListener {
     @EventHandler(ignoreCancelled = true)
     public void onBreakBlock(final BreakBlockEvent event) {
         if (event.getResult() == Result.ALLOW) return; // Don't care about events that have been pre-allowed
-        if (!isRegionSupportEnabled(BukkitAdapter.adapt(event.getWorld()))) return; // Region support disabled
+        if (!isRegionSupportEnabled(event.getWorld())) return; // Region support disabled
         if (isWhitelisted(event.getCause(), event.getWorld(), false)) return; // Whitelisted cause
 
         final RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
@@ -243,7 +242,7 @@ public class RegionProtectionListener extends AbstractListener {
     @EventHandler(ignoreCancelled = true)
     public void onUseBlock(final UseBlockEvent event) {
         if (event.getResult() == Result.ALLOW) return; // Don't care about events that have been pre-allowed
-        if (!isRegionSupportEnabled(BukkitAdapter.adapt(event.getWorld()))) return; // Region support disabled
+        if (!isRegionSupportEnabled(event.getWorld())) return; // Region support disabled
         if (isWhitelisted(event.getCause(), event.getWorld(), false)) return; // Whitelisted cause
 
         final Material type = event.getEffectiveMaterial();
@@ -312,7 +311,7 @@ public class RegionProtectionListener extends AbstractListener {
     @EventHandler(ignoreCancelled = true)
     public void onSpawnEntity(SpawnEntityEvent event) {
         if (event.getResult() == Result.ALLOW) return; // Don't care about events that have been pre-allowed
-        if (!isRegionSupportEnabled(BukkitAdapter.adapt(event.getWorld()))) return; // Region support disabled
+        if (!isRegionSupportEnabled(event.getWorld())) return; // Region support disabled
         if (isWhitelisted(event.getCause(), event.getWorld(), false)) return; // Whitelisted cause
 
         Location target = event.getTarget();
@@ -358,7 +357,7 @@ public class RegionProtectionListener extends AbstractListener {
     @EventHandler(ignoreCancelled = true)
     public void onDestroyEntity(DestroyEntityEvent event) {
         if (event.getResult() == Result.ALLOW) return; // Don't care about events that have been pre-allowed
-        if (!isRegionSupportEnabled(BukkitAdapter.adapt(event.getWorld()))) return; // Region support disabled
+        if (!isRegionSupportEnabled(event.getWorld())) return; // Region support disabled
         if (isWhitelisted(event.getCause(), event.getWorld(), false)) return; // Whitelisted cause
 
         Location target = event.getTarget();
@@ -394,7 +393,7 @@ public class RegionProtectionListener extends AbstractListener {
     @EventHandler(ignoreCancelled = true)
     public void onUseEntity(UseEntityEvent event) {
         if (event.getResult() == Result.ALLOW) return; // Don't care about events that have been pre-allowed
-        if (!isRegionSupportEnabled(BukkitAdapter.adapt(event.getWorld()))) return; // Region support disabled
+        if (!isRegionSupportEnabled(event.getWorld())) return; // Region support disabled
         if (isWhitelisted(event.getCause(), event.getWorld(), false)) return; // Whitelisted cause
 
         Location target = event.getTarget();
@@ -413,7 +412,8 @@ public class RegionProtectionListener extends AbstractListener {
             what = Msg.REGION_PROTECTION_ACTION_USE.get();
         /* Paintings, item frames, etc. */
         } else if (Entities.isConsideredBuildingIfUsed(entity)) {
-            if (type == EntityType.ITEM_FRAME && event.getCause().getFirstPlayer() != null
+            if ((type == EntityType.ITEM_FRAME || type == EntityType.GLOW_ITEM_FRAME)
+                    && event.getCause().getFirstPlayer() != null
                     && ((ItemFrame) entity).getItem().getType() != Material.AIR) {
                 canUse = query.testBuild(BukkitAdapter.adapt(target), associable, combine(event, Flags.ITEM_FRAME_ROTATE));
                 what = Msg.REGION_PROTECTION_ACTION_CHANGE.get();
@@ -444,7 +444,7 @@ public class RegionProtectionListener extends AbstractListener {
     @EventHandler(ignoreCancelled = true)
     public void onDamageEntity(DamageEntityEvent event) {
         if (event.getResult() == Result.ALLOW) return; // Don't care about events that have been pre-allowed
-        if (!isRegionSupportEnabled(BukkitAdapter.adapt(event.getWorld()))) return; // Region support disabled
+        if (!isRegionSupportEnabled(event.getWorld())) return; // Region support disabled
         // Whitelist check is below
 
         com.sk89q.worldedit.util.Location target = BukkitAdapter.adapt(event.getTarget());
@@ -520,7 +520,7 @@ public class RegionProtectionListener extends AbstractListener {
     @EventHandler(ignoreCancelled = true)
     public void onVehicleExit(VehicleExitEvent event) {
         Entity vehicle = event.getVehicle();
-        if (!isRegionSupportEnabled(BukkitAdapter.adapt(vehicle.getWorld()))) return; // Region support disabled
+        if (!isRegionSupportEnabled(vehicle.getWorld())) return; // Region support disabled
         Entity exited = event.getExited();
 
         if (vehicle instanceof Tameable && exited instanceof Player) {

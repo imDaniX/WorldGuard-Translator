@@ -22,9 +22,14 @@ package com.sk89q.worldguard.protection.association;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.sk89q.worldguard.domains.Association;
+import com.sk89q.worldguard.protection.FlagValueCalculator;
+import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,6 +39,7 @@ public abstract class AbstractRegionOverlapAssociation implements RegionAssociab
     protected Set<ProtectedRegion> source;
     private boolean useMaxPriorityAssociation;
     private int maxPriority;
+    private Set<ProtectedRegion> maxPriorityRegions;
 
     protected AbstractRegionOverlapAssociation(@Nullable Set<ProtectedRegion> source, boolean useMaxPriorityAssociation) {
         this.source = source;
@@ -43,32 +49,76 @@ public abstract class AbstractRegionOverlapAssociation implements RegionAssociab
     protected void calcMaxPriority() {
         checkNotNull(source);
         int best = 0;
+        Set<ProtectedRegion> bestRegions = new HashSet<>();
         for (ProtectedRegion region : source) {
             int priority = region.getPriority();
             if (priority > best) {
                 best = priority;
+                bestRegions.clear();
+                bestRegions.add(region);
+            } else if (priority == best) {
+                bestRegions.add(region);
             }
         }
         this.maxPriority = best;
+        this.maxPriorityRegions = bestRegions;
+    }
+
+    private boolean checkNonplayerProtectionDomains(Iterable<? extends ProtectedRegion> source, Collection<?> domains) {
+        if (source == null || domains == null || domains.isEmpty()) {
+            return false;
+        }
+
+        for (ProtectedRegion region : source) {
+            // Potential endless recurrence? No, because there is no region group flag.
+            Set<String> regionDomains = FlagValueCalculator.getEffectiveFlagOf(region, Flags.NONPLAYER_PROTECTION_DOMAINS, this);
+
+            if (regionDomains == null || regionDomains.isEmpty()) {
+                continue;
+            }
+
+            if (!Collections.disjoint(regionDomains, domains)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
     public Association getAssociation(List<ProtectedRegion> regions) {
         checkNotNull(source);
         for (ProtectedRegion region : regions) {
-            if ((region.getId().equals(ProtectedRegion.GLOBAL_REGION) && source.isEmpty())) {
-                return Association.OWNER;
-            }
-
-            if (source.contains(region)) {
-                if (useMaxPriorityAssociation) {
-                    int priority = region.getPriority();
-                    if (priority == maxPriority) {
-                        return Association.OWNER;
-                    }
-                } else {
+            while (region != null) {
+                if ((region.getId().equals(ProtectedRegion.GLOBAL_REGION) && source.isEmpty())) {
                     return Association.OWNER;
                 }
+
+                if (source.contains(region)) {
+                    if (useMaxPriorityAssociation) {
+                        int priority = region.getPriority();
+                        if (priority == maxPriority) {
+                            return Association.OWNER;
+                        }
+                    } else {
+                        return Association.OWNER;
+                    }
+                }
+
+                Set<ProtectedRegion> source;
+
+                if (useMaxPriorityAssociation) {
+                    source = maxPriorityRegions;
+                } else {
+                    source = this.source;
+                }
+
+                // Potential endless recurrence? No, because there is no region group flag.
+                if (checkNonplayerProtectionDomains(source, FlagValueCalculator.getEffectiveFlagOf(region, Flags.NONPLAYER_PROTECTION_DOMAINS, this))) {
+                    return Association.OWNER;
+                }
+
+                region = region.getParent();
             }
         }
 

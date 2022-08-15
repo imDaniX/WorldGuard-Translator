@@ -129,6 +129,7 @@ public abstract class WorldConfiguration {
     public boolean allowTamedSpawns;
     public int maxClaimVolume;
     public boolean claimOnlyInsideExistingRegions;
+    public String setParentOnClaim;
     public int maxRegionCountPerPlayer;
     public boolean antiWolfDumbness;
     public boolean signChestProtection;
@@ -157,6 +158,7 @@ public abstract class WorldConfiguration {
     public boolean disableGrassGrowth;
     public boolean disableMyceliumSpread;
     public boolean disableVineGrowth;
+    public boolean disableRockGrowth;
     public boolean disableCropGrowth;
     public boolean disableEndermanGriefing;
     public boolean disableSnowmanTrails;
@@ -170,7 +172,6 @@ public abstract class WorldConfiguration {
     public boolean fakePlayerBuildOverride;
     public boolean explosionFlagCancellation;
     public boolean disableDeathMessages;
-    public boolean disableObsidianGenerators;
     public boolean strictEntitySpawn;
     public boolean ignoreHopperMoveEvents;
     public boolean breakDeniedHoppers;
