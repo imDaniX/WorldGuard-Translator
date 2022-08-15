@@ -175,7 +175,7 @@ public enum Msg {
     // com.sk89q.worldguard.bukkit.listener.RegionProtectionListener
     DENY_CREATEPORTALS("create portals"),
     DENY_CHAT("chat"),
-    DENY_USE("use {what}"),
+    DENY_USE("use {what}", "what"),
 
     // com.sk89q.worldguard.blacklist.action...
     BLACKLIST_PUNISHMENT_BAN_REASONED("Banned: {reason}", "reason"),
@@ -208,14 +208,6 @@ public enum Msg {
         return currentMsg;
     }
 
-    public String get(Object... args) {
-        String result = currentMsg;
-        for (int i = 0; i < placeholders.length; i++) {
-            result = result.replace(placeholders[i], String.valueOf(args[i]));
-        }
-        return result;
-    }
-
     public String get(Object arg) {
         return currentMsg
                 .replace(placeholders[0], String.valueOf(arg));
@@ -226,11 +218,20 @@ public enum Msg {
                 .replace(placeholders[0], String.valueOf(arg1))
                 .replace(placeholders[1], String.valueOf(arg2));
     }
+
     public String get(Object arg1, Object arg2, Object arg3) {
         return currentMsg
                 .replace(placeholders[0], String.valueOf(arg1))
                 .replace(placeholders[1], String.valueOf(arg2))
                 .replace(placeholders[2], String.valueOf(arg3));
+    }
+
+    public String get(Object... args) {
+        String result = currentMsg;
+        for (int i = 0; i < placeholders.length; i++) {
+            result = result.replace(placeholders[i], String.valueOf(args[i]));
+        }
+        return result;
     }
 
     public boolean setMessage(String msg) {
@@ -258,11 +259,11 @@ public enum Msg {
         return new String(b);
     }
 
-    public static String toSection(Msg msg) {
-        return toSection(msg.name());
+    public String asSection() {
+        return toSection(name());
     }
 
-    public static String toSection(String msg) {
+    private static String toSection(String msg) {
         return msg.toLowerCase(Locale.ENGLISH).replace('_', '.');
     }
 }

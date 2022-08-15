@@ -40,7 +40,7 @@ public class I18n implements CommandExecutor {
         Objects.requireNonNull(cfg);
         List<String> errors = new ArrayList<>();
         for (Msg msg : Msg.values()) {
-            String section = Msg.toSection(msg);
+            String section = msg.asSection();
             if (!msg.setMessage(cfg.getString(section))) {
                 errors.add(section);
             }
@@ -65,7 +65,7 @@ public class I18n implements CommandExecutor {
                 FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
                 if (!cmds) {
                     for (Msg msg : Msg.values()) {
-                        cfg.set(Msg.toSection(msg), msg.getDefault());
+                        cfg.set(msg.asSection(), msg.getDefault());
                     }
                     cfg.save(file);
                 }
