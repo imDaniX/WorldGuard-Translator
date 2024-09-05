@@ -40,7 +40,6 @@ import com.sk89q.worldguard.util.Entities;
 import com.sk89q.worldguard.util.command.CommandFilter;
 import com.sk89q.worldguard.util.profile.Profile;
 import me.imdanix.wgtranslator.Msg;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -145,7 +144,7 @@ public class WorldGuardPlayerListener extends AbstractListener {
 
             if (!chatFrom.testState(localPlayer, Flags.SEND_CHAT)) {
                 String message = chatFrom.queryValue(localPlayer, Flags.DENY_MESSAGE);
-                RegionProtectionListener.formatAndSendDenyMessage(Msg.DENY_CHAT.get(), localPlayer, message);
+                RegionProtectionListener.formatAndSendDenyMessage(Msg.REGION_PROTECTION_ACTION_CHAT.get(), localPlayer, message);
                 event.setCancelled(true);
                 return;
             }
@@ -185,7 +184,7 @@ public class WorldGuardPlayerListener extends AbstractListener {
             if (!hostname.equals(hostKey)
                     && !(cfg.hostKeysAllowFMLClients &&
                             (hostname.equals(hostKey + "\u0000FML\u0000") || hostname.equals(hostKey + "\u0000FML2\u0000")))) {
-                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Msg.INVALIDHOST_KICK.get());
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Msg.ERROR_INVALIDHOSTKICK.get());
                 log.warning("WorldGuard host key check: " +
                         player.getName() + " joined with '" + hostname +
                         "' but '" + hostKey + "' was expected. Kicked!");
@@ -218,7 +217,7 @@ public class WorldGuardPlayerListener extends AbstractListener {
             ItemStack heldItem = player.getInventory().getItem(slot);
             if (heldItem != null && heldItem.getAmount() < 0) {
                 player.getInventory().setItem(slot, null);
-                player.sendMessage(Msg.INFINITYSTACK_REMOVE.get());
+                player.sendMessage(Msg.INFINITESTACK_REMOVE.get());
             }
         }
     }
@@ -249,7 +248,7 @@ public class WorldGuardPlayerListener extends AbstractListener {
                 ItemStack heldItem = player.getInventory().getItem(slot);
                 if (heldItem != null && heldItem.getAmount() < 0) {
                     player.getInventory().setItem(slot, null);
-                    player.sendMessage(Msg.INFINITYSTACK_REMOVESLOT.get(slot));
+                    player.sendMessage(Msg.INFINITESTACK_REMOVESLOT.get(slot));
                 }
             }
         }
@@ -340,7 +339,7 @@ public class WorldGuardPlayerListener extends AbstractListener {
             ItemStack heldItem = player.getInventory().getItem(newSlot);
             if (heldItem != null && heldItem.getAmount() < 0) {
                 player.getInventory().setItem(newSlot, null);
-                player.sendMessage(Msg.INFINITYSTACK_REMOVE.get());
+                player.sendMessage(Msg.INFINITESTACK_REMOVE.get());
             }
         }
     }
@@ -422,7 +421,7 @@ public class WorldGuardPlayerListener extends AbstractListener {
 
             if (!test.apply(event.getMessage())) {
                 String message = set.queryValue(localPlayer, Flags.DENY_MESSAGE);
-                RegionProtectionListener.formatAndSendDenyMessage(Msg.DENY_USE.get(event.getMessage()), localPlayer, message);
+                RegionProtectionListener.formatAndSendDenyMessage(Msg.REGION_PROTECTION_ACTION_USEWHAT.get(event.getMessage()), localPlayer, message);
                 event.setCancelled(true);
                 return;
             }

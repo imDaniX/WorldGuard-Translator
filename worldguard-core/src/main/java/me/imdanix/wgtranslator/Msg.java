@@ -71,10 +71,16 @@ public enum Msg {
     REGION_DEFINE_ADDING("Adding region '{region}'", "region"),
     REGION_DEFINE_SUCCESS("A new region has been made named '{region}'", "region"),
     REGION_DEFINE_FAIL("Failed to add the region '{region}'", "region"),
+
     REGION_REDEFINE_ADDING("Updating region '{region}'", "region"),
     REGION_REDEFINE_WAIT("(Please wait... {description})", "description"),
     REGION_REDEFINE_SUCCESS("Region '{region}' has been updated with a new area.", "region"),
     REGION_REDEFINE_FAIL("Failed to update the region '{region}'", "region"),
+
+    REGION_CLAIM_ADDING("Claiming region '{region}'", "region"),
+    REGION_CLAIM_SUCCESS("A new region has been claimed named '{region}'", "region"),
+    REGION_CLAIM_WAIT("(Please wait... {description})", "description"),
+    REGION_CLAIM_FAIL("Failed to claim region"),
     REGION_CLAIM_ERROR_TOOMANY("You own too many regions, delete one first to claim a new one."),
     REGION_CLAIM_ERROR_ALREADYEXIST("This region already exists and you don't own it."),
     REGION_CLAIM_ERROR_OVERLAPS("This region overlaps with someone else's region."),
@@ -83,10 +89,7 @@ public enum Msg {
     REGION_CLAIM_ERROR_NOPOLYGONS("Polygons are currently not supported for /rg claim."),
     REGION_CLAIM_ERROR_TOOLARGE1("This region is too large to claim."),
     REGION_CLAIM_ERROR_TOOLARGE2("Max. volume: {max}, your volume: {current}", "max", "current"),
-    REGION_CLAIM_ADDING("Claiming region '{region}'", "region"),
-    REGION_CLAIM_SUCCESS("A new region has been claimed named '{region}'", "region"),
-    REGION_CLAIM_WAIT("(Please wait... {description})", "description"),
-    REGION_CLAIM_FAIL("Failed to claim region"),
+
     REGION_SELECT_SPECIFY("Please specify a region name."),
     REGION_SELECT_SELECTED("Region selected as {region}", "region"),
     REGION_SELECT_TYPEFAIL("Can't select that region! The region type '{type}' can't be selected.", "type"),
@@ -105,16 +108,20 @@ public enum Msg {
     // com.sk89q.worldguard.bukkit.listener.WorldGuardPlayerListener
     HALT_SERVERHALTED("&eIntensive server activity has been HALTED."),
     HALT_AUTOREMOVE("Halt-Act: {removed} entities (>10) auto-removed from {world}", "removed", "world"),
+
     CONFIG_WORLD_FIREDISABLED("&eFire spread is currently globally disabled for this world."),
-    INVALIDHOST_KICK("You did not join with the valid host key!"),
-    INFINITYSTACK_REMOVE("&cInfinite stack removed."),
-    INFINITYSTACK_REMOVESLOT("&cInfinite stack in slot #{slot} removed.", "slot"),
+
+    INFINITESTACK_REMOVE("&cInfinite stack removed."),
+    INFINITESTACK_REMOVESLOT("&cInfinite stack in slot #{slot} removed.", "slot"),
+
+    ERROR_INVALIDHOSTKICK("You did not join with the valid host key!"),
+    ERROR_OPDEOP("&c/op and /deop can only be used in console (as set by a WG setting)."),
+
     WAND_BUILD_INFO("&eCan you build? {check}", "check"),
     WAND_BUILD_NO("No"),
     WAND_BUILD_YES("Yes"),
     WAND_REGIONS_LIST("Applicable regions: {regions}", "regions"),
     WAND_REGIONS_EMPTY("WorldGuard: No defined regions here!"),
-    ERROR_OPDEOP("&c/op and /deop can only be used in console (as set by a WG setting)."),
 
     // com.sk89q.worldguard.bukkit.listener.ChestProtectionListener
     CHESTLOCK_LOCK("[Lock]"),
@@ -173,9 +180,9 @@ public enum Msg {
     BLACKLIST_ACTION_USE("use"),
 
     // com.sk89q.worldguard.bukkit.listener.RegionProtectionListener
-    DENY_CREATEPORTALS("create portals"),
-    DENY_CHAT("chat"),
-    DENY_USE("use {what}", "what"),
+    REGION_PROTECTION_ACTION_CREATEPORTALS("create portals"),
+    REGION_PROTECTION_ACTION_CHAT("chat"),
+    REGION_PROTECTION_ACTION_USEWHAT("use {what}", "what"),
 
     // com.sk89q.worldguard.blacklist.action...
     BLACKLIST_PUNISHMENT_BAN_REASONED("Banned: {reason}", "reason"),
@@ -252,7 +259,7 @@ public enum Msg {
         char[] b = textToTranslate.toCharArray();
         for (int i = 0; i < b.length - 1; i++) {
             if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx".indexOf(b[i + 1]) > -1) {
-                b[i] = '\u00A7';
+                b[i] = '§';
                 b[i + 1] = Character.toLowerCase(b[i + 1]);
             }
         }
