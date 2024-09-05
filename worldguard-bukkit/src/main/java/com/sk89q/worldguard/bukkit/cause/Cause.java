@@ -24,9 +24,12 @@ import com.google.common.collect.Sets;
 import com.sk89q.worldguard.bukkit.BukkitWorldConfiguration;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.bukkit.internal.WGMetadata;
+import com.sk89q.worldguard.bukkit.util.Entities;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
+import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
@@ -106,6 +109,12 @@ public final class Cause {
             return false;
         }
 
+        if (object instanceof Tameable tameable && tameable.isTamed()) {
+            // if they're tamed but also the root cause, the owner is offline
+            // otherwise the owner will be the root cause (and known)
+            return false;
+        }
+
         if (object instanceof TNTPrimed || object instanceof Vehicle) {
             if (!PaperLib.isPaper()) {
                 return false;
@@ -134,8 +143,8 @@ public final class Cause {
     @Nullable
     public Player getFirstPlayer() {
         for (Object object : causes) {
-            if (object instanceof Player) {
-                return (Player) object;
+            if (object instanceof Player p && !Entities.isNPC(p)) {
+                return p;
             }
         }
 
@@ -145,8 +154,8 @@ public final class Cause {
     @Nullable
     public Entity getFirstEntity() {
         for (Object object : causes) {
-            if (object instanceof Entity) {
-                return (Entity) object;
+            if (object instanceof Entity e) {
+                return e;
             }
         }
 
@@ -156,8 +165,8 @@ public final class Cause {
     @Nullable
     public Entity getFirstNonPlayerEntity() {
         for (Object object : causes) {
-            if (object instanceof Entity && !(object instanceof Player)) {
-                return (Entity) object;
+            if (object instanceof Entity e && (!(object instanceof Player) || Entities.isNPC(e))) {
+                return e;
             }
         }
 
@@ -167,8 +176,8 @@ public final class Cause {
     @Nullable
     public Block getFirstBlock() {
         for (Object object : causes) {
-            if (object instanceof Block) {
-                return (Block) object;
+            if (object instanceof Block b) {
+                return b;
             }
         }
 
@@ -299,9 +308,24 @@ public final class Cause {
                 } else if (o instanceof AreaEffectCloud) {
                     indirect = true;
                     addAll(((AreaEffectCloud) o).getSource());
-                } else if (o instanceof Tameable) {
+                } else if (o instanceof Tameable tameable) {
                     indirect = true;
-                    addAll(((Tameable) o).getOwner());
+                    if (PaperLib.isPaper()) {
+                        UUID ownerId = tameable.getOwnerUniqueId();
+                        if (ownerId != null) {
+                            Player owner = Bukkit.getPlayer(ownerId);
+                            if (owner != null) {
+                                addAll(owner);
+                            }
+                        }
+                    } else {
+                        // this will cause offline player loads if the player is offline
+                        // too bad for spigot users
+                        AnimalTamer owner = tameable.getOwner();
+                        if (owner instanceof OfflinePlayer player) {
+                            addAll(player.getPlayer()); // player object if online, else null
+                        }
+                    }
                 } else if (o instanceof Creature && ((Creature) o).getTarget() != null) {
                     indirect = true;
                     addAll(((Creature) o).getTarget());

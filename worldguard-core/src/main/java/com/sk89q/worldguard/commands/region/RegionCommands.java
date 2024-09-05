@@ -59,7 +59,7 @@ import com.sk89q.worldguard.protection.FlagValueCalculator;
 import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.FlagContext;
 import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.flags.InvalidFlagFormat;
+import com.sk89q.worldguard.protection.flags.InvalidFlagFormatException;
 import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.RegionGroupFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
@@ -161,7 +161,7 @@ public final class RegionCommands extends RegionCommandsBase {
             region = checkRegionFromSelection(sender, id);
         }
 
-        RegionAdder task = new RegionAdder(manager, region);
+        RegionAdder task = new RegionAdder(manager, region, sender);
         task.addOwnersFromCommand(args, 2);
 
         final String description = Msg.REGION_DEFINE_ADDING.get(region.getId());
@@ -215,7 +215,7 @@ public final class RegionCommands extends RegionCommandsBase {
 
         region.copyFrom(existing);
 
-        RegionAdder task = new RegionAdder(manager, region);
+        RegionAdder task = new RegionAdder(manager, region, sender);
 
         final String description = Msg.REGION_REDEFINE_ADDING.get(region.getId());
         AsyncCommandBuilder.wrap(task, sender)
@@ -327,17 +327,9 @@ public final class RegionCommands extends RegionCommandsBase {
             }
         }
 
-        RegionAdder task = new RegionAdder(manager, region);
-        task.setLocatorPolicy(UserLocatorPolicy.UUID_ONLY);
-        task.setOwnersInput(new String[]{player.getName()});
-
-        final String description = Msg.REGION_CLAIM_ADDING.get(id);
-        AsyncCommandBuilder.wrap(task, sender)
-                .registerWithSupervisor(WorldGuard.getInstance().getSupervisor(), description)
-                .sendMessageAfterDelay(Msg.REGION_CLAIM_WAIT.get(description))
-                .onSuccess(TextComponent.of(Msg.REGION_CLAIM_SUCCESS.get(id)), null)
-                .onFailure(Msg.REGION_CLAIM_FAIL.get(), WorldGuard.getInstance().getExceptionConverter())
-                .buildAndExec(WorldGuard.getInstance().getExecutorService());
+        region.getOwners().addPlayer(player);
+        manager.addRegion(region);
+        player.print(TextComponent.of(Msg.REGION_CLAIM_SUCCESS.get(id)));
     }
 
     /**
@@ -592,7 +584,7 @@ public final class RegionCommands extends RegionCommandsBase {
             // the [value] part throws an error.
             try {
                 groupValue = groupFlag.parseInput(FlagContext.create().setSender(sender).setInput(group).setObject("region", existing).build());
-            } catch (InvalidFlagFormat e) {
+            } catch (InvalidFlagFormatException e) {
                 throw new CommandException(e.getMessage());
             }
 
@@ -603,7 +595,7 @@ public final class RegionCommands extends RegionCommandsBase {
             // Set the flag if [value] was given even if [-g group] was given as well
             try {
                 value = setFlag(existing, foundFlag, sender, value).toString();
-            } catch (InvalidFlagFormat e) {
+            } catch (InvalidFlagFormatException e) {
                 throw new CommandException(e.getMessage());
             }
 
@@ -1197,7 +1189,7 @@ public final class RegionCommands extends RegionCommandsBase {
                 // TODO: Add some method to create a safe teleport location.
                 // The method AbstractPlayerActor$findFreePoisition(Location loc) is no good way for this.
                 // It doesn't return the found location and it can't be checked if the location is inside the region.
-                throw new CommandException("Center teleport is only availible in Spectator gamemode.");
+                throw new CommandException("Center teleport is only available in Spectator gamemode.");
             }
         } else {
             teleportLocation = FlagValueCalculator.getEffectiveFlagOf(existing, Flags.TELE_LOC, player);

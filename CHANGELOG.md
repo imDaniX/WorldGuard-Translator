@@ -1,5 +1,29 @@
 # Changelog
 
+## 7.0.10
+
+* Add support for MC 1.20.5 and 1.20.6, drop support for other 1.20 versions
+
+## 7.0.9
+* Add support for MC 1.20, drop support for MC 1.19
+* Made entities spawned via the `/summon` command get treated as plugin-spawned entities
+* Add sniffer egg trample protection options
+
+## 7.0.8
+* Add support for MC 1.19
+* Add skulk-growth flag and config option
+* Add copper-fade flag
+* Add data packs to report output
+* Add protection for allay inventory slot
+* Categorize allay item pickups under item-pickup flag
+* Categorize dragon egg interaction (teleporting) as building
+* Ignore most NPC-based actions for Player events
+* Optimize handling of tamed animals where the owner was offline (Paper only)
+* Optimize additional InventoryHolder accesses (Paper only)
+* Fix an exception that occurred when plugins created portals with non-player entities
+* Fix possible error when using Paper's entity origin API
+* Update bstats and squirrelid libs
+
 ## 7.0.7
 * Add rock-growth flag for budding amethyst and pointed dripstone.
 * Add /rg migrateheights command. See https://worldguard.enginehub.org/en/latest/regions/commands/#migrate-region-heights

@@ -34,10 +34,10 @@ import com.sk89q.worldguard.protection.regions.RegionQuery;
 import com.sk89q.worldguard.session.handler.Handler;
 import com.sk89q.worldguard.util.Locations;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.annotation.Nullable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -69,7 +69,7 @@ public class Session {
      * @param handler A new handler
      */
     public void register(Handler handler) {
-        handlers.put(handler.getWrappedHandler().getClass(), handler);
+        handlers.put(handler.getClass(), handler);
     }
 
     /**
@@ -91,7 +91,7 @@ public class Session {
     @Nullable
     @SuppressWarnings("unchecked")
     public <T extends Handler> T getHandler(Class<T> type) {
-        return (T) handlers.get(type).getWrappedHandler();
+        return (T) handlers.get(type);
     }
 
     /**
@@ -117,6 +117,21 @@ public class Session {
 
         for (Handler handler : handlers.values()) {
             handler.initialize(player, location, set);
+        }
+    }
+
+    /**
+     * Uninitialize the session.
+     *
+     * @param player The player
+     */
+    public void uninitialize(LocalPlayer player) {
+        RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
+        Location location = player.getLocation();
+        ApplicableRegionSet set = query.getApplicableRegions(location);
+
+        for (Handler handler : handlers.values()) {
+            handler.uninitialize(player, location, set);
         }
     }
 

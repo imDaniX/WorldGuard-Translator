@@ -10,15 +10,12 @@ applyShadowConfiguration()
 repositories {
     maven {
         name = "paper"
-        url = uri("https://papermc.io/repo/repository/maven-public/")
+        url = uri("https://repo.papermc.io/repository/maven-public/")
     }
     maven {
-        name = "bstats"
-        url = uri("https://repo.codemc.org/repository/maven-public")
-    }
-    maven {
-        name = "aikar-timings"
-        url = uri("https://repo.aikar.co/nexus/content/groups/aikar/")
+        // TODO: Remove this once paper updated to adventure release
+        name = "adventure-snapshots"
+        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     }
 }
 
@@ -28,16 +25,15 @@ configurations {
 
 dependencies {
     "api"(project(":worldguard-core"))
-    "compileOnly"("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
-    "runtimeOnly"("org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT") {
+    "compileOnly"("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
+    "runtimeOnly"("org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT") {
         exclude("junit", "junit")
     }
     "api"("com.sk89q.worldedit:worldedit-bukkit:${Versions.WORLDEDIT}") { isTransitive = false }
     "implementation"("com.google.guava:guava:${Versions.GUAVA}")
     "compileOnly"("com.sk89q:commandbook:2.3") { isTransitive = false }
-    "shadeOnly"("io.papermc:paperlib:1.0.7")
-    "shadeOnly"("org.bstats:bstats-bukkit:2.1.0")
-    "shadeOnly"("co.aikar:minecraft-timings:1.0.4")
+    "shadeOnly"("io.papermc:paperlib:1.0.8")
+    "shadeOnly"("org.bstats:bstats-bukkit:3.0.1")
 }
 
 tasks.named<Copy>("processResources") {

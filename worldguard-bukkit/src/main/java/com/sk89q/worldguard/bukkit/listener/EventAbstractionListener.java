@@ -22,8 +22,6 @@ package com.sk89q.worldguard.bukkit.listener;
 import static com.sk89q.worldguard.bukkit.cause.Cause.create;
 
 import com.destroystokyo.paper.event.entity.EntityZapEvent;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldguard.bukkit.BukkitWorldConfiguration;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.bukkit.cause.Cause;
 import com.sk89q.worldguard.bukkit.event.DelegateEvent;
@@ -49,6 +47,7 @@ import com.sk89q.worldguard.bukkit.util.Materials;
 import com.sk89q.worldguard.config.WorldConfiguration;
 import com.sk89q.worldguard.protection.flags.Flags;
 import io.papermc.lib.PaperLib;
+import io.papermc.paper.event.player.PlayerOpenSignEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
@@ -115,6 +114,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.EntityUnleashEvent;
 import org.bukkit.event.entity.ExpBottleEvent;
@@ -142,12 +142,10 @@ import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
@@ -165,17 +163,6 @@ public class EventAbstractionListener extends AbstractListener {
     private final EventDebounce<BlockPistonRetractKey> pistonRetractDebounce = EventDebounce.create(5000);
     private final EventDebounce<BlockPistonExtendKey> pistonExtendDebounce = EventDebounce.create(5000);
 
-    private static final boolean HAS_SNAPSHOT_INVHOLDER;
-    static {
-        boolean temp;
-        try {
-            Inventory.class.getMethod("getHolder", boolean.class);
-            temp = true;
-        } catch (NoSuchMethodException e) {
-            temp = false;
-        }
-        HAS_SNAPSHOT_INVHOLDER = temp;
-    }
     /**
      * Construct the listener.
      *
@@ -467,7 +454,9 @@ public class EventAbstractionListener extends AbstractListener {
         switch (event.getAction()) {
             case PHYSICAL:
                 if (event.useInteractedBlock() != Result.DENY) {
-                    if (clicked.getType() == Material.FARMLAND || clicked.getType() == Material.TURTLE_EGG) {
+                    if (clicked.getType() == Material.FARMLAND ||
+                            clicked.getType() == Material.TURTLE_EGG ||
+                            clicked.getType() == Material.SNIFFER_EGG) {
                         BreakBlockEvent breakDelagate = new BreakBlockEvent(event, cause, clicked);
                         breakDelagate.setSilent(true);
                         breakDelagate.getRelevantFlags().add(Flags.TRAMPLE_BLOCKS);
@@ -493,7 +482,7 @@ public class EventAbstractionListener extends AbstractListener {
                         firedEvent.setSilent(true);
                     }
                     interactDebounce.debounce(clicked, event.getPlayer(), event, firedEvent);
-                    if (event.useInteractedBlock() == Result.DENY) {
+                    if (event.useInteractedBlock() == Result.DENY && !firedEvent.isSilent()) {
                         playDenyEffect(player, clicked.getLocation().add(0, 1, 0));
                     }
                 }
@@ -613,9 +602,7 @@ public class EventAbstractionListener extends AbstractListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onSignChange(SignChangeEvent event) {
-        Events.fireToCancel(event, new UseBlockEvent(event, create(event.getPlayer()), event.getBlock()));
-
-        if (event.isCancelled()) {
+        if (Events.fireToCancel(event, new PlaceBlockEvent(event, create(event.getPlayer()), event.getBlock()))) {
             playDenyEffect(event.getPlayer(), event.getBlock().getLocation().add(0.5, 0.5, 0.5));
         }
     }
@@ -934,6 +921,12 @@ public class EventAbstractionListener extends AbstractListener {
     }
 
     @EventHandler(ignoreCancelled = true)
+    public void onEntityPickupItem(EntityPickupItemEvent event) {
+        Item item = event.getItem();
+        pickupDebounce.debounce(event.getEntity(), item, event, new DestroyEntityEvent(event, create(event.getEntity()), event.getItem()));
+    }
+
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Events.fireToCancel(event, new SpawnEntityEvent(event, create(event.getPlayer()), event.getItemDrop()));
     }
@@ -963,12 +956,7 @@ public class EventAbstractionListener extends AbstractListener {
 
     @EventHandler(ignoreCancelled = true)
     public void onInventoryMoveItem(InventoryMoveItemEvent event) {
-        InventoryHolder causeHolder;
-        if (HAS_SNAPSHOT_INVHOLDER) {
-            causeHolder = event.getInitiator().getHolder(false);
-        } else {
-            causeHolder = event.getInitiator().getHolder();
-        }
+        InventoryHolder causeHolder = PaperLib.getHolder(event.getInitiator(), false).getHolder();
 
         WorldConfiguration wcfg = null;
         if (causeHolder instanceof Hopper
@@ -982,15 +970,8 @@ public class EventAbstractionListener extends AbstractListener {
         Entry entry;
 
         if ((entry = moveItemDebounce.tryDebounce(event)) != null) {
-            InventoryHolder sourceHolder;
-            InventoryHolder targetHolder;
-            /*if (HAS_SNAPSHOT_INVHOLDER) {
-                sourceHolder = event.getSource().getHolder(false);
-                targetHolder = event.getDestination().getHolder(false);
-            } else {*/
-                sourceHolder = event.getSource().getHolder();
-                targetHolder = event.getDestination().getHolder();
-            //}
+            InventoryHolder sourceHolder = PaperLib.getHolder(event.getSource(), false).getHolder();
+            InventoryHolder targetHolder = PaperLib.getHolder(event.getDestination(), false).getHolder();
 
             Cause cause;
 
@@ -1105,9 +1086,9 @@ public class EventAbstractionListener extends AbstractListener {
     public void onLingeringApply(AreaEffectCloudApplyEvent event) {
         AreaEffectCloud entity = event.getEntity();
         List<PotionEffect> effects = new ArrayList<>();
-        PotionEffectType baseEffectType = entity.getBasePotionData().getType().getEffectType();
-        if (baseEffectType != null) {
-            effects.add(new PotionEffect(baseEffectType, 0, 0));
+        List<PotionEffect> baseEffectTypes = entity.getBasePotionType() == null ? null : entity.getBasePotionType().getPotionEffects();
+        if (baseEffectTypes != null) {
+            effects.addAll(baseEffectTypes);
         }
         if (entity.hasCustomEffects()) {
             effects.addAll(entity.getCustomEffects());
@@ -1192,14 +1173,17 @@ public class EventAbstractionListener extends AbstractListener {
 
         if (item != null && item.getType() == Material.END_CRYSTAL) { /*&& placed.getType() == Material.BEDROCK) {*/ // in vanilla you can only place them on bedrock but who knows what plugins will add
                                                                                                                         // may be overprotective as a result, but better than being underprotective
-            Events.fireToCancel(event, new SpawnEntityEvent(event, cause, placed.getLocation().add(0.5, 0, 0.5), EntityType.ENDER_CRYSTAL));
+            Events.fireToCancel(event, new SpawnEntityEvent(event, cause, placed.getLocation().add(0.5, 0, 0.5), EntityType.END_CRYSTAL));
             return;
         }
 
         // Handle created spawn eggs
-        if (item != null && Materials.isSpawnEgg(item.getType())) {
-            Events.fireToCancel(event, new SpawnEntityEvent(event, cause, placed.getLocation().add(0.5, 0, 0.5), Materials.getEntitySpawnEgg(item.getType())));
-            return;
+        if (item != null) {
+            EntityType possibleEntityType = Materials.getEntitySpawnEgg(item.getType());
+            if (possibleEntityType != null) {
+                Events.fireToCancel(event, new SpawnEntityEvent(event, cause, placed.getLocation().add(0.5, 0, 0.5), possibleEntityType));
+                return;
+            }
         }
 
         // handle water/lava placement
@@ -1215,8 +1199,7 @@ public class EventAbstractionListener extends AbstractListener {
             return;
         }
 
-        if (holder instanceof Entity) {
-            Entity entity = (Entity) holder;
+        if (holder instanceof Entity entity) {
             Material mat = Materials.getRelatedMaterial((entity).getType());
             UseEntityEvent useEntityEvent = new UseEntityEvent(originalEvent, cause, entity);
             if (mat != null && hasInteractBypass((entity).getWorld(), mat)) {
@@ -1224,8 +1207,7 @@ public class EventAbstractionListener extends AbstractListener {
             }
             Events.fireToCancel(originalEvent, useEntityEvent);
         } else {
-            if (holder instanceof BlockState) {
-                final BlockState block = (BlockState) holder;
+            if (holder instanceof BlockState block && block.isPlaced()) {
                 final UseBlockEvent useBlockEvent = new UseBlockEvent(originalEvent, cause, block.getBlock());
                 if (hasInteractBypass(block.getWorld(), block.getType())) {
                     useBlockEvent.setAllowed(true);
@@ -1283,6 +1265,14 @@ public class EventAbstractionListener extends AbstractListener {
         @EventHandler(ignoreCancelled = true)
         public void onEntityTransform(EntityZapEvent event) {
             Events.fireToCancel(event, new DamageEntityEvent(event, create(event.getBolt()), event.getEntity()));
+        }
+
+        @EventHandler(ignoreCancelled = true)
+        public void onSignOpen(PlayerOpenSignEvent event) {
+            if (event.getCause() == PlayerOpenSignEvent.Cause.INTERACT) {
+                // other cases are handled by other events
+                Events.fireToCancel(event, new UseBlockEvent(event, create(event.getPlayer()), event.getSign().getBlock()));
+            }
         }
     }
 }

@@ -25,9 +25,9 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.BukkitPlayer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.bukkit.event.player.ProcessPlayerEvent;
+import com.sk89q.worldguard.bukkit.util.Entities;
 import com.sk89q.worldguard.session.AbstractSessionManager;
 import com.sk89q.worldguard.session.Session;
-import com.sk89q.worldguard.session.handler.Handler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,13 +40,6 @@ import java.util.Collection;
  * (flags, etc.).
  */
 public class BukkitSessionManager extends AbstractSessionManager implements Runnable, Listener {
-
-    private boolean useTimings;
-
-    @Override
-    protected Handler.Factory<? extends Handler> wrapForRegistration(Handler.Factory<? extends Handler> factory) {
-        return useTimings ? new TimedHandlerFactory(factory) : factory;
-    }
 
     /**
      * Re-initialize handlers and clear "last position," "last state," etc.
@@ -81,9 +74,9 @@ public class BukkitSessionManager extends AbstractSessionManager implements Runn
 
     @Override
     public boolean hasBypass(LocalPlayer player, World world) {
-        if (player instanceof BukkitPlayer) {
-            if (((BukkitPlayer) player).getPlayer().hasMetadata("NPC")
-                && WorldGuard.getInstance().getPlatform().getGlobalStateManager().get(world).fakePlayerBuildOverride) {
+        if (player instanceof BukkitPlayer bukkitPlayer) {
+            if (Entities.isNPC(bukkitPlayer.getPlayer())
+                    && WorldGuard.getInstance().getPlatform().getGlobalStateManager().get(world).fakePlayerBuildOverride) {
                 return true;
             }
             if (!((BukkitPlayer) player).getPlayer().isOnline()) {
@@ -93,11 +86,10 @@ public class BukkitSessionManager extends AbstractSessionManager implements Runn
         return super.hasBypass(player, world);
     }
 
-    public boolean isUsingTimings() {
-        return useTimings;
-    }
-
-    public void setUsingTimings(boolean useTimings) {
-        this.useTimings = useTimings;
+    public void shutdown() {
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
+            get(localPlayer).uninitialize(localPlayer);
+        }
     }
 }
