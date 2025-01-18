@@ -242,7 +242,7 @@ public enum Msg {
     }
 
     public boolean setMessage(String msg) {
-        if(msg == null) {
+        if (msg == null) {
             currentMsg = defaultMsg;
             return false;
         } else {
@@ -253,7 +253,7 @@ public enum Msg {
 
     // org.bukkit.ChatColor#translateAlternateColorCodes
     public static String colorize(String textToTranslate) {
-        if(textToTranslate == null) {
+        if (textToTranslate == null) {
             return null;
         }
         char[] b = textToTranslate.toCharArray();
