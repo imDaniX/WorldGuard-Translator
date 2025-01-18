@@ -45,6 +45,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.AbstractWindCharge;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EnderCrystal;
@@ -61,6 +62,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.Tameable;
+import org.bukkit.entity.WindCharge;
 import org.bukkit.entity.Wither;
 import org.bukkit.entity.WitherSkull;
 import org.bukkit.entity.Wolf;
@@ -312,10 +314,14 @@ public class WorldGuardEntityListener extends AbstractListener {
                         return;
                     }
                 }
-                if (event.getDamager() instanceof Fireball) {
-                    Fireball fireball = (Fireball) event.getDamager();
+                if (event.getDamager() instanceof Fireball fireball) {
                     if (fireball instanceof WitherSkull) {
                         if (wcfg.blockWitherSkullExplosions) {
+                            event.setCancelled(true);
+                            return;
+                        }
+                    } else if (fireball instanceof AbstractWindCharge) {
+                        if (wcfg.blockWindChargeExplosions) {
                             event.setCancelled(true);
                             return;
                         }
@@ -327,7 +333,7 @@ public class WorldGuardEntityListener extends AbstractListener {
                     }
                     if (wcfg.useRegions) {
                         RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
-                        if (!query.testState(localPlayer.getLocation(), localPlayer, Flags.GHAST_FIREBALL) && wcfg.explosionFlagCancellation) {
+                        if (!query.testState(localPlayer.getLocation(), localPlayer, Entities.getExplosionFlag(event.getDamager())) && wcfg.explosionFlagCancellation) {
                             event.setCancelled(true);
                             return;
                         }
@@ -484,6 +490,11 @@ public class WorldGuardEntityListener extends AbstractListener {
                     event.blockList().clear();
                     return;
                 }
+            } else if (ent instanceof AbstractWindCharge) {
+                if (wcfg.blockWindChargeExplosions) {
+                    event.setCancelled(true);
+                    return;
+                }
             } else {
                 if (wcfg.blockFireballExplosions) {
                     event.setCancelled(true);
@@ -494,10 +505,10 @@ public class WorldGuardEntityListener extends AbstractListener {
                     return;
                 }
             }
-            // allow wither skull blocking since there is no dedicated flag atm
-            if (wcfg.useRegions) {
+            if (wcfg.useRegions && !(ent instanceof WindCharge)) {
                 for (Block block : event.blockList()) {
-                    if (!WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery().getApplicableRegions(BukkitAdapter.adapt(block.getLocation())).testState(null, Flags.GHAST_FIREBALL)) {
+                    if (!WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery()
+                            .testState(BukkitAdapter.adapt(block.getLocation()), null, Entities.getExplosionFlag(ent))) {
                         event.blockList().clear();
                         if (wcfg.explosionFlagCancellation) event.setCancelled(true);
                         return;
@@ -515,8 +526,8 @@ public class WorldGuardEntityListener extends AbstractListener {
             }
             if (wcfg.useRegions) {
                 for (Block block : event.blockList()) {
-                    if (!StateFlag.test(WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery().queryState(BukkitAdapter.adapt(block.getLocation()),
-                            (RegionAssociable) null, Flags.WITHER_DAMAGE))) {
+                    if (!WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery()
+                            .testState(BukkitAdapter.adapt(block.getLocation()), null, Flags.WITHER_DAMAGE)) {
                         event.blockList().clear();
                         event.setCancelled(true);
                         return;
@@ -531,7 +542,8 @@ public class WorldGuardEntityListener extends AbstractListener {
             }
             if (wcfg.useRegions) {
                 for (Block block : event.blockList()) {
-                    if (!WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery().getApplicableRegions(BukkitAdapter.adapt(block.getLocation())).testState(null, Flags.OTHER_EXPLOSION)) {
+                    if (!WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery()
+                            .testState(BukkitAdapter.adapt(block.getLocation()), null, Flags.OTHER_EXPLOSION)) {
                         event.blockList().clear();
                         if (wcfg.explosionFlagCancellation) event.setCancelled(true);
                         return;
@@ -539,7 +551,6 @@ public class WorldGuardEntityListener extends AbstractListener {
                 }
             }
         }
-
 
         if (wcfg.signChestProtection) {
             for (Block block : event.blockList()) {
@@ -590,6 +601,11 @@ public class WorldGuardEntityListener extends AbstractListener {
         } else if (event.getEntityType() == EntityType.TNT
                 || event.getEntityType() == EntityType.TNT_MINECART) {
             if (wcfg.blockTNTExplosions) {
+                event.setCancelled(true);
+                return;
+            }
+        } else if (event.getEntity() instanceof AbstractWindCharge) {
+            if (wcfg.blockWindChargeExplosions) {
                 event.setCancelled(true);
                 return;
             }
