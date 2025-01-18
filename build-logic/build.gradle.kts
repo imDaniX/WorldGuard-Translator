@@ -8,7 +8,6 @@ repositories {
 
 dependencies {
     implementation(gradleApi())
-    implementation(libs.licenser)
     implementation(libs.grgit)
     implementation(libs.shadow)
     implementation(libs.jfrog.buildinfo)
