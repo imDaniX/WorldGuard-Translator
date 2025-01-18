@@ -539,7 +539,7 @@ public class RegionProtectionListener extends AbstractListener {
         if (!query.testBuild(BukkitAdapter.adapt(location), localPlayer, Flags.RIDE, Flags.INTERACT)) {
             event.setCancelled(true);
             DelegateEvent dummy = new UseEntityEvent(event, cause, vehicle);
-            tellErrorMessage(dummy, cause, vehicle.getLocation(), "ride that");
+            tellErrorMessage(dummy, cause, vehicle.getLocation(), Msg.REGION_PROTECTION_ACTION_RIDE.get());
         }
     }
 
@@ -558,7 +558,7 @@ public class RegionProtectionListener extends AbstractListener {
                     long now = System.currentTimeMillis();
                     Long lastTime = WGMetadata.getIfPresent(player, DISEMBARK_MESSAGE_KEY, Long.class);
                     if (lastTime == null || now - lastTime >= LAST_MESSAGE_DELAY) {
-                        player.sendMessage("" + ChatColor.GOLD + "Don't disembark here!" + ChatColor.GRAY + " You can't get back on.");
+                        player.sendMessage(Msg.REGION_PROTECTION_ACTION_DISEMBARK.get());
                         WGMetadata.put(player, DISEMBARK_MESSAGE_KEY, now);
                     }
 
