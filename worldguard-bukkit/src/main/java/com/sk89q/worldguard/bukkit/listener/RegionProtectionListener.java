@@ -469,11 +469,12 @@ public class RegionProtectionListener extends AbstractListener {
         }
 
         /* Hostile / ambient mob override */
-        if (Entities.isHostile(event.getEntity()) || Entities.isAmbient(event.getEntity())
-                || Entities.isVehicle(event.getEntity().getType())) {
+        if (Entities.isHostile(event.getEntity()) || Entities.isAmbient(event.getEntity())) {
             canDamage = event.getRelevantFlags().isEmpty() || query.queryState(target, associable, combine(event)) != State.DENY;
             what = Msg.REGION_PROTECTION_ACTION_HIT.get();
-
+        } else if (Entities.isVehicle(event.getEntity().getType())) {
+            canDamage = query.testBuild(target, associable, combine(event, Flags.DESTROY_VEHICLE));
+            what = Msg.REGION_PROTECTION_ACTION_CHANGE.get();
         /* Paintings, item frames, etc. */
         } else if (Entities.isConsideredBuildingIfUsed(event.getEntity())) {
             canDamage = query.testBuild(target, associable, combine(event));

@@ -1,5 +1,5 @@
 [versions]
-worldedit = "7.3.0"
+worldedit = "7.3.9"
 
 # Minimum versions we apply to make dependencies support newer Java
 minimumAsm = "9.7"

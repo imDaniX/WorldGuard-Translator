@@ -74,6 +74,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.LivingEntity;
@@ -126,6 +127,7 @@ import org.bukkit.event.entity.EntityUnleashEvent;
 import org.bukkit.event.entity.ExpBottleEvent;
 import org.bukkit.event.entity.LingeringPotionSplashEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
@@ -158,6 +160,7 @@ import org.bukkit.util.Vector;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class EventAbstractionListener extends AbstractListener {
@@ -802,7 +805,8 @@ public class EventAbstractionListener extends AbstractListener {
     public void onPlayerFish(PlayerFishEvent event) {
         if (event.getState() == PlayerFishEvent.State.FISHING) {
             if (Events.fireAndTestCancel(new UseItemEvent(event, create(event.getPlayer(), event.getHook()),
-                    event.getPlayer().getWorld(), event.getPlayer().getInventory().getItemInMainHand()))) {
+                    event.getPlayer().getWorld(),
+                    event.getPlayer().getInventory().getItem(Objects.requireNonNull(event.getHand()))))) {
                 event.setCancelled(true);
             }
         } else if (event.getState() == PlayerFishEvent.State.CAUGHT_FISH) {
@@ -816,9 +820,16 @@ public class EventAbstractionListener extends AbstractListener {
                 Events.fireToCancel(event, new DestroyEntityEvent(event, create(event.getPlayer(), event.getHook()), caught));
             } else if (Entities.isConsideredBuildingIfUsed(caught)) {
                 Events.fireToCancel(event, new UseEntityEvent(event, create(event.getPlayer(), event.getHook()), caught));
-            } else if (Entities.isNonHostile(caught) || caught instanceof Player) {
+            } else if (!Entities.isHostile(caught) || caught instanceof Player) {
                 Events.fireToCancel(event, new DamageEntityEvent(event, create(event.getPlayer(), event.getHook()), caught));
             }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onProjectileHit(ProjectileHitEvent event) {
+        if (event.getEntity() instanceof FishHook hook && event.getHitEntity() instanceof Entity target) {
+            Events.fireToCancel(event, new DamageEntityEvent(event, create(hook), target));
         }
     }
 
