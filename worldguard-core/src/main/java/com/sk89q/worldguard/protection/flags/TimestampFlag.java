@@ -19,6 +19,8 @@
 
 package com.sk89q.worldguard.protection.flags;
 
+import me.imdanix.wgtranslator.Msg;
+
 import javax.annotation.Nullable;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -61,10 +63,10 @@ public class TimestampFlag extends Flag<Instant> {
                 } else if (parsed instanceof ZonedDateTime) {
                     return ((ZonedDateTime) parsed).toInstant();
                 } else {
-                    throw new InvalidFlagFormat("Unrecognized input.");
+                    throw new InvalidFlagFormat(Msg.REGION_FLAGS_INVALID_UNRECOGNIZED.get());
                 }
             } catch (DateTimeParseException ignored) {
-                throw new InvalidFlagFormat("Expected 'now' or ISO 8601 formatted input.");
+                throw new InvalidFlagFormat(Msg.REGION_FLAGS_INVALID_DATETIME.get());
             }
         }
     }

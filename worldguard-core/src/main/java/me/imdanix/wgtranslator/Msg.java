@@ -68,6 +68,25 @@ public enum Msg {
     REGION_FLAGS_VALUE_STRING_DEFAULT("Default value:"),
     REGION_FLAGS_VALUE_STRING_CURRENT("Current value:"),
 
+    // com.sk89q.worldguard.protection.flags...
+    REGION_FLAGS_INVALID_SENDERNOTPLAYER("Not a player"),
+    REGION_FLAGS_INVALID_STATE("Expected none/allow/deny, but got '{input}'", "input"),
+    REGION_FLAGS_INVALID_BOOLEAN("Not a yes/no value: {input}", "input"),
+    REGION_FLAGS_INVALID_REGISTRY("Unknown {registry}: {key}", "registry", "key"),
+    REGION_FLAGS_INVALID_ENUM("Unknown value '{input}' in {class}", "input", "class"),
+    REGION_FLAGS_INVALID_INTEGER("Not a number: {input}", "input"),
+    REGION_FLAGS_INVALID_DOUBLE("Not a number: {input}", "input"),
+    REGION_FLAGS_INVALID_MAP("Input must be in a 'key:value,key1=value1' format. Either ':' or '=' can be used."),
+    REGION_FLAGS_INVALID_UUID("Not a valid uuid: {input}", "input"),
+    REGION_FLAGS_INVALID_ENTITYTYPE("Unknown entity type: {input}", "input"),
+    REGION_FLAGS_INVALID_OUTSIDE("You can't set that flag outside of the region boundaries."),
+    REGION_FLAGS_INVALID_LOCATION("Expected 'here' or x,y,z."),
+    REGION_FLAGS_INVALID_PLUGIN("The plugin that registered this flag is not currently installed"),
+    REGION_FLAGS_INVALID_UNRECOGNIZED("Unrecognized input."),
+    REGION_FLAGS_INVALID_DATETIME("Expected 'now' or ISO 8601 formatted input."),
+    REGION_FLAGS_INVALID_WEATHER("Unknown weather type: {input}", "input"),
+    REGION_FLAGS_INVALID_GAMEMODE("Unknown game mode: {input}", "input"),
+
     // com.sk89q.worldguard.commands.region.RegionCommand
     REGION_DEFINE_ADDING("Adding region '{region}'", "region"),
     REGION_DEFINE_SUCCESS("A new region has been made named '{region}'", "region"),
@@ -132,7 +151,7 @@ public enum Msg {
     REGION_REMOVE_ERROR_FLAGS("You cannot use both -u (unset parent) and -f (remove children) together."),
     REGION_REMOVE_REMOVING("Removing region '{region}' in '{world}'", "region", "world"),
     REGION_REMOVE_WAIT("Please wait... removing region."),
-    REGION_REMOVE_SUCCESS("Successfully removed {regions}.", "regions"),
+    REGION_REMOVE_SUCCESS("Successfully removed {region}.", "region"),
     REGION_REMOVE_FAIL("Failed to remove region"),
 
     REGION_LOAD_NOMANAGER("No region manager exists for world '{world}'.", "world"),

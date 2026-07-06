@@ -23,6 +23,7 @@ import com.google.common.collect.Maps;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
+import me.imdanix.wgtranslator.Msg;
 
 import java.util.Map;
 
@@ -67,7 +68,7 @@ public final class FlagContext {
         if (sender.isPlayer() && sender instanceof LocalPlayer) {
             return (LocalPlayer) sender;
         } else {
-            throw new InvalidFlagFormat("Not a player");
+            throw new InvalidFlagFormat(Msg.REGION_FLAGS_INVALID_SENDERNOTPLAYER.get());
         }
     }
 
@@ -75,7 +76,7 @@ public final class FlagContext {
         try {
             return Integer.parseInt(input);
         } catch (NumberFormatException e) {
-            throw new InvalidFlagFormat("Not a number: " + input);
+            throw new InvalidFlagFormat(Msg.REGION_FLAGS_INVALID_INTEGER.get(input));
         }
     }
 
@@ -83,7 +84,7 @@ public final class FlagContext {
         try {
             return Double.parseDouble(input);
         } catch (NumberFormatException e) {
-            throw new InvalidFlagFormat("Not a number: " + input);
+            throw new InvalidFlagFormat(Msg.REGION_FLAGS_INVALID_DOUBLE.get(input));
         }
     }
 

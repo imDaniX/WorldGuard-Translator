@@ -19,6 +19,8 @@
 
 package com.sk89q.worldguard.protection.flags;
 
+import me.imdanix.wgtranslator.Msg;
+
 /**
  * A boolean flag.
  */
@@ -45,7 +47,7 @@ public class BooleanFlag extends Flag<Boolean> {
                 || input.equalsIgnoreCase("0")) {
             return false;
         } else {
-            throw new InvalidFlagFormat("Not a yes/no value: " + input);
+            throw new InvalidFlagFormat(Msg.REGION_FLAGS_INVALID_BOOLEAN.get(input));
         }
     }
 

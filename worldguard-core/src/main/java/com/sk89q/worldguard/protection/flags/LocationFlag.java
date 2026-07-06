@@ -26,6 +26,7 @@ import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.internal.permission.RegionPermissionModel;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import me.imdanix.wgtranslator.Msg;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,7 +77,7 @@ public class LocationFlag extends Flag<Location> {
                             player.printDebug("WARNING: Flag location is outside of region.");
                         } else {
                             // no permission
-                            throw new InvalidFlagFormat("You can't set that flag outside of the region boundaries.");
+                            throw new InvalidFlagFormat(Msg.REGION_FLAGS_INVALID_OUTSIDE.get());
                         }
                     }
                     // clamp height to world limits
@@ -86,7 +87,7 @@ public class LocationFlag extends Flag<Location> {
             }
             return loc;
         }
-        throw new InvalidFlagFormat("Expected 'here' or x,y,z.");
+        throw new InvalidFlagFormat(Msg.REGION_FLAGS_INVALID_LOCATION.get());
     }
 
     @Override

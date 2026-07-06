@@ -19,6 +19,8 @@
 
 package com.sk89q.worldguard.protection.flags;
 
+import me.imdanix.wgtranslator.Msg;
+
 import javax.annotation.Nullable;
 import java.util.UUID;
 
@@ -41,7 +43,7 @@ public class UUIDFlag extends Flag<UUID> {
         try {
             return UUID.fromString(input);
         } catch (IllegalArgumentException e) {
-            throw new InvalidFlagFormat("Not a valid uuid: " + input);
+            throw new InvalidFlagFormat(Msg.REGION_FLAGS_INVALID_UUID.get(input));
         }
     }
 

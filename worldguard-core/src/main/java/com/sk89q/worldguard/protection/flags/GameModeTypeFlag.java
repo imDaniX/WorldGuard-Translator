@@ -21,6 +21,7 @@ package com.sk89q.worldguard.protection.flags;
 
 import com.sk89q.worldedit.world.gamemode.GameMode;
 import com.sk89q.worldedit.world.gamemode.GameModes;
+import me.imdanix.wgtranslator.Msg;
 
 import javax.annotation.Nullable;
 
@@ -45,7 +46,7 @@ public class GameModeTypeFlag extends Flag<GameMode> {
         input = input.trim();
         GameMode gamemode = unmarshal(input);
         if (gamemode == null) {
-            throw new InvalidFlagFormat("Unknown game mode: " + input);
+            throw new InvalidFlagFormat(Msg.REGION_FLAGS_INVALID_GAMEMODE.get(input));
         }
         return gamemode;
     }
