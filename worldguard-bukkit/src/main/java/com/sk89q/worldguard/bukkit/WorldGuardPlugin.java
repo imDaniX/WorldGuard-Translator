@@ -76,6 +76,9 @@ import com.sk89q.worldguard.protection.managers.storage.file.DirectoryYamlDriver
 import com.sk89q.worldguard.protection.managers.storage.sql.SQLDriver;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.util.logging.RecordMessagePrefixer;
+import me.imdanix.wgtranslator.I18n;
+import me.imdanix.wgtranslator.Msg;
+import me.imdanix.wgtranslator.TranslatableCommandsManager;
 import io.papermc.lib.PaperLib;
 import io.papermc.paper.ServerBuildInfo;
 import org.bstats.bukkit.Metrics;
@@ -83,7 +86,6 @@ import org.bstats.charts.DrilldownPie;
 import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -99,6 +101,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -122,12 +125,7 @@ public class WorldGuardPlugin extends JavaPlugin {
      */
     public WorldGuardPlugin() {
         inst = this;
-        commands = new CommandsManager<Actor>() {
-            @Override
-            public boolean hasPermission(Actor player, String perm) {
-                return player.hasPermission(perm);
-            }
-        };
+        commands = new TranslatableCommandsManager();
     }
 
     /**
@@ -152,6 +150,11 @@ public class WorldGuardPlugin extends JavaPlugin {
 
         getDataFolder().mkdirs(); // Need to create the plugins/WorldGuard folder
 
+        // WGTranslator
+        I18n translator = new I18n(this);
+        Objects.requireNonNull(getCommand("wgtranslator")).setExecutor(translator);
+        ((TranslatableCommandsManager)commands).load(this, translator);
+
         PermissionsResolverManager.initialize(this);
 
         WorldGuard.getInstance().setPlatform(platform = new BukkitWorldGuardPlatform()); // Initialise WorldGuard
@@ -170,6 +173,7 @@ public class WorldGuardPlugin extends JavaPlugin {
             reg.register(GeneralCommands.class);
         }
 
+        getServer().getScheduler().runTask(this, () -> ((TranslatableCommandsManager)commands).clean());
         if (this.isFolia()) {
             getServer().getGlobalRegionScheduler().runAtFixedRate(this, new Consumer() {
                 @Override
@@ -322,16 +326,16 @@ public class WorldGuardPlugin extends JavaPlugin {
                 throw t;
             }
         } catch (CommandPermissionsException e) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission.");
+            sender.sendMessage(Msg.ERROR_NOPERMISSIONS.get());
         } catch (MissingNestedCommandException e) {
-            sender.sendMessage(ChatColor.RED + e.getUsage());
+            sender.sendMessage(Msg.ERROR_USAGE.get(e.getUsage()));
         } catch (CommandUsageException e) {
-            sender.sendMessage(ChatColor.RED + e.getMessage());
-            sender.sendMessage(ChatColor.RED + e.getUsage());
+            sender.sendMessage(Msg.ERROR_INFO.get(e.getMessage()));
+            sender.sendMessage(Msg.ERROR_USAGE.get(e.getUsage()));
         } catch (WrappedCommandException e) {
-            sender.sendMessage(ChatColor.RED + e.getCause().getMessage());
+            sender.sendMessage(Msg.ERROR_INFO.get(e.getCause().getMessage()));
         } catch (CommandException e) {
-            sender.sendMessage(ChatColor.RED + e.getMessage());
+            sender.sendMessage(Msg.ERROR_INFO.get(e.getMessage()));
         }
 
         return true;

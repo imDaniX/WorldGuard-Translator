@@ -4,3 +4,6 @@ version: "${internalVersion}"
 depend: [WorldEdit]
 api-version: "1.21.11"
 folia-supported: true
+commands:
+  wgtranslator:
+    permission: wgtranslator.reload

@@ -34,6 +34,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.util.DomainInputResolver;
 import com.sk89q.worldguard.protection.util.DomainInputResolver.UserLocatorPolicy;
+import me.imdanix.wgtranslator.Msg;
 
 import java.util.concurrent.Callable;
 
@@ -69,11 +70,11 @@ public class MemberCommands extends RegionCommandsBase {
         resolver.setLocatorPolicy(args.hasFlag('n') ? UserLocatorPolicy.NAME_ONLY : UserLocatorPolicy.UUID_ONLY);
 
 
-        final String description = String.format("Adding members to the region '%s' on '%s'", region.getId(), world.getName());
+        final String description = Msg.REGION_MEMBERSHIP_ADDMEMBER_ADDING.get(region.getId(), world.getName());
         AsyncCommandBuilder.wrap(resolver, sender)
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
-                .onSuccess(String.format("Region '%s' updated with new members.", region.getId()), region.getMembers()::addAll)
-                .onFailure("Failed to add new members", worldGuard.getExceptionConverter())
+                .onSuccess(Msg.REGION_MEMBERSHIP_ADDMEMBER_SUCCESS.get(region.getId()), region.getMembers()::addAll)
+                .onFailure(Msg.REGION_MEMBERSHIP_ADDMEMBER_FAIL.get(), worldGuard.getExceptionConverter())
                 .buildAndExec(worldGuard.getExecutorService());
     }
 
@@ -102,12 +103,11 @@ public class MemberCommands extends RegionCommandsBase {
                 WorldGuard.getInstance().getProfileService(), args.getParsedPaddedSlice(1, 0));
         resolver.setLocatorPolicy(args.hasFlag('n') ? UserLocatorPolicy.NAME_ONLY : UserLocatorPolicy.UUID_ONLY);
 
-
-        final String description = String.format("Adding owners to the region '%s' on '%s'", region.getId(), world.getName());
+        final String description = Msg.REGION_MEMBERSHIP_ADDOWNER_ADDING.get(region.getId(), world.getName());
         AsyncCommandBuilder.wrap(checkedAddOwners(sender, manager, region, world, resolver), sender)
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
-                .onSuccess(String.format("Region '%s' updated with new owners.", region.getId()), region.getOwners()::addAll)
-                .onFailure("Failed to add new owners", worldGuard.getExceptionConverter())
+                .onSuccess(Msg.REGION_MEMBERSHIP_ADDOWNER_SUCCESS.get(region.getId()), region.getOwners()::addAll)
+                .onFailure(Msg.REGION_MEMBERSHIP_ADDOWNER_FAIL.get(), worldGuard.getExceptionConverter())
                 .buildAndExec(worldGuard.getExecutorService());
     }
 
@@ -123,7 +123,7 @@ public class MemberCommands extends RegionCommandsBase {
                             .get(world).getMaxRegionCount(player);
                     if (maxRegionCount >= 0 && manager.getRegionCountOfPlayer(player)
                             >= maxRegionCount) {
-                        throw new CommandException("You already own the maximum allowed amount of regions.");
+                        throw new CommandException(Msg.REGION_MEMBERSHIP_ADDOWNER_MAXIMUM.get());
                     }
                 }
             }
@@ -167,7 +167,7 @@ public class MemberCommands extends RegionCommandsBase {
             callable = region::getMembers;
         } else {
             if (args.argsLength() < 2) {
-                throw new CommandException("List some names to remove, or use -a to remove all.");
+                throw new CommandException(Msg.REGION_MEMBERSHIP_REMOVEMEMBER_LIST.get());
             }
 
             // Resolve members asynchronously
@@ -178,12 +178,12 @@ public class MemberCommands extends RegionCommandsBase {
             callable = resolver;
         }
 
-        final String description = String.format("Removing members from the region '%s' on '%s'", region.getId(), world.getName());
+        final String description = Msg.REGION_MEMBERSHIP_REMOVEMEMBER_REMOVING.get(region.getId(), world.getName());
         AsyncCommandBuilder.wrap(callable, sender)
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
-                .sendMessageAfterDelay("(Please wait... querying player names...)")
-                .onSuccess(String.format("Region '%s' updated with members removed.", region.getId()), region.getMembers()::removeAll)
-                .onFailure("Failed to remove members", worldGuard.getExceptionConverter())
+                .sendMessageAfterDelay(Msg.REGION_MEMBERSHIP_REMOVEMEMBER_WAIT.get())
+                .onSuccess(Msg.REGION_MEMBERSHIP_REMOVEMEMBER_SUCCESS.get(region.getId()), region.getMembers()::removeAll)
+                .onFailure(Msg.REGION_MEMBERSHIP_REMOVEMEMBER_FAIL.get(), worldGuard.getExceptionConverter())
                 .buildAndExec(worldGuard.getExecutorService());
     }
 
@@ -210,7 +210,7 @@ public class MemberCommands extends RegionCommandsBase {
             callable = region::getOwners;
         } else {
             if (args.argsLength() < 2) {
-                throw new CommandException("List some names to remove, or use -a to remove all.");
+                throw new CommandException(Msg.REGION_MEMBERSHIP_REMOVEOWNER_LIST.get());
             }
 
             // Resolve owners asynchronously
@@ -221,12 +221,12 @@ public class MemberCommands extends RegionCommandsBase {
             callable = resolver;
         }
 
-        final String description = String.format("Removing owners from the region '%s' on '%s'", region.getId(), world.getName());
+        final String description = Msg.REGION_MEMBERSHIP_REMOVEOWNER_REMOVING.get(region.getId(), world.getName());
         AsyncCommandBuilder.wrap(callable, sender)
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
-                .sendMessageAfterDelay("(Please wait... querying player names...)")
-                .onSuccess(String.format("Region '%s' updated with owners removed.", region.getId()), region.getOwners()::removeAll)
-                .onFailure("Failed to remove owners", worldGuard.getExceptionConverter())
+                .sendMessageAfterDelay(Msg.REGION_MEMBERSHIP_REMOVEOWNER_WAIT.get())
+                .onSuccess(Msg.REGION_MEMBERSHIP_REMOVEOWNER_SUCCESS.get(region.getId()), region.getOwners()::removeAll)
+                .onFailure(Msg.REGION_MEMBERSHIP_REMOVEOWNER_FAIL.get(), worldGuard.getExceptionConverter())
                 .buildAndExec(worldGuard.getExecutorService());
     }
 }
