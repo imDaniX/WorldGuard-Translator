@@ -95,7 +95,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
         builder.append(TextComponent.of(Msg.REGION_INFO_TYPE.get(), TextColor.GRAY));
         builder.append(TextComponent.of(region.getType().getName()));
 
-        builder.append(TextComponent.of(Msg.REGION_INFO_PRIORITY.get(), TextColor.GRAY));
+        builder.append(TextComponent.of(Msg.REGION_INFO_PRIORITY_INFO.get(), TextColor.GRAY));
         appendPriorityComponent(region);
         builder.append(TextComponent.of(")", TextColor.GRAY));
 
@@ -249,7 +249,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
 
             // Put (parent)
             if (!cur.equals(region)) {
-                builder.append(TextComponent.of(Msg.REGION_INFO_PARENT.get(), useColors ? TextColor.GRAY : TextColor.WHITE));
+                builder.append(TextComponent.of(Msg.REGION_INFO_PARENT_INFO.get(), useColors ? TextColor.GRAY : TextColor.WHITE));
                 appendPriorityComponent(cur);
                 builder.append(TextComponent.of(")", useColors ? TextColor.GRAY : TextColor.WHITE));
             }
