@@ -1,9 +1,11 @@
 package me.imdanix.wgtranslator;
 
+import com.sk89q.worldedit.util.formatting.text.Component;
+import com.sk89q.worldedit.util.formatting.text.serializer.legacy.LegacyComponentSerializer;
+
 import java.util.Locale;
 
 public enum Msg {
-
     // com.sk89q.worldguard.bukkit.BukkitStringMatcher
     ERROR_MATCHER_NONORMALWORLD("No normal world found."),
     ERROR_MATCHER_NONETHERWORLD("No nether world found."),
@@ -191,6 +193,30 @@ public enum Msg {
     BLACKLIST_PUNISHMENT_TELL_TEXT("{text}", "text"),
     BLACKLIST_PUNISHMENT_TELL_DEFAULT("You're not allowed to {action} {type}.", "action", "type"),
 
+    // com.sk89q.worldguard.commands.region.RegionCommandsBase
+    REGION_COMMANDS_WORLDSPECIFY("Please specify the world with -{flag} world_name.", "flag"),
+    REGION_COMMANDS_REGIONINVALIDID("The region name of '{id}' contains characters that are not allowed.", "id"),
+    REGION_COMMANDS_REGIONNOGLOBAL("Sorry, you can't use __global__ here."),
+    REGION_COMMANDS_REGIONNOTFOUND("No region could be found with the name of '{id}'.", "id"),
+    REGION_COMMANDS_NOTSTANDINGINREGION("You're not standing in a region. Specify an ID if you want to select a specific region."),
+    REGION_COMMANDS_STANDINGINMULTIPLE("You're standing in several regions (please pick one)."),
+    REGION_COMMANDS_CURRENTREGIONS("Current regions: "),
+    REGION_COMMANDS_CLICKTOPICK("Click to pick this region"),
+    REGION_COMMANDS_SELECTAREAFIRST("Please select an area first. Use WorldEdit to make a selection! (see: https://worldedit.enginehub.org/en/latest/usage/regions/selections/)."),
+    REGION_COMMANDS_REGIONEXISTS("A region with that name already exists. Please choose another name."),
+    REGION_COMMANDS_REGIONEXISTSREDEFINE(" To change the shape, use /region redefine {id}.", "id"),
+    REGION_COMMANDS_REGIONSDISABLED("Region support is disabled in the target world. It can be enabled per-world in WorldGuard's configuration files. However, you may need to restart your server afterwards."),
+    REGION_COMMANDS_REGIONDATALOADFAIL("Region data failed to load for this world. Please ask a server administrator to read the logs to identify the reason."),
+    REGION_COMMANDS_UNSUPPORTEDSHAPE("Sorry, you can only use cuboids and polygons for WorldGuard regions."),
+    REGION_COMMANDS_SAVEFAILURES("(Warning: The background saving of region data is failing for these worlds: {worlds}. Your changes are getting lost. See the server log for more information.)", "worlds"),
+    REGION_COMMANDS_HEIGHTWARNING("(Warning: The height of the region was {height} block(s).)", "height"),
+    REGION_COMMANDS_NEWUSERINFO1("(This region is NOW PROTECTED from modification from others. Don't want that? Use "),
+    REGION_COMMANDS_NEWUSERINFO2(")"),
+    REGION_COMMANDS_SPAWNOVERLAPWARNING("Warning!"),
+    REGION_COMMANDS_SPAWNOVERLAPINFO(" This region overlaps vanilla's spawn protection. WorldGuard cannot override this, and only server operators will be able to interact with this area."),
+    REGION_COMMANDS_SELECTED("Region selected as {type}", "type"),
+    REGION_COMMANDS_TYPEFAIL("Can't select that region! The region type '{type}' can't be selected.", "type"),
+
     ;
 
     private final String defaultMsg;
@@ -238,6 +264,14 @@ public enum Msg {
             result = result.replace(placeholders[i], String.valueOf(args[i]));
         }
         return result;
+    }
+
+    public Component text() {
+        return LegacyComponentSerializer.legacyLinking().deserialize(currentMsg);
+    }
+
+    public Component text(Object... args) {
+        return LegacyComponentSerializer.legacyLinking().deserialize(get(args));
     }
 
     public boolean setMessage(String msg) {
