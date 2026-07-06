@@ -151,9 +151,8 @@ public final class Flags {
      *              in a future release. If you depend on the type of this flag, take proper precaution for future breakage.
      */
     @Deprecated
-    public static final StringFlag TELE_MESSAGE = register(new StringFlag("teleport-message",
-            LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of("").append(TextComponent.of(
-                    "Teleported you to the region '%id%'.", TextColor.LIGHT_PURPLE)))));
+    public static final StringFlag TELE_MESSAGE = register(StringFlag.of("teleport-message",
+            Msg.REGION_FLAGS_VALUE_DEFAULT_TELEPORT::get));
 
     // idk?
     public static final StateFlag INVINCIBILITY = register(new StateFlag("invincible", false));
@@ -221,22 +220,22 @@ public final class Flags {
      *              in a future release. If you depend on the type of this flag, take proper precaution for future breakage.
      */
     @Deprecated
-    public static final StringFlag DENY_MESSAGE = register(new StringFlag("deny-message",
-            Msg.REGION_FLAGS_VALUE_DEFAULT_DENY.get()));
+    public static final StringFlag DENY_MESSAGE = register(StringFlag.of("deny-message",
+            Msg.REGION_FLAGS_VALUE_DEFAULT_DENY::get));
     /**
      * @deprecated The type of this flag will change from a StringFlag to a ComponentFlag to support JSON text
      *              in a future release. If you depend on the type of this flag, take proper precaution for future breakage.
      */
     @Deprecated
-    public static final StringFlag ENTRY_DENY_MESSAGE = register(new StringFlag("entry-deny-message",
-            Msg.REGION_FLAGS_VALUE_DEFAULT_ENTRYDENY.get()));
+    public static final StringFlag ENTRY_DENY_MESSAGE = register(StringFlag.of("entry-deny-message",
+            Msg.REGION_FLAGS_VALUE_DEFAULT_ENTRYDENY::get));
     /**
      * @deprecated The type of this flag will change from a StringFlag to a ComponentFlag to support JSON text
      *              in a future release. If you depend on the type of this flag, take proper precaution for future breakage.
      */
     @Deprecated
-    public static final StringFlag EXIT_DENY_MESSAGE = register(new StringFlag("exit-deny-message",
-            Msg.REGION_FLAGS_VALUE_DEFAULT_EXITDENY.get()));
+    public static final StringFlag EXIT_DENY_MESSAGE = register(StringFlag.of("exit-deny-message",
+            Msg.REGION_FLAGS_VALUE_DEFAULT_EXITDENY::get));
 
     private Flags() {
     }

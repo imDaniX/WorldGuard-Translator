@@ -22,38 +22,49 @@ package com.sk89q.worldguard.protection.flags;
 import com.sk89q.worldguard.commands.CommandUtils;
 
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * Stores a string.
  */
 public class StringFlag extends Flag<String> {
 
-    private final String defaultValue;
+    private final Supplier<String> defaultValue;
 
     public StringFlag(String name) {
         super(name);
-        this.defaultValue = null;
+        this.defaultValue = () -> null;
     }
 
     public StringFlag(String name, String defaultValue) {
         super(name);
-        this.defaultValue = defaultValue;
+        this.defaultValue = () -> defaultValue;
     }
 
     public StringFlag(String name, RegionGroup defaultGroup) {
         super(name, defaultGroup);
-        this.defaultValue = null;
+        this.defaultValue = () -> null;
     }
 
     public StringFlag(String name, RegionGroup defaultGroup, String defaultValue) {
         super(name, defaultGroup);
+        this.defaultValue = () -> defaultValue;
+    }
+
+    // Making this for compatibility reasons
+    private StringFlag(String name, Supplier<String> defaultValue) {
+        super(name);
         this.defaultValue = defaultValue;
+    }
+
+    public static StringFlag of(String name, Supplier<String> defaultValue) {
+        return new StringFlag(name, defaultValue);
     }
 
     @Nullable
     @Override
     public String getDefault() {
-        return defaultValue;
+        return defaultValue.get();
     }
 
     @Override
