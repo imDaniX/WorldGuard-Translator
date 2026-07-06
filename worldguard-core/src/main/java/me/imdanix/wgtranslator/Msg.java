@@ -315,17 +315,19 @@ public enum Msg {
     REGION_COMMANDS_TYPEFAIL("Can't select that region! The region type '{type}' can't be selected.", "type"),
 
     // com.sk89q.worldguard.commands.region.RegionPrintoutBuilder
-    REGION_INFO_REGION("Region: "),
-    REGION_INFO_TYPE("type="),
-    REGION_INFO_PRIORITY_INFO(", priority="),
+    REGION_INFO_REGION_NAME("Region: "),
+    REGION_INFO_REGION_TYPE(" (type="),
+    REGION_INFO_REGION_PRIORITY(", priority="),
+    REGION_INFO_REGION_END(")"),
     REGION_INFO_VOLUME("Volume: "),
     REGION_INFO_FLAGS_BASE("Flags: "),
     REGION_INFO_FLAGS_NONE("(none)"),
     REGION_INFO_FLAGS_CLICKTOSET("Click to set flag"),
     REGION_INFO_FLAGS_CLICKTOSETFLAG("Click to set a flag"),
     REGION_INFO_FLAGS_SETCOMMAND("[Flags]"),
-    REGION_INFO_PARENT_INFO(", parent, priority="),
+    REGION_INFO_PARENT_INFO(" (parent, priority="),
     REGION_INFO_PARENT_CLICKINFO("Click for info"),
+    REGION_INFO_PARENT_END(")"),
     REGION_INFO_PARENT_UNLINK("Click to unlink parent"),
     REGION_INFO_PARENT_UNLINKCMD("[X]"),
     REGION_INFO_OWNERS("Owners: "),
@@ -397,11 +399,11 @@ public enum Msg {
     }
 
     public Component text() {
-        return LegacyComponentSerializer.legacyLinking().deserialize(currentMsg);
+        return LegacyComponentSerializer.legacyLinking().deserialize(currentMsg, '&');
     }
 
     public Component text(Object... args) {
-        return LegacyComponentSerializer.legacyLinking().deserialize(get(args));
+        return LegacyComponentSerializer.legacyLinking().deserialize(get(args), '&');
     }
 
     public boolean setMessage(String msg) {

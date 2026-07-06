@@ -88,16 +88,16 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
      * Add region name, type, and priority.
      */
     public void appendBasics() {
-        builder.append(TextComponent.of(Msg.REGION_INFO_REGION.get(), TextColor.BLUE));
+        builder.append(TextComponent.of(Msg.REGION_INFO_REGION_NAME.get(), TextColor.BLUE));
         builder.append(TextComponent.of(region.getId(), TextColor.YELLOW)
                 .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "/rg info -w \"" + world + "\" " + region.getId())));
 
-        builder.append(TextComponent.of(Msg.REGION_INFO_TYPE.get(), TextColor.GRAY));
+        builder.append(TextComponent.of(Msg.REGION_INFO_REGION_TYPE.get(), TextColor.GRAY));
         builder.append(TextComponent.of(region.getType().getName()));
 
-        builder.append(TextComponent.of(Msg.REGION_INFO_PRIORITY_INFO.get(), TextColor.GRAY));
+        builder.append(TextComponent.of(Msg.REGION_INFO_REGION_PRIORITY.get(), TextColor.GRAY));
         appendPriorityComponent(region);
-        builder.append(TextComponent.of(")", TextColor.GRAY));
+        builder.append(TextComponent.of(Msg.REGION_INFO_REGION_END.get(), TextColor.GRAY));
 
         newline();
     }
@@ -251,7 +251,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
             if (!cur.equals(region)) {
                 builder.append(TextComponent.of(Msg.REGION_INFO_PARENT_INFO.get(), useColors ? TextColor.GRAY : TextColor.WHITE));
                 appendPriorityComponent(cur);
-                builder.append(TextComponent.of(")", useColors ? TextColor.GRAY : TextColor.WHITE));
+                builder.append(TextComponent.of(Msg.REGION_INFO_PARENT_END.get(), useColors ? TextColor.GRAY : TextColor.WHITE));
             }
             if (last != null && cur.equals(region) && perms != null && perms.maySetParent(cur, last)) {
                 builder.append(TextComponent.space());
