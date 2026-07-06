@@ -19,6 +19,7 @@
 
 package com.sk89q.worldguard.blacklist.action;
 
+import com.sk89q.worldedit.util.formatting.text.serializer.plain.PlainComponentSerializer;
 import com.sk89q.worldguard.blacklist.BlacklistEntry;
 import com.sk89q.worldguard.blacklist.event.BlacklistEvent;
 import me.imdanix.wgtranslator.Msg;
@@ -43,10 +44,12 @@ public class KickAction implements Action {
         if (event.getPlayer() != null) {
             String message = entry.getMessage();
 
+            String friendlyName = PlainComponentSerializer.INSTANCE.serialize(event.getTarget().getFriendlyNameComponent());
+
             if (message != null) {
-                event.getPlayer().kick(Msg.BLACKLIST_PUNISHMENT_KICK_REASONED.get(String.format(message, event.getTarget().getFriendlyName())));
+                event.getPlayer().kick(Msg.BLACKLIST_PUNISHMENT_KICK_REASONED.get(String.format(message, friendlyName)));
             } else {
-                event.getPlayer().kick(Msg.BLACKLIST_PUNISHMENT_KICK_DEFAULT.get(event.getDescription(), event.getTarget().getFriendlyName()));
+                event.getPlayer().kick(Msg.BLACKLIST_PUNISHMENT_KICK_DEFAULT.get(event.getDescription(), friendlyName));
             }
         }
 

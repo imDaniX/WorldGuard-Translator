@@ -33,6 +33,8 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitCommandSender;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldedit.internal.util.LogManagerCompat;
+import com.sk89q.worldedit.util.concurrency.LazyReference;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.blacklist.Blacklist;
@@ -78,6 +80,8 @@ import com.sk89q.worldguard.util.logging.RecordMessagePrefixer;
 import me.imdanix.wgtranslator.I18n;
 import me.imdanix.wgtranslator.Msg;
 import me.imdanix.wgtranslator.TranslatableCommandsManager;
+import io.papermc.lib.PaperLib;
+import io.papermc.paper.ServerBuildInfo;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.DrilldownPie;
 import org.bstats.charts.SimplePie;
@@ -99,6 +103,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -107,6 +112,7 @@ import java.util.logging.Logger;
  */
 public class WorldGuardPlugin extends JavaPlugin {
 
+    private static final org.apache.logging.log4j.Logger LOGGER = LogManagerCompat.getLogger();
     private static WorldGuardPlugin inst;
     private static BukkitWorldGuardPlatform platform;
     private final CommandsManager<Actor> commands;
@@ -135,6 +141,7 @@ public class WorldGuardPlugin extends JavaPlugin {
      * Called on plugin enable.
      */
     @Override
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public void onEnable() {
         // Catch bad things being done by naughty plugins that include WorldGuard's classes
         ClassSourceValidator verifier = new ClassSourceValidator(this);
@@ -166,8 +173,18 @@ public class WorldGuardPlugin extends JavaPlugin {
         if (!platform.getGlobalStateManager().hasCommandBookGodMode()) {
             reg.register(GeneralCommands.class);
         }
+
         getServer().getScheduler().runTask(this, () -> ((TranslatableCommandsManager)commands).clean());
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, sessionManager, BukkitSessionManager.RUN_DELAY, BukkitSessionManager.RUN_DELAY);
+        if (this.isFolia()) {
+            getServer().getGlobalRegionScheduler().runAtFixedRate(this, new Consumer() {
+                @Override
+                public void accept(Object ignored) {
+                    sessionManager.run();
+                }
+            }, BukkitSessionManager.RUN_DELAY, BukkitSessionManager.RUN_DELAY);
+        } else {
+            getServer().getScheduler().scheduleSyncRepeatingTask(this, sessionManager, BukkitSessionManager.RUN_DELAY, BukkitSessionManager.RUN_DELAY);
+        }
 
         // Register events
         getServer().getPluginManager().registerEvents(sessionManager, this);
@@ -208,12 +225,24 @@ public class WorldGuardPlugin extends JavaPlugin {
         }
         worldListener.registerEvents();
 
-        Bukkit.getScheduler().runTask(this, () -> {
+        if (this.isFolia()) {
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                ProcessPlayerEvent event = new ProcessPlayerEvent(player);
-                Events.fire(event);
+                player.getScheduler().run(this, new Consumer() {
+                    @Override
+                    public void accept(Object ignored) {
+                        ProcessPlayerEvent event = new ProcessPlayerEvent(player);
+                        Events.fire(event);
+                    }
+                }, null);
             }
-        });
+        } else {
+            Bukkit.getScheduler().runTask(this, () -> {
+                for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                    ProcessPlayerEvent event = new ProcessPlayerEvent(player);
+                    Events.fire(event);
+                }
+            });
+        }
 
         ((SimpleFlagRegistry) WorldGuard.getInstance().getFlagRegistry()).setInitialized(true);
         ((SimpleDomainRegistry) WorldGuard.getInstance().getDomainRegistry()).setInitialized(true);
@@ -269,7 +298,12 @@ public class WorldGuardPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         WorldGuard.getInstance().disable();
-        this.getServer().getScheduler().cancelTasks(this);
+        if (this.isFolia()) {
+            this.getServer().getGlobalRegionScheduler().cancelTasks(this);
+            this.getServer().getAsyncScheduler().cancelTasks(this);
+        } else {
+            this.getServer().getScheduler().cancelTasks(this);
+        }
     }
 
     @Override
@@ -527,6 +561,24 @@ public class WorldGuardPlugin extends JavaPlugin {
 
     public PlayerMoveListener getPlayerMoveListener() {
         return playerMoveListener;
+    }
+
+    private final LazyReference<Boolean> folia = LazyReference.from(() -> {
+        try {
+            // Folia is Paper-based, so this is a good first check.
+            if (PaperLib.isPaper()) {
+                return ServerBuildInfo.buildInfo().isBrandCompatible(net.kyori.adventure.key.Key.key("papermc", "folia"));
+            }
+        } catch (Throwable t) {
+            // Ignore, this likely means an outdated version.
+            LOGGER.warn("Failed to check if server is running Folia", t);
+        }
+
+        return false;
+    });
+
+    public boolean isFolia() {
+        return folia.getValue();
     }
 
 }

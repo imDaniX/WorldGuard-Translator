@@ -19,6 +19,7 @@
 
 package com.sk89q.worldguard.blacklist.action;
 
+import com.sk89q.worldedit.util.formatting.text.serializer.plain.PlainComponentSerializer;
 import com.sk89q.worldguard.blacklist.BlacklistEntry;
 import com.sk89q.worldguard.blacklist.event.BlacklistEvent;
 import me.imdanix.wgtranslator.Msg;
@@ -43,11 +44,12 @@ public class TellAction extends RepeatGuardedAction {
         String message = entry.getMessage();
 
         if (event.getPlayer() != null) {
+            String friendlyName = PlainComponentSerializer.INSTANCE.serialize(event.getTarget().getFriendlyNameComponent());
             if (message != null) {
                 message = message.replaceAll("(?!<\\\\)\\\\n", "\n").replaceAll("\\\\\\\\n", "\\n");
-                event.getPlayer().print(Msg.BLACKLIST_PUNISHMENT_TELL_TEXT.get(String.format(message, event.getTarget().getFriendlyName())));
+                event.getPlayer().print(Msg.BLACKLIST_PUNISHMENT_TELL_TEXT.get(String.format(message, friendlyName)));
             } else {
-                event.getPlayer().printError(Msg.BLACKLIST_PUNISHMENT_TELL_DEFAULT.get(event.getDescription(), event.getTarget().getFriendlyName()));
+                event.getPlayer().printError(Msg.BLACKLIST_PUNISHMENT_TELL_DEFAULT.get(event.getDescription(), friendlyName));
             }
         }
 
