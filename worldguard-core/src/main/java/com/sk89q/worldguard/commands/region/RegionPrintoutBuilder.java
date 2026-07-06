@@ -113,7 +113,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
      * Add information about flags.
      */
     public void appendFlags() {
-        builder.append(TextComponent.of(Msg.REGION_INFO_FLAGS.get(), TextColor.BLUE));
+        builder.append(TextComponent.of(Msg.REGION_INFO_FLAGS_BASE.get(), TextColor.BLUE));
 
         appendFlagsList(true);
 
@@ -317,7 +317,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
     public void appendBounds() {
         BlockVector3 min = region.getMinimumPoint();
         BlockVector3 max = region.getMaximumPoint();
-        builder.append(TextComponent.of(Msg.REGION_INFO_BOUNDS.get(), TextColor.BLUE));
+        builder.append(TextComponent.of(Msg.REGION_INFO_BOUND_BASE.get(), TextColor.BLUE));
         TextComponent bound = TextComponent.of(" " + min + " -> " + max, TextColor.YELLOW);
         if (perms != null && perms.maySelect(region)) {
             bound = bound

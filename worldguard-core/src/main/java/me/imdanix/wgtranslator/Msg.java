@@ -115,14 +115,17 @@ public enum Msg {
     REGION_FLAG_GROUP_RESET("Region group flag for '{flag}' reset to default.", "flag"),
     REGION_FLAG_GROUP_SET("Region group flag for '{flag}' set.", "flag"),
     REGION_FLAG_CURRENT_FLAGS("(Current flags: "),
+    REGION_FLAG_CURRENT_FLAGSEND(")"),
     REGION_FLAGS_SPECIFY("Please specify the region with /region flags -w world_name region_name."),
     REGION_FLAGS_FAIL("Failed to get region flags"),
 
     REGION_PRIORITY_SET("Priority of '{region}' set to {priority} (higher numbers override).", "region", "priority"),
 
     REGION_PARENT_ERROR_CIRCULAR("Uh oh! Setting '{parent}' to be the parent of '{child}' would cause circular inheritance.", "parent", "child"),
-    REGION_PARENT_CURRENT_INHERITANCE("(Current inheritance on '{parent}':", "parent"),
+    REGION_PARENT_CURRENT_INHERITANCE_INFO("(Current inheritance on '{parent}':", "parent"),
+    REGION_PARENT_CURRENT_INHERITANCE_INFOEND(")"),
     REGION_PARENT_CURRENT_INHERITANCE_SHORT("(Current inheritance:"),
+    REGION_PARENT_CURRENT_INHERITANCE_SHORTEND(")"),
     REGION_PARENT_SET("Inheritance set for region '{region}'.", "region"),
     REGION_PARENT_ORPHANED(" Region is now orphaned."),
 
@@ -152,6 +155,7 @@ public enum Msg {
     REGION_SAVE_ALL_SUCCESS("Successfully saved the region data for all worlds."),
     REGION_SAVE_ALL_FAIL("Failed to save regions for all worlds"),
 
+    REGION_MIGRATEDB_ERROR_BASE("Error encountered while migrating: {message}", "message"),
     REGION_MIGRATEDB_ERROR_INVALID_FROM("The value of 'from' is not a recognized type of region data database."),
     REGION_MIGRATEDB_ERROR_INVALID_TO("The value of 'to' is not a recognized type of region region data database."),
     REGION_MIGRATEDB_ERROR_SAME("It is not possible to migrate between the same types of region data databases."),
@@ -160,7 +164,6 @@ public enum Msg {
     REGION_MIGRATEDB_ERROR_UNSUPPORTED_TO("The driver specified as 'to' does not seem to be supported in your version of WorldGuard."),
     REGION_MIGRATEDB_PERFORMING("Now performing migration... this may take a while."),
     REGION_MIGRATEDB_COMPLETE("Migration complete! This only migrated the data. If you already changed your settings to use the target driver, then WorldGuard is now using the new data. If not, you have to adjust your configuration to use the new driver and then restart your server."),
-    REGION_MIGRATEDB_ERROR("Error encountered while migrating: {message}", "message"),
 
     REGION_MIGRATEUUID_PERFORMING("Now performing migration... this may take a while."),
     REGION_MIGRATEUUID_COMPLETE("Migration complete!"),
@@ -316,7 +319,7 @@ public enum Msg {
     REGION_INFO_TYPE("type="),
     REGION_INFO_PRIORITY(", priority="),
     REGION_INFO_VOLUME("Volume: "),
-    REGION_INFO_FLAGS("Flags: "),
+    REGION_INFO_FLAGS_BASE("Flags: "),
     REGION_INFO_FLAGS_NONE("(none)"),
     REGION_INFO_FLAGS_CLICKTOSET("Click to set flag"),
     REGION_INFO_FLAGS_CLICKTOSETFLAG("Click to set a flag"),
@@ -334,7 +337,7 @@ public enum Msg {
     REGION_INFO_DOMAIN_REMOVECMD("[Rem]"),
     REGION_INFO_DOMAIN_CLEAR("Click to clear"),
     REGION_INFO_DOMAIN_CLEARCMD("[Clr]"),
-    REGION_INFO_BOUNDS("Bounds:"),
+    REGION_INFO_BOUND_BASE("Bounds:"),
     REGION_INFO_BOUNDS_CLICKSELECT("Click to select"),
     REGION_INFO_BOUNDS_TELEPORT("Click to teleport"),
     REGION_INFO_BOUNDS_TELEPORTCMD("[Teleport]"),

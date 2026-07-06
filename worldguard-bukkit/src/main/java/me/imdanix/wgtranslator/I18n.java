@@ -41,7 +41,7 @@ public class I18n implements CommandExecutor {
         List<String> errors = new ArrayList<>();
         for (Msg msg : Msg.values()) {
             String section = msg.asSection();
-            if (!msg.setMessage(cfg.getString(section))) {
+            if (!cfg.isString(section) || !msg.setMessage(cfg.getString(section))) {
                 errors.add(section);
             }
         }

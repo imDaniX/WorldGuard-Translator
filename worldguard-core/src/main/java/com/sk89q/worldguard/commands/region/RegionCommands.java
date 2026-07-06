@@ -76,7 +76,6 @@ import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion.CircularInheritanceException;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
-import com.sk89q.worldguard.protection.util.DomainInputResolver.UserLocatorPolicy;
 import com.sk89q.worldguard.protection.util.WorldEditRegionConverter;
 import com.sk89q.worldguard.session.Session;
 import com.sk89q.worldguard.util.Enums;
@@ -639,7 +638,7 @@ public final class RegionCommands extends RegionCommandsBase {
             RegionPrintoutBuilder printout = new RegionPrintoutBuilder(world.getName(), existing, null, sender);
             printout.append(SubtleFormat.wrap(Msg.REGION_FLAG_CURRENT_FLAGS.get()));
             printout.appendFlagsList(false);
-            printout.append(SubtleFormat.wrap(")"));
+            printout.append(SubtleFormat.wrap(Msg.REGION_FLAG_CURRENT_FLAGSEND.get()));
             printout.send(sender);
             checkSpawnOverlap(sender, world, existing);
         }
@@ -769,10 +768,10 @@ public final class RegionCommands extends RegionCommandsBase {
             assert parent != null;
             printout.append(ErrorFormat.wrap(Msg.REGION_PARENT_ERROR_CIRCULAR.get(parent.getId(), child.getId())));
             printout.newline();
-            printout.append(SubtleFormat.wrap(Msg.REGION_PARENT_CURRENT_INHERITANCE.get(parent.getId())));
+            printout.append(SubtleFormat.wrap(Msg.REGION_PARENT_CURRENT_INHERITANCE_INFO.get(parent.getId())));
             printout.newline();
             printout.appendParentTree(true);
-            printout.append(SubtleFormat.wrap(")"));
+            printout.append(SubtleFormat.wrap(Msg.REGION_PARENT_CURRENT_INHERITANCE_INFOEND.get()));
             printout.send(sender);
             return;
         }
@@ -785,7 +784,7 @@ public final class RegionCommands extends RegionCommandsBase {
             printout.append(SubtleFormat.wrap(Msg.REGION_PARENT_CURRENT_INHERITANCE_SHORT.get()));
             printout.newline();
             printout.appendParentTree(true);
-            printout.append(SubtleFormat.wrap(")"));
+            printout.append(SubtleFormat.wrap(Msg.REGION_PARENT_CURRENT_INHERITANCE_SHORTEND.get()));
         } else {
             printout.append(LabelFormat.wrap(Msg.REGION_PARENT_ORPHANED.get()));
         }
@@ -1027,7 +1026,7 @@ public final class RegionCommands extends RegionCommandsBase {
             sender.print(Msg.REGION_MIGRATEDB_COMPLETE.get());
         } catch (MigrationException e) {
             log.log(Level.WARNING, "Failed to migrate", e);
-            throw new CommandException(Msg.REGION_MIGRATEDB_ERROR.get(e.getMessage()));
+            throw new CommandException(Msg.REGION_MIGRATEDB_ERROR_BASE.get(e.getMessage()));
         } finally {
             if (minecraftLogger != null) {
                 minecraftLogger.removeHandler(handler);
