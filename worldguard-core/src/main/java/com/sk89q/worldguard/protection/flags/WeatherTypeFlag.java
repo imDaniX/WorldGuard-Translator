@@ -46,7 +46,7 @@ public class WeatherTypeFlag extends Flag<WeatherType> {
         input = input.trim();
         WeatherType weatherType = unmarshal(input);
         if (weatherType == null) {
-            throw new InvalidFlagFormat(Msg.REGION_FLAGS_INVALID_WEATHER.get(input));
+            throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_WEATHER.get(input));
         }
         return weatherType;
     }

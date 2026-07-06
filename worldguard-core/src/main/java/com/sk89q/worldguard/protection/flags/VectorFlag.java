@@ -57,7 +57,7 @@ public class VectorFlag extends Flag<Vector3> {
                 }
             }
 
-            throw new InvalidFlagFormat(Msg.REGION_FLAGS_INVALID_LOCATION.get());
+            throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_LOCATION.get());
         }
     }
 

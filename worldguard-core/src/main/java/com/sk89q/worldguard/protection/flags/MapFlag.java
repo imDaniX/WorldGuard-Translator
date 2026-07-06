@@ -84,7 +84,7 @@ public class MapFlag<K, V> extends Flag<Map<K, V>> {
             final char split = str.indexOf('=') == -1 ? ':' : '=';
             final String[] keyVal = str.split(String.valueOf(split));
             if (keyVal.length != 2) {
-                throw new InvalidFlagFormat(Msg.REGION_FLAGS_INVALID_MAP.get());
+                throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_MAP.get());
             }
 
             final FlagContext key = context.copyWith(null, keyVal[0], null);

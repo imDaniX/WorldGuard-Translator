@@ -43,7 +43,7 @@ public class UUIDFlag extends Flag<UUID> {
         try {
             return UUID.fromString(input);
         } catch (IllegalArgumentException e) {
-            throw new InvalidFlagFormat(Msg.REGION_FLAGS_INVALID_UUID.get(input));
+            throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_UUID.get(input));
         }
     }
 

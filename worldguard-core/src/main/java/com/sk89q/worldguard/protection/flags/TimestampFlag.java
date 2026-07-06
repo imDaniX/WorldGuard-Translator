@@ -63,10 +63,10 @@ public class TimestampFlag extends Flag<Instant> {
                 } else if (parsed instanceof ZonedDateTime) {
                     return ((ZonedDateTime) parsed).toInstant();
                 } else {
-                    throw new InvalidFlagFormat(Msg.REGION_FLAGS_INVALID_UNRECOGNIZED.get());
+                    throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_UNRECOGNIZED.get());
                 }
             } catch (DateTimeParseException ignored) {
-                throw new InvalidFlagFormat(Msg.REGION_FLAGS_INVALID_DATETIME.get());
+                throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_DATETIME.get());
             }
         }
     }
