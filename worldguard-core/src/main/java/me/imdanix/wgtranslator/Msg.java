@@ -69,7 +69,7 @@ public enum Msg {
     REGION_FLAGS_VALUE_STRING_CURRENT("Current value:"),
 
     // com.sk89q.worldguard.protection.flags.Flags
-    REGION_FLAGS_VALUE_DEFAULT_DENY("&c&lHey!&7 Sorry, but you can't %what% here"),
+    REGION_FLAGS_VALUE_DEFAULT_DENY("&c&lHey!&7 Sorry, but you can't %what% here."),
     REGION_FLAGS_VALUE_DEFAULT_ENTRYDENY("&c&lHey!&7 You are not permitted to enter this area."),
     REGION_FLAGS_VALUE_DEFAULT_EXITDENY("&c&lHey!&7 You are not permitted to leave this area."),
 
