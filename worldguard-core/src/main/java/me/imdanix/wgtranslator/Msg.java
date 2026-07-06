@@ -40,7 +40,6 @@ public enum Msg {
 
     // com.sk89q.worldguard.commands.region.FlagHelperBox
     REGION_FLAGS_TITLE("Flags for {region}", "region"),
-    REGION_FLAGS_PAGECOMMAND("/rg flags -w \"{world}\" -p %page% {region}", "region", "world"),
     REGION_FLAGS_THIRDPARTY("Third-Party Flags"),
     REGION_FLAGS_SPECIAL_MEMBER("This is a special flag which defaults to allow for members, and deny for non-members"),
     REGION_FLAGS_SPECIAL_BUILD("This is a special flag which overrides build checks. (Not movement related!)"),

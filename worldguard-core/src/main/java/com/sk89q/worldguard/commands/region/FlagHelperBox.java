@@ -85,7 +85,7 @@ class FlagHelperBox extends PaginationBox {
     private boolean monoSpace;
 
     FlagHelperBox(World world, ProtectedRegion region, RegionPermissionModel perms) {
-        super(Msg.REGION_FLAGS_TITLE.get(region.getId()), Msg.REGION_FLAGS_PAGECOMMAND.get(region.getId(), world.getName()));
+        super(Msg.REGION_FLAGS_TITLE.get(region.getId()), "/rg flags -w \"" + world.getName() + "\" -p %page% " + region.getId());
         this.world = world;
         this.region = region;
         this.perms = perms;
