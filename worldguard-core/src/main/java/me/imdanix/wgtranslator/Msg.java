@@ -441,19 +441,58 @@ public enum Msg {
         }
     }
 
-    // org.bukkit.ChatColor#translateAlternateColorCodes
-    public static String colorize(String textToTranslate) {
-        if (textToTranslate == null) {
-            return null;
-        }
-        char[] b = textToTranslate.toCharArray();
-        for (int i = 0; i < b.length - 1; i++) {
-            if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx".indexOf(b[i + 1]) > -1) {
-                b[i] = '§';
-                b[i + 1] = Character.toLowerCase(b[i + 1]);
+    public static String colorize(String message) {
+        StringBuilder builder = new StringBuilder(message.length() + 32);
+        int i = 0;
+        int len = message.length();
+
+        while (i < len) {
+            if (i + 7 < len && message.charAt(i) == '&' && message.charAt(i + 1) == '#') {
+                boolean isHex = true;
+                for (int j = 2; j < 8; j++) {
+                    char c = message.charAt(i + j);
+                    if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f'))) {
+                        isHex = false;
+                        break;
+                    }
+                }
+                if (isHex) {
+                    String hexDigits = message.substring(i + 2, i + 8);
+                    builder.append('§').append('x');
+                    for (int k = 0; k < 6; k++) {
+                        builder.append('§').append(hexDigits.charAt(k));
+                    }
+                    i += 8;
+                    continue;
+                }
             }
+
+            if (i + 1 < len && message.charAt(i) == '&') {
+                char next = message.charAt(i + 1);
+                if (isValidFormatCode(next)) {
+                    builder.append('§').append(next);
+                    i += 2;
+                    continue;
+                }
+            }
+
+            builder.append(message.charAt(i));
+            i++;
         }
-        return new String(b);
+
+        return builder.toString();
+    }
+
+    private static boolean isValidFormatCode(char c) {
+        return switch (c) {
+            case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                 'a', 'b', 'c', 'd', 'e', 'f',
+                 'A', 'B', 'C', 'D', 'E', 'F',
+                 'k', 'l', 'm', 'n', 'o', 'r',
+                 'K', 'L', 'M', 'N', 'O', 'R',
+                 'x', 'X' -> true;
+            default -> false;
+        };
     }
 
     public String asSection() {
