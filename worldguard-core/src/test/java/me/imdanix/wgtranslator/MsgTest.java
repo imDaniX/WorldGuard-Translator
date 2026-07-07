@@ -4,10 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class MsgTest {
     @ParameterizedTest
@@ -35,15 +33,26 @@ public class MsgTest {
 
     @Test
     public void sectionsTest() {
-        List<String> names = Arrays.stream(Msg.values()).map(Enum::name).toList();
+        for (Msg msgLeft : Msg.values()) {
+            String[] sectionsLeft = msgLeft.name().split("_");
+            for (Msg msgRight : Msg.values()) {
+                if (msgLeft == msgRight) continue;
+                String[] sectionRight = msgRight.name().split("_");
+                if (sectionsLeft.length > sectionRight.length) continue;
 
-        for (String a : names) for (String b : names) {
-            if (!a.equals(b)) {
-                assertFalse(
-                        a.contains(b),
-                        "'" + a + "' contains '" + b + "'"
-                );
+                if (isPrefix(sectionsLeft, sectionRight)) {
+                    fail("'" + msgRight.name() + "' contains '" + msgLeft.name() + "'");
+                }
             }
         }
+    }
+
+    private boolean isPrefix(String[] shorter, String[] longer) {
+        for (int i = 0; i < shorter.length; i++) {
+            if (!shorter[i].equals(longer[i])) {
+                return false;
+            }
+        }
+        return true;
     }
 }
