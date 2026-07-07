@@ -21,7 +21,7 @@ public class MsgTest {
         '&' | '&'
         '' | ''
         '&&kDouble ampersand' | '&§kDouble ampersand'
-        '&#FF0000Uppercase hex' | '&#FF0000Uppercase hex'
+        '&#FF0000Uppercase hex' | '§x§f§f§0§0§0§0Uppercase hex'
         '&#12Short hex' | '&#12Short hex'
         '&#ghijklNon hex' | '&#ghijklNon hex'
         'Text ending with &' | 'Text ending with &'

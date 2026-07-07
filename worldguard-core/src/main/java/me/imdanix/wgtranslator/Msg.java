@@ -447,11 +447,11 @@ public enum Msg {
         int len = message.length();
 
         while (i < len) {
-            if (i + 7 < len && message.charAt(i) == '&' && message.charAt(i + 1) == '#') {
+            if (i + 7 < len && (message.charAt(i) == '&' || message.charAt(i) == '§') && message.charAt(i + 1) == '#') {
                 boolean isHex = true;
                 for (int j = 2; j < 8; j++) {
                     char c = message.charAt(i + j);
-                    if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f'))) {
+                    if (!isColorCode(c)) {
                         isHex = false;
                         break;
                     }
@@ -460,7 +460,7 @@ public enum Msg {
                     String hexDigits = message.substring(i + 2, i + 8);
                     builder.append('§').append('x');
                     for (int k = 0; k < 6; k++) {
-                        builder.append('§').append(hexDigits.charAt(k));
+                        builder.append('§').append(Character.toLowerCase(hexDigits.charAt(k)));
                     }
                     i += 8;
                     continue;
@@ -469,8 +469,8 @@ public enum Msg {
 
             if (i + 1 < len && message.charAt(i) == '&') {
                 char next = message.charAt(i + 1);
-                if (isValidFormatCode(next)) {
-                    builder.append('§').append(next);
+                if (isFormatCode(next)) {
+                    builder.append('§').append(Character.toLowerCase(next));
                     i += 2;
                     continue;
                 }
@@ -483,7 +483,11 @@ public enum Msg {
         return builder.toString();
     }
 
-    private static boolean isValidFormatCode(char c) {
+    private static boolean isColorCode(char c) {
+        return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
+    }
+
+    private static boolean isFormatCode(char c) {
         return switch (c) {
             case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                  'a', 'b', 'c', 'd', 'e', 'f',
