@@ -241,7 +241,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
             builder.append(TextComponent.of(namePrefix.toString(), useColors ? TextColor.GREEN : TextColor.WHITE));
             if (perms != null && perms.mayLookup(cur)) {
                 builder.append(TextComponent.of(cur.getId(), useColors ? TextColor.GREEN : TextColor.WHITE)
-                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION__INFO__PARENT__CLICKINFO.get())))
+                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION__INFO__PARENT__CLICK_INFO.get())))
                     .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "/rg info -w \"" + world + "\" " + cur.getId())));
             } else {
                 builder.append(TextComponent.of(cur.getId(), useColors ? TextColor.GREEN : TextColor.WHITE));
@@ -255,7 +255,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
             }
             if (last != null && cur.equals(region) && perms != null && perms.maySetParent(cur, last)) {
                 builder.append(TextComponent.space());
-                builder.append(TextComponent.of(Msg.REGION__INFO__PARENT__UNLINKCMD.get(), TextColor.RED)
+                builder.append(TextComponent.of(Msg.REGION__INFO__PARENT__UNLINK_CMD.get(), TextColor.RED)
                         .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION__INFO__PARENT__UNLINK.get())))
                         .clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND, "/rg setparent -w \"" + world + "\" " + cur.getId())));
             }

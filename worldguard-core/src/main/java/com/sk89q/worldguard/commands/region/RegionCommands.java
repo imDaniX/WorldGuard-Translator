@@ -768,10 +768,10 @@ public final class RegionCommands extends RegionCommandsBase {
             assert parent != null;
             printout.append(ErrorFormat.wrap(Msg.REGION__PARENT__ERROR__CIRCULAR.get(parent.getId(), child.getId())));
             printout.newline();
-            printout.append(SubtleFormat.wrap(Msg.REGION__PARENT__CURRENT__INHERITANCE__INFO.get(parent.getId())));
+            printout.append(SubtleFormat.wrap(Msg.REGION__PARENT__CURRENT_INHERITANCE__INFO.get(parent.getId())));
             printout.newline();
             printout.appendParentTree(true);
-            printout.append(SubtleFormat.wrap(Msg.REGION__PARENT__CURRENT__INHERITANCE__INFOEND.get()));
+            printout.append(SubtleFormat.wrap(Msg.REGION__PARENT__CURRENT_INHERITANCE__INFO_END.get()));
             printout.send(sender);
             return;
         }
@@ -781,10 +781,10 @@ public final class RegionCommands extends RegionCommandsBase {
         printout.append(TextComponent.of(Msg.REGION__PARENT__SET.get(child.getId()), TextColor.LIGHT_PURPLE));
         if (parent != null) {
             printout.newline();
-            printout.append(SubtleFormat.wrap(Msg.REGION__PARENT__CURRENT__INHERITANCE__SHORT.get()));
+            printout.append(SubtleFormat.wrap(Msg.REGION__PARENT__CURRENT_INHERITANCE__SHORT.get()));
             printout.newline();
             printout.appendParentTree(true);
-            printout.append(SubtleFormat.wrap(Msg.REGION__PARENT__CURRENT__INHERITANCE__SHORTEND.get()));
+            printout.append(SubtleFormat.wrap(Msg.REGION__PARENT__CURRENT_INHERITANCE__SHORT_END.get()));
         } else {
             printout.append(LabelFormat.wrap(Msg.REGION__PARENT__ORPHANED.get()));
         }
