@@ -125,7 +125,7 @@ public class WorldGuardPlayerListener extends AbstractListener {
         }
 
         if (wcfg.fireSpreadDisableToggle) {
-            player.sendMessage(Msg.CONFIG__WORLD__FIRE_DISABLED.get());
+            player.sendMessage(Msg.FIRE__DISABLED.get());
         }
 
         Events.fire(new ProcessPlayerEvent(player));
