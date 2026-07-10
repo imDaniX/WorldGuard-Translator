@@ -82,8 +82,28 @@ public enum Msg {
     HALT__STATUS__ALLOWED("ALL intensive server activity is allowed."),
     HALT__STATUS__HALTED("ALL intensive server activity is not allowed."),
 
+    HEAL__HEALED("Healed!"),
+    HEAL__HEALED_BY("Healed by {name}.", "name"),
+    HEAL__HEALED_OTHER("Players healed."),
+
+    GOD__DISABLED("God mode disabled!"),
+    GOD__DISABLED_BY("God disabled by {name}.", "name"),
+    GOD__DISABLED_OTHER("Players no longer have god mode."),
+    GOD__ENABLED("God mode enabled! Use /ungod to disable."),
+    GOD__ENABLED_BY("God enabled by {name}.", "name"),
+    GOD__ENABLED_OTHER("Players now have god mode."),
+
     INFINITESTACK__REMOVE("&cInfinite stack removed."),
     INFINITESTACK__REMOVE_SLOT("&cInfinite stack in slot #{slot} removed.", "slot"),
+
+    LOCATE__REPOINTED("Compass repointed."),
+    LOCATE__RESET("Compass reset to spawn."),
+
+    SLAY__SLAIN("Slain!"),
+    SLAY__SLAIN_BY("Slain by {name}.", "name"),
+    SLAY__SLAIN_OTHER("Players slain."),
+
+    STACK__COMPACTED("Items compacted into stacks!"),
 
     REGION__BYPASS__DISABLED("You are no longer bypassing region protection."),
     REGION__BYPASS__ENABLED("You are now bypassing region protection (as long as you have permission)."),

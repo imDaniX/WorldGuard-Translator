@@ -31,6 +31,7 @@ import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.session.Session;
 import com.sk89q.worldguard.session.handler.GodMode;
+import me.imdanix.wgtranslator.Msg;
 
 public class GeneralCommands {
     private final WorldGuard worldGuard;
@@ -66,12 +67,12 @@ public class GeneralCommands {
 
                 // Tell the user
                 if (player.equals(sender)) {
-                    player.print("God mode enabled! Use /ungod to disable.");
+                    player.print(Msg.GOD__ENABLED.get());
 
                     // Keep track of this
                     included = true;
                 } else if (!args.hasFlag('s')) {
-                    player.print("God enabled by " + sender.getDisplayName() + ".");
+                    player.print(Msg.GOD__ENABLED_BY.get(sender.getDisplayName()));
 
                 }
             }
@@ -80,7 +81,7 @@ public class GeneralCommands {
         // The player didn't receive any items, then we need to send the
         // user a message so s/he know that something is indeed working
         if (!included) {
-            sender.print("Players now have god mode.");
+            sender.print(Msg.GOD__ENABLED_OTHER.get());
         }
     }
     
@@ -109,12 +110,12 @@ public class GeneralCommands {
             if (GodMode.set(player, session, false)) {
                 // Tell the user
                 if (player.equals(sender)) {
-                    player.print("God mode disabled!");
+                    player.print(Msg.GOD__DISABLED.get());
 
                     // Keep track of this
                     included = true;
                 } else if (!args.hasFlag('s')) {
-                    player.print("God disabled by " + sender.getDisplayName() + ".");
+                    player.print(Msg.GOD__DISABLED_BY.get(sender.getDisplayName()));
 
                 }
             }
@@ -123,7 +124,7 @@ public class GeneralCommands {
         // The player didn't receive any items, then we need to send the
         // user a message so s/he know that something is indeed working
         if (!included) {
-            sender.print("Players no longer have god mode.");
+            sender.print(Msg.GOD__DISABLED_OTHER.get());
         }
     }
     
@@ -154,12 +155,12 @@ public class GeneralCommands {
             
             // Tell the user
             if (player.equals(sender)) {
-                player.print("Healed!");
+                player.print(Msg.HEAL__HEALED.get());
                 
                 // Keep track of this
                 included = true;
             } else if (!args.hasFlag('s')) {
-                player.print("Healed by " + sender.getDisplayName() + ".");
+                player.print(Msg.HEAL__HEALED_BY.get(sender.getDisplayName()));
                 
             }
         }
@@ -167,7 +168,7 @@ public class GeneralCommands {
         // The player didn't receive any items, then we need to send the
         // user a message so s/he know that something is indeed working
         if (!included) {
-            sender.print("Players healed.");
+            sender.print(Msg.HEAL__HEALED_OTHER.get());
         }
     }
     
@@ -195,12 +196,12 @@ public class GeneralCommands {
             
             // Tell the user
             if (player.equals(sender)) {
-                player.print("Slain!");
+                player.print(Msg.SLAY__SLAIN.get());
                 
                 // Keep track of this
                 included = true;
             } else if (!args.hasFlag('s')) {
-                player.print("Slain by " + sender.getDisplayName() + ".");
+                player.print(Msg.SLAY__SLAIN_BY.get(sender.getDisplayName()));
                 
             }
         }
@@ -208,7 +209,7 @@ public class GeneralCommands {
         // The player didn't receive any items, then we need to send the
         // user a message so s/he know that something is indeed working
         if (!included) {
-            sender.print("Players slain.");
+            sender.print(Msg.SLAY__SLAIN_OTHER.get());
         }
     }
     
@@ -220,12 +221,12 @@ public class GeneralCommands {
         if (args.argsLength() == 0) {
             player.setCompassTarget(new Location(player.getWorld(), player.getWorld().getSpawnPosition().toVector3()));
             
-            sender.print("Compass reset to spawn.");
+            sender.print(Msg.LOCATE__RESET.get());
         } else {
             LocalPlayer target = worldGuard.getPlatform().getMatcher().matchSinglePlayer(sender, args.getString(0));
             player.setCompassTarget(target.getLocation());
             
-            sender.print("Compass repointed.");
+            sender.print(Msg.LOCATE__REPOINTED.get());
         }
     }
     
@@ -237,6 +238,6 @@ public class GeneralCommands {
 
         WorldGuard.getInstance().getPlatform().stackPlayerInventory(player);
 
-        player.print("Items compacted into stacks!");
+        player.print(Msg.STACK__COMPACTED.get());
     }
 }
