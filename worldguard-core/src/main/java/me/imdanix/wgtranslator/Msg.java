@@ -93,6 +93,29 @@ public enum Msg {
     REGION_FLAGS_VALUE_INVALID_WEATHER("Unknown weather type: {input}", "input"),
     REGION_FLAGS_VALUE_INVALID_GAMEMODE("Unknown game mode: {input}", "input"),
 
+    // com.sk89q.worldguard.commands.ToggleCommands
+    FIRE_STOP_SUCCESS("Fire spread has been globally disabled for '{world}' by {player}.", "world", "player"),
+    FIRE_STOP_ALREADY("Fire spread was already globally disabled."),
+    FIRE_ALLOW_SUCCESS("Fire spread has been globally for '{world}' re-enabled by {player}.", "world", "player"),
+    FIRE_ALLOW_ALREADY("Fire spread was already globally enabled."),
+
+    HALT_STATUS_HALTED("ALL intensive server activity is not allowed."),
+    HALT_STATUS_ALLOWED("ALL intensive server activity is allowed."),
+    HALT_CONFIRM_WARNING1("This command will "),
+    HALT_CONFIRM_WARNING2("PERMANENTLY"),
+    HALT_CONFIRM_WARNING3(" erase ALL animals in ALL loaded chunks in ALL loaded worlds. "),
+    HALT_CONFIRM_PROMPT1("Click to confirm /{command}", "command"),
+    HALT_CONFIRM_PROMPT2("[Click]"),
+    HALT_CONFIRM_PROMPT3(" or type "),
+    HALT_CONFIRM_PROMPT4(" to confirm."),
+    HALT_HALTED_INFO("ALL intensive server activity halted."),
+    HALT_HALTED_BROADCAST("ALL intensive server activity halted by {name}.", "name"),
+    HALT_HALTED_SILENT("(Silent) ALL intensive server activity halted by {name}.", "name"),
+    HALT_ALLOWED_INFO("ALL intensive server activity is now allowed."),
+    HALT_ALLOWED_BROADCAST("ALL intensive server activity is now allowed."),
+    HALT_ALLOWED_SILENT("(Silent) ALL intensive server activity is now allowed."),
+    HALT_ENTITIESREMOVED("{count} entities (>10) auto-removed from {world}", "count", "world"),
+
     // com.sk89q.worldguard.commands.region.RegionCommand
     REGION_DEFINE_ADDING("Adding region '{region}'", "region"),
     REGION_DEFINE_SUCCESS("A new region has been made named '{region}'", "region"),
