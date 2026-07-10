@@ -58,10 +58,10 @@ public enum Msg {
     ERROR__USAGE("&c{usage}", "usage"),
 
     FIRE__ALLOW__ALREADY("Fire spread was already globally enabled."),
-    FIRE__ALLOW__SUCCESS("Fire spread has been globally for '{world}' re-enabled by {player}.", "world", "player"),
+    FIRE__ALLOW__SUCCESS("Fire spread has been globally for '{world}' re-enabled by {name}.", "world", "name"),
     FIRE__DISABLED("&eFire spread is currently globally disabled for this world."),
     FIRE__STOP__ALREADY("Fire spread was already globally disabled."),
-    FIRE__STOP__SUCCESS("Fire spread has been globally disabled for '{world}' by {player}.", "world", "player"),
+    FIRE__STOP__SUCCESS("Fire spread has been globally disabled for '{world}' by {name}.", "world", "name"),
 
     HALT__ALLOWED__BROADCAST("ALL intensive server activity is now allowed."),
     HALT__ALLOWED__INFO("ALL intensive server activity is now allowed."),
