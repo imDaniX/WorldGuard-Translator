@@ -71,9 +71,9 @@ public class WorldGuardCommandBookListener implements Listener {
                 }
                 
                 if (regions.size() > 0) {
-                    event.addWhoisInformation(Msg.COMMANDBOOK_WHOIS_CURRENT.get(), regionStr);
+                    event.addWhoisInformation(Msg.COMMANDBOOK__WHOIS__CURRENT.get(), regionStr);
                 }
-                event.addWhoisInformation(Msg.COMMANDBOOK_WHOIS_BUILD.get(), regions.testState(localPlayer, Flags.BUILD));
+                event.addWhoisInformation(Msg.COMMANDBOOK__WHOIS__BUILD.get(), regions.testState(localPlayer, Flags.BUILD));
             }
         }
     }

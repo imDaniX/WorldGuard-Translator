@@ -34,10 +34,10 @@ public class MsgTest {
     @Test
     public void sectionsTest() {
         for (Msg msgLeft : Msg.values()) {
-            String[] sectionsLeft = msgLeft.name().split("_");
+            String[] sectionsLeft = msgLeft.name().split("__");
             for (Msg msgRight : Msg.values()) {
                 if (msgLeft == msgRight) continue;
-                String[] sectionRight = msgRight.name().split("_");
+                String[] sectionRight = msgRight.name().split("__");
                 if (sectionsLeft.length > sectionRight.length) continue;
 
                 if (isPrefix(sectionsLeft, sectionRight)) {

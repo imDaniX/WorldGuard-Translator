@@ -47,9 +47,9 @@ public class KickAction implements Action {
             String friendlyName = PlainComponentSerializer.INSTANCE.serialize(event.getTarget().getFriendlyNameComponent());
 
             if (message != null) {
-                event.getPlayer().kick(Msg.BLACKLIST_PUNISHMENT_KICK_REASONED.get(String.format(message, friendlyName)));
+                event.getPlayer().kick(Msg.BLACKLIST__PUNISHMENT__KICK__REASONED.get(String.format(message, friendlyName)));
             } else {
-                event.getPlayer().kick(Msg.BLACKLIST_PUNISHMENT_KICK_DEFAULT.get(event.getDescription(), friendlyName));
+                event.getPlayer().kick(Msg.BLACKLIST__PUNISHMENT__KICK__DEFAULT.get(event.getDescription(), friendlyName));
             }
         }
 

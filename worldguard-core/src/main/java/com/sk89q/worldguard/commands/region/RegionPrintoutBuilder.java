@@ -88,22 +88,22 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
      * Add region name, type, and priority.
      */
     public void appendBasics() {
-        builder.append(TextComponent.of(Msg.REGION_INFO_REGION_NAME.get(), TextColor.BLUE));
+        builder.append(TextComponent.of(Msg.REGION__INFO__REGION__NAME.get(), TextColor.BLUE));
         builder.append(TextComponent.of(region.getId(), TextColor.YELLOW)
                 .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "/rg info -w \"" + world + "\" " + region.getId())));
 
-        builder.append(TextComponent.of(Msg.REGION_INFO_REGION_TYPE.get(), TextColor.GRAY));
+        builder.append(TextComponent.of(Msg.REGION__INFO__REGION__TYPE.get(), TextColor.GRAY));
         builder.append(TextComponent.of(region.getType().getName()));
 
-        builder.append(TextComponent.of(Msg.REGION_INFO_REGION_PRIORITY.get(), TextColor.GRAY));
+        builder.append(TextComponent.of(Msg.REGION__INFO__REGION__PRIORITY.get(), TextColor.GRAY));
         appendPriorityComponent(region);
-        builder.append(TextComponent.of(Msg.REGION_INFO_REGION_END.get(), TextColor.GRAY));
+        builder.append(TextComponent.of(Msg.REGION__INFO__REGION__END.get(), TextColor.GRAY));
 
         newline();
     }
 
     public void appendVolume() {
-        builder.append(TextComponent.of(Msg.REGION_INFO_VOLUME.get(), TextColor.BLUE));
+        builder.append(TextComponent.of(Msg.REGION__INFO__VOLUME.get(), TextColor.BLUE));
         builder.append(TextComponent.of(region.volume(), TextColor.YELLOW));
 
         newline();
@@ -113,7 +113,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
      * Add information about flags.
      */
     public void appendFlags() {
-        builder.append(TextComponent.of(Msg.REGION_INFO_FLAGS_BASE.get(), TextColor.BLUE));
+        builder.append(TextComponent.of(Msg.REGION__INFO__FLAGS__BASE.get(), TextColor.BLUE));
 
         appendFlagsList(true);
 
@@ -171,7 +171,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
             TextComponent flagText = TextComponent.of(flagString, flagColor)
                     .append(TextComponent.of(String.valueOf(val), useColors ? TextColor.YELLOW : TextColor.WHITE));
             if (perms != null && perms.maySetFlag(region, flag)) {
-                flagText = flagText.hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION_INFO_FLAGS_CLICKTOSET.get())))
+                flagText = flagText.hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION__INFO__FLAGS__CLICK_TO_SET.get())))
                         .clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND,
                                 "/rg flag -w \"" + world + "\" " + region.getId() + " " + flag.getName() + " "));
             }
@@ -181,14 +181,14 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
         }
 
         if (!hasFlags) {
-            TextComponent noFlags = TextComponent.of(Msg.REGION_INFO_FLAGS_NONE.get(), useColors ? TextColor.RED : TextColor.WHITE);
+            TextComponent noFlags = TextComponent.of(Msg.REGION__INFO__FLAGS__NONE.get(), useColors ? TextColor.RED : TextColor.WHITE);
             builder.append(noFlags);
         }
 
         if (perms != null && perms.maySetFlag(region)) {
             builder.append(TextComponent.space())
-                    .append(TextComponent.of(Msg.REGION_INFO_FLAGS_SETCOMMAND.get(), useColors ? TextColor.GREEN : TextColor.GRAY)
-                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION_INFO_FLAGS_CLICKTOSETFLAG.get())))
+                    .append(TextComponent.of(Msg.REGION__INFO__FLAGS__SET_COMMAND.get(), useColors ? TextColor.GREEN : TextColor.GRAY)
+                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION__INFO__FLAGS__CLICK_TO_SET_FLAG.get())))
                     .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "/rg flags -w \"" + world + "\" " + region.getId())));
         }
     }
@@ -241,7 +241,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
             builder.append(TextComponent.of(namePrefix.toString(), useColors ? TextColor.GREEN : TextColor.WHITE));
             if (perms != null && perms.mayLookup(cur)) {
                 builder.append(TextComponent.of(cur.getId(), useColors ? TextColor.GREEN : TextColor.WHITE)
-                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION_INFO_PARENT_CLICKINFO.get())))
+                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION__INFO__PARENT__CLICKINFO.get())))
                     .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "/rg info -w \"" + world + "\" " + cur.getId())));
             } else {
                 builder.append(TextComponent.of(cur.getId(), useColors ? TextColor.GREEN : TextColor.WHITE));
@@ -249,14 +249,14 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
 
             // Put (parent)
             if (!cur.equals(region)) {
-                builder.append(TextComponent.of(Msg.REGION_INFO_PARENT_INFO.get(), useColors ? TextColor.GRAY : TextColor.WHITE));
+                builder.append(TextComponent.of(Msg.REGION__INFO__PARENT__INFO.get(), useColors ? TextColor.GRAY : TextColor.WHITE));
                 appendPriorityComponent(cur);
-                builder.append(TextComponent.of(Msg.REGION_INFO_PARENT_END.get(), useColors ? TextColor.GRAY : TextColor.WHITE));
+                builder.append(TextComponent.of(Msg.REGION__INFO__PARENT__END.get(), useColors ? TextColor.GRAY : TextColor.WHITE));
             }
             if (last != null && cur.equals(region) && perms != null && perms.maySetParent(cur, last)) {
                 builder.append(TextComponent.space());
-                builder.append(TextComponent.of(Msg.REGION_INFO_PARENT_UNLINKCMD.get(), TextColor.RED)
-                        .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION_INFO_PARENT_UNLINK.get())))
+                builder.append(TextComponent.of(Msg.REGION__INFO__PARENT__UNLINKCMD.get(), TextColor.RED)
+                        .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION__INFO__PARENT__UNLINK.get())))
                         .clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND, "/rg setparent -w \"" + world + "\" " + cur.getId())));
             }
 
@@ -270,13 +270,13 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
      * Add information about members.
      */
     public void appendDomain() {
-        builder.append(TextComponent.of(Msg.REGION_INFO_OWNERS.get(), TextColor.BLUE));
+        builder.append(TextComponent.of(Msg.REGION__INFO__OWNERS.get(), TextColor.BLUE));
         addDomainString(region.getOwners(),
                 perms != null && perms.mayAddOwners(region) ? "addowner" : null,
                 perms != null && perms.mayRemoveOwners(region) ? "removeowner" : null);
         newline();
 
-        builder.append(TextComponent.of(Msg.REGION_INFO_MEMBERS.get(), TextColor.BLUE));
+        builder.append(TextComponent.of(Msg.REGION__INFO__MEMBERS.get(), TextColor.BLUE));
         addDomainString(region.getMembers(),
                 perms != null && perms.mayAddMembers(region) ? "addmember" : null,
                 perms != null && perms.mayRemoveMembers(region) ? "removemember" : null);
@@ -285,7 +285,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
 
     private void addDomainString(DefaultDomain domain, String addCommand, String removeCommand) {
         if (domain.size() == 0) {
-            builder.append(ErrorFormat.wrap(Msg.REGION_INFO_DOMAIN_NONE.get()));
+            builder.append(ErrorFormat.wrap(Msg.REGION__INFO__DOMAIN__NONE.get()));
         } else {
             if (perms != null) {
                 builder.append(domain.toUserFriendlyComponent(cache));
@@ -294,18 +294,18 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
             }
         }
         if (addCommand != null) {
-            builder.append(TextComponent.space().append(TextComponent.of(Msg.REGION_INFO_DOMAIN_ADDCMD.get(), TextColor.GREEN)
-                            .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION_INFO_DOMAIN_ADD.get())))
+            builder.append(TextComponent.space().append(TextComponent.of(Msg.REGION__INFO__DOMAIN__ADD_CMD.get(), TextColor.GREEN)
+                            .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION__INFO__DOMAIN__ADD.get())))
                             .clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND,
                                     "/rg " + addCommand + " -w \"" + world + "\" " + region.getId() + " "))));
         }
         if (removeCommand != null && domain.size() > 0) {
-            builder.append(TextComponent.space().append(TextComponent.of(Msg.REGION_INFO_DOMAIN_REMOVECMD.get(), TextColor.RED)
-                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION_INFO_DOMAIN_REMOVE.get())))
+            builder.append(TextComponent.space().append(TextComponent.of(Msg.REGION__INFO__DOMAIN__REMOVE_CMD.get(), TextColor.RED)
+                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION__INFO__DOMAIN__REMOVE.get())))
                     .clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND,
                             "/rg " + removeCommand + " -w \"" + world + "\" " + region.getId() + " "))));
-            builder.append(TextComponent.space().append(TextComponent.of(Msg.REGION_INFO_DOMAIN_CLEARCMD.get(), TextColor.RED)
-                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION_INFO_DOMAIN_CLEAR.get())))
+            builder.append(TextComponent.space().append(TextComponent.of(Msg.REGION__INFO__DOMAIN__CLEAR_CMD.get(), TextColor.RED)
+                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION__INFO__DOMAIN__CLEAR.get())))
                     .clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND,
                             "/rg " + removeCommand + " -w \"" + world + "\" -a " + region.getId()))));
         }
@@ -317,28 +317,28 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
     public void appendBounds() {
         BlockVector3 min = region.getMinimumPoint();
         BlockVector3 max = region.getMaximumPoint();
-        builder.append(TextComponent.of(Msg.REGION_INFO_BOUND_BASE.get(), TextColor.BLUE));
+        builder.append(TextComponent.of(Msg.REGION__INFO__BOUNDS__BASE.get(), TextColor.BLUE));
         TextComponent bound = TextComponent.of(" " + min + " -> " + max, TextColor.YELLOW);
         if (perms != null && perms.maySelect(region)) {
             bound = bound
-                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION_INFO_BOUNDS_CLICKSELECT.get())))
+                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION__INFO__BOUNDS__CLICK_SELECT.get())))
                     .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND, "/rg select " + region.getId()));
         }
         builder.append(bound);
         final Location teleFlag = FlagValueCalculator.getEffectiveFlagOf(region, Flags.TELE_LOC, perms != null && perms.getSender() instanceof RegionAssociable ? (RegionAssociable) perms.getSender() : null);
         if (teleFlag != null && perms != null && perms.mayTeleportTo(region)) {
-            builder.append(TextComponent.space().append(TextComponent.of(Msg.REGION_INFO_BOUNDS_TELEPORTCMD.get(), TextColor.GRAY)
+            builder.append(TextComponent.space().append(TextComponent.of(Msg.REGION__INFO__BOUNDS__TELEPORT_CMD.get(), TextColor.GRAY)
                     .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT,
-                            TextComponent.of(Msg.REGION_INFO_BOUNDS_TELEPORT.get()).append(TextComponent.newline()).append(
+                            TextComponent.of(Msg.REGION__INFO__BOUNDS__TELEPORT.get()).append(TextComponent.newline()).append(
                                     TextComponent.of(teleFlag.getBlockX() + ", "
                                             + teleFlag.getBlockY() + ", "
                                             + teleFlag.getBlockZ()))))
                     .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND,
                             "/rg tp -w \"" + world + "\" " + region.getId()))));
         } else if (perms != null && perms.mayTeleportToCenter(region) && region.isPhysicalArea()) {
-            builder.append(TextComponent.space().append(TextComponent.of(Msg.REGION_INFO_BOUNDS_CENTERTELEPORTCMD.get(), TextColor.GRAY)
+            builder.append(TextComponent.space().append(TextComponent.of(Msg.REGION__INFO__BOUNDS__CENTER_TELEPORT_CMD.get(), TextColor.GRAY)
                     .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT,
-                            TextComponent.of(Msg.REGION_INFO_BOUNDS_CENTERTELEPORT.get())))
+                            TextComponent.of(Msg.REGION__INFO__BOUNDS__CENTER_TELEPORT.get())))
                     .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND,
                             "/rg tp -c -w \"" + world + "\" " + region.getId()))));
         }
@@ -350,7 +350,7 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
         final String content = String.valueOf(rg.getPriority());
         if (perms != null && perms.maySetPriority(rg)) {
             builder.append(TextComponent.of(content, TextColor.GOLD)
-                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION_INFO_PRIORITY_CLICKCHANGE.get())))
+                    .hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION__INFO__PRIORITY__CLICK_CHANGE.get())))
                     .clickEvent(ClickEvent.of(ClickEvent.Action.SUGGEST_COMMAND, "/rg setpriority -w \"" + world + "\" " + rg.getId() + " ")));
         } else {
             builder.append(TextComponent.of(content, TextColor.WHITE));
@@ -366,13 +366,13 @@ public class RegionPrintoutBuilder implements Callable<TextComponent> {
         appendBounds();
 
         if (cache != null && perms == null) {
-            builder.append(SubtleFormat.wrap(Msg.REGION_INFO_LASTSEEN.get()));
+            builder.append(SubtleFormat.wrap(Msg.REGION__INFO__LAST_SEEN.get()));
         }
     }
 
     @Override
     public TextComponent call() {
-        MessageBox box = new MessageBox(Msg.REGION_INFO_TITLE.get(), builder);
+        MessageBox box = new MessageBox(Msg.REGION__INFO__TITLE.get(), builder);
         appendRegionInformation();
         return box.create();
     }

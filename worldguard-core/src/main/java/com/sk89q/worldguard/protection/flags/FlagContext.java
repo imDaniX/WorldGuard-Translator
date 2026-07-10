@@ -68,7 +68,7 @@ public final class FlagContext {
         if (sender.isPlayer() && sender instanceof LocalPlayer) {
             return (LocalPlayer) sender;
         } else {
-            throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_SENDERNOTPLAYER.get());
+            throw new InvalidFlagFormat(Msg.REGION__FLAGS__VALUE__INVALID__SENDER_NOT_PLAYER.get());
         }
     }
 
@@ -76,7 +76,7 @@ public final class FlagContext {
         try {
             return Integer.parseInt(input);
         } catch (NumberFormatException e) {
-            throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_INTEGER.get(input));
+            throw new InvalidFlagFormat(Msg.REGION__FLAGS__VALUE__INVALID__INTEGER.get(input));
         }
     }
 
@@ -84,7 +84,7 @@ public final class FlagContext {
         try {
             return Double.parseDouble(input);
         } catch (NumberFormatException e) {
-            throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_DOUBLE.get(input));
+            throw new InvalidFlagFormat(Msg.REGION__FLAGS__VALUE__INVALID__DOUBLE.get(input));
         }
     }
 

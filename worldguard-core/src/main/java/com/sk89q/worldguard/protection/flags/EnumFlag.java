@@ -81,7 +81,7 @@ public class EnumFlag<T extends Enum<T>> extends Flag<T> {
         try {
             return findValue(input);
         } catch (IllegalArgumentException e) {
-            throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_ENUM.get(input, enumClass.getName()));
+            throw new InvalidFlagFormat(Msg.REGION__FLAGS__VALUE__INVALID__ENUM.get(input, enumClass.getName()));
         }
     }
 

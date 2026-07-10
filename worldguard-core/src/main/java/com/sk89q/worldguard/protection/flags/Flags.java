@@ -19,11 +19,6 @@
 
 package com.sk89q.worldguard.protection.flags;
 
-import com.google.common.collect.Sets;
-import com.sk89q.worldedit.util.formatting.text.TextComponent;
-import com.sk89q.worldedit.util.formatting.text.format.TextColor;
-import com.sk89q.worldedit.util.formatting.text.format.TextDecoration;
-import com.sk89q.worldedit.util.formatting.text.serializer.legacy.LegacyComponentSerializer;
 import com.sk89q.worldedit.world.entity.EntityType;
 import com.sk89q.worldedit.world.gamemode.GameMode;
 import com.sk89q.worldedit.world.weather.WeatherType;
@@ -152,7 +147,7 @@ public final class Flags {
      */
     @Deprecated
     public static final StringFlag TELE_MESSAGE = register(StringFlag.of("teleport-message",
-            Msg.REGION_FLAGS_VALUE_DEFAULT_TELEPORT::get));
+            Msg.REGION__FLAGS__VALUE__DEFAULT__TELEPORT::get));
 
     // idk?
     public static final StateFlag INVINCIBILITY = register(new StateFlag("invincible", false));
@@ -221,21 +216,21 @@ public final class Flags {
      */
     @Deprecated
     public static final StringFlag DENY_MESSAGE = register(StringFlag.of("deny-message",
-            Msg.REGION_FLAGS_VALUE_DEFAULT_DENY::get));
+            Msg.REGION__FLAGS__VALUE__DEFAULT__DENY::get));
     /**
      * @deprecated The type of this flag will change from a StringFlag to a ComponentFlag to support JSON text
      *              in a future release. If you depend on the type of this flag, take proper precaution for future breakage.
      */
     @Deprecated
     public static final StringFlag ENTRY_DENY_MESSAGE = register(StringFlag.of("entry-deny-message",
-            Msg.REGION_FLAGS_VALUE_DEFAULT_ENTRYDENY::get));
+            Msg.REGION__FLAGS__VALUE__DEFAULT__ENTRY_DENY::get));
     /**
      * @deprecated The type of this flag will change from a StringFlag to a ComponentFlag to support JSON text
      *              in a future release. If you depend on the type of this flag, take proper precaution for future breakage.
      */
     @Deprecated
     public static final StringFlag EXIT_DENY_MESSAGE = register(StringFlag.of("exit-deny-message",
-            Msg.REGION_FLAGS_VALUE_DEFAULT_EXITDENY::get));
+            Msg.REGION__FLAGS__VALUE__DEFAULT__EXIT_DENY::get));
 
     private Flags() {
     }

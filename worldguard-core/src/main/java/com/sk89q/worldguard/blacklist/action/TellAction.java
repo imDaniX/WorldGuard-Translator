@@ -47,9 +47,9 @@ public class TellAction extends RepeatGuardedAction {
             String friendlyName = PlainComponentSerializer.INSTANCE.serialize(event.getTarget().getFriendlyNameComponent());
             if (message != null) {
                 message = message.replaceAll("(?!<\\\\)\\\\n", "\n").replaceAll("\\\\\\\\n", "\\n");
-                event.getPlayer().print(Msg.BLACKLIST_PUNISHMENT_TELL_TEXT.get(String.format(message, friendlyName)));
+                event.getPlayer().print(Msg.BLACKLIST__PUNISHMENT__TELL__TEXT.get(String.format(message, friendlyName)));
             } else {
-                event.getPlayer().printError(Msg.BLACKLIST_PUNISHMENT_TELL_DEFAULT.get(event.getDescription(), friendlyName));
+                event.getPlayer().printError(Msg.BLACKLIST__PUNISHMENT__TELL__DEFAULT.get(event.getDescription(), friendlyName));
             }
         }
 

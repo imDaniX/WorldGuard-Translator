@@ -104,22 +104,22 @@ public final class RegionCommands extends RegionCommandsBase {
     }
 
     private static TextComponent passthroughFlagWarning = TextComponent.empty()
-            .append(TextComponent.of(Msg.REGION_FLAGS_CONSEQUENCES1.get(), TextColor.RED, Sets.newHashSet(TextDecoration.BOLD)))
-            .append(ErrorFormat.wrap(Msg.REGION_FLAGS_CONSEQUENCES2.get()))
+            .append(TextComponent.of(Msg.REGION__FLAGS__CONSEQUENCES1.get(), TextColor.RED, Sets.newHashSet(TextDecoration.BOLD)))
+            .append(ErrorFormat.wrap(Msg.REGION__FLAGS__CONSEQUENCES2.get()))
             .append(TextComponent.newline())
-            .append(TextComponent.of(Msg.REGION_FLAGS_CONSEQUENCES3.get())
-                    .append(TextComponent.of(Msg.REGION_FLAGS_WARNING_DOCUMENTATION.get(), TextColor.AQUA)
+            .append(TextComponent.of(Msg.REGION__FLAGS__CONSEQUENCES3.get())
+                    .append(TextComponent.of(Msg.REGION__FLAGS__WARNING__DOCUMENTATION.get(), TextColor.AQUA)
                             .clickEvent(ClickEvent.of(ClickEvent.Action.OPEN_URL,
                                     "https://worldguard.enginehub.org/en/latest/regions/flags/#overrides")))
                     .append(TextComponent.of(".")));
     private static TextComponent buildFlagWarning = TextComponent.empty()
-            .append(TextComponent.of(Msg.REGION_FLAGS_BUILD_WARNING_HEADER.get(), TextColor.RED, Sets.newHashSet(TextDecoration.BOLD)))
-            .append(ErrorFormat.wrap(Msg.REGION_FLAGS_BUILD_WARNING_BODY.get()))
+            .append(TextComponent.of(Msg.REGION__FLAGS__BUILD__WARNING__HEADER.get(), TextColor.RED, Sets.newHashSet(TextDecoration.BOLD)))
+            .append(ErrorFormat.wrap(Msg.REGION__FLAGS__BUILD__WARNING__BODY.get()))
             .append(TextComponent.newline())
-            .append(TextComponent.of(Msg.REGION_FLAGS_BUILD_WARNING_DETAIL.get()))
+            .append(TextComponent.of(Msg.REGION__FLAGS__BUILD__WARNING__DETAIL.get()))
             .append(TextComponent.newline())
-            .append(TextComponent.of(Msg.REGION_FLAGS_BUILD_WARNING_DOCUMENTATION.get())
-                    .append(TextComponent.of(Msg.REGION_FLAGS_WARNING_DOCUMENTATION.get(), TextColor.AQUA)
+            .append(TextComponent.of(Msg.REGION__FLAGS__BUILD__WARNING__DOCUMENTATION.get())
+                    .append(TextComponent.of(Msg.REGION__FLAGS__WARNING__DOCUMENTATION.get(), TextColor.AQUA)
                             .clickEvent(ClickEvent.of(ClickEvent.Action.OPEN_URL,
                                     "https://worldguard.enginehub.org/en/latest/regions/flags/#protection-related")))
                     .append(TextComponent.of(".")));
@@ -162,17 +162,17 @@ public final class RegionCommands extends RegionCommandsBase {
         RegionAdder task = new RegionAdder(manager, region);
         task.addOwnersFromCommand(args, 2);
 
-        final String description = Msg.REGION_DEFINE_ADDING.get(region.getId());
+        final String description = Msg.REGION__DEFINE__ADDING.get(region.getId());
         AsyncCommandBuilder.wrap(task, sender)
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
                 .onSuccess((Component) null,
                         t -> {
-                            sender.print(Msg.REGION_DEFINE_SUCCESS.get(region.getId()));
+                            sender.print(Msg.REGION__DEFINE__SUCCESS.get(region.getId()));
                             warnAboutDimensions(sender, region);
                             informNewUser(sender, manager, region);
                             checkSpawnOverlap(sender, world, region);
                         })
-                .onFailure(Msg.REGION_DEFINE_FAIL.get(region.getId()), worldGuard.getExceptionConverter())
+                .onFailure(Msg.REGION__DEFINE__FAIL.get(region.getId()), worldGuard.getExceptionConverter())
                 .buildAndExec(worldGuard.getExecutorService());
     }
 
@@ -215,18 +215,18 @@ public final class RegionCommands extends RegionCommandsBase {
 
         RegionAdder task = new RegionAdder(manager, region);
 
-        final String description = Msg.REGION_REDEFINE_ADDING.get(region.getId());
+        final String description = Msg.REGION__REDEFINE__ADDING.get(region.getId());
         AsyncCommandBuilder.wrap(task, sender)
                 .registerWithSupervisor(worldGuard.getSupervisor(), description)
-                .sendMessageAfterDelay(Msg.REGION_REDEFINE_WAIT.get(description))
+                .sendMessageAfterDelay(Msg.REGION__REDEFINE__WAIT.get(description))
                 .onSuccess((Component) null,
                         t -> {
-                            sender.print(Msg.REGION_REDEFINE_SUCCESS.get(region.getId()));
+                            sender.print(Msg.REGION__REDEFINE__SUCCESS.get(region.getId()));
                             warnAboutDimensions(sender, region);
                             informNewUser(sender, manager, region);
                             checkSpawnOverlap(sender, world, region);
                         })
-                .onFailure(Msg.REGION_REDEFINE_FAIL.get(region.getId()), worldGuard.getExceptionConverter())
+                .onFailure(Msg.REGION__REDEFINE__FAIL.get(region.getId()), worldGuard.getExceptionConverter())
                 .buildAndExec(worldGuard.getExecutorService());
     }
 
@@ -269,7 +269,7 @@ public final class RegionCommands extends RegionCommandsBase {
             int maxRegionCount = wcfg.getMaxRegionCount(player);
             if (maxRegionCount >= 0
                     && manager.getRegionCountOfPlayer(player) >= maxRegionCount) {
-                throw new CommandException(Msg.REGION_CLAIM_ERROR_TOOMANY.get());
+                throw new CommandException(Msg.REGION__CLAIM__ERROR__TOO_MANY.get());
             }
         }
 
@@ -278,7 +278,7 @@ public final class RegionCommands extends RegionCommandsBase {
         // Check for an existing region
         if (existing != null) {
             if (!existing.getOwners().contains(player)) {
-                throw new CommandException(Msg.REGION_CLAIM_ERROR_ALREADYEXIST.get());
+                throw new CommandException(Msg.REGION__CLAIM__ERROR__ALREADY_EXIST.get());
             }
         }
 
@@ -288,27 +288,27 @@ public final class RegionCommands extends RegionCommandsBase {
         // Check if this region overlaps any other region
         if (regions.size() > 0) {
             if (!regions.isOwnerOfAll(player)) {
-                throw new CommandException(Msg.REGION_CLAIM_ERROR_OVERLAPS.get());
+                throw new CommandException(Msg.REGION__CLAIM__ERROR__OVERLAPS.get());
             }
         } else {
             if (wcfg.claimOnlyInsideExistingRegions) {
-                throw new CommandException(Msg.REGION_CLAIM_ERROR_ONLYINSIDE.get());
+                throw new CommandException(Msg.REGION__CLAIM__ERROR__ONLY_INSIDE.get());
             }
         }
 
         if (wcfg.maxClaimVolume >= Integer.MAX_VALUE) {
-            throw new CommandException(Msg.REGION_CLAIM_ERROR_MAXINTEGER.get());
+            throw new CommandException(Msg.REGION__CLAIM__ERROR__MAX_INTEGER.get());
         }
 
         // Check claim volume
         if (!permModel.mayClaimRegionsUnbounded()) {
             if (region instanceof ProtectedPolygonalRegion) {
-                throw new CommandException(Msg.REGION_CLAIM_ERROR_NOPOLYGONS.get());
+                throw new CommandException(Msg.REGION__CLAIM__ERROR__NO_POLYGONS.get());
             }
 
             if (region.volume() > wcfg.maxClaimVolume) {
-                player.printError(Msg.REGION_CLAIM_ERROR_TOOLARGE1.get());
-                player.printError(Msg.REGION_CLAIM_ERROR_TOOLARGE2.get(wcfg.maxClaimVolume, region.volume()));
+                player.printError(Msg.REGION__CLAIM__ERROR__TOO_LARGE1.get());
+                player.printError(Msg.REGION__CLAIM__ERROR__TOO_LARGE2.get(wcfg.maxClaimVolume, region.volume()));
                 return;
             }
         }
@@ -327,7 +327,7 @@ public final class RegionCommands extends RegionCommandsBase {
 
         region.getOwners().addPlayer(player);
         manager.addRegion(region);
-        player.print(TextComponent.of(Msg.REGION_CLAIM_SUCCESS.get(id)));
+        player.print(TextComponent.of(Msg.REGION__CLAIM__SUCCESS.get(id)));
     }
 
     /**
@@ -351,7 +351,7 @@ public final class RegionCommands extends RegionCommandsBase {
         if (args.argsLength() == 0) {
             LocalPlayer player = worldGuard.checkPlayer(sender);
             if (!player.getWorld().equals(world)) { // confusing to get current location regions in another world
-                throw new CommandException(Msg.REGION_SELECT_SPECIFY.get()); // just don't allow that
+                throw new CommandException(Msg.REGION__SELECT__SPECIFY.get()); // just don't allow that
             }
             world = player.getWorld();
             existing = checkRegionStandingIn(manager, player, "/rg select -w \"" + world.getName() + "\" %id%");
@@ -392,7 +392,7 @@ public final class RegionCommands extends RegionCommandsBase {
 
         if (args.argsLength() == 0) { // Get region from where the player is
             if (!(sender instanceof LocalPlayer)) {
-                throw new CommandException(Msg.REGION_INFO_SPECIFY.get());
+                throw new CommandException(Msg.REGION__INFO__SPECIFY.get());
             }
 
             existing = checkRegionStandingIn(manager, (LocalPlayer) sender, true,
@@ -421,13 +421,13 @@ public final class RegionCommands extends RegionCommandsBase {
                 args.hasFlag('u') ? null : WorldGuard.getInstance().getProfileCache(), sender);
 
         AsyncCommandBuilder.wrap(printout, sender)
-                .registerWithSupervisor(WorldGuard.getInstance().getSupervisor(), Msg.REGION_INFO_FETCHING.get())
-                .sendMessageAfterDelay(Msg.REGION_INFO_WAIT.get())
+                .registerWithSupervisor(WorldGuard.getInstance().getSupervisor(), Msg.REGION__INFO__FETCHING.get())
+                .sendMessageAfterDelay(Msg.REGION__INFO__WAIT.get())
                 .onSuccess((Component) null, component -> {
                     sender.print(component);
                     checkSpawnOverlap(sender, world, existing);
                 })
-                .onFailure(Msg.REGION_INFO_FAIL.get(), WorldGuard.getInstance().getExceptionConverter())
+                .onFailure(Msg.REGION__INFO__FAIL.get(), WorldGuard.getInstance().getExceptionConverter())
                 .buildAndExec(WorldGuard.getInstance().getExecutorService());
     }
 
@@ -489,9 +489,9 @@ public final class RegionCommands extends RegionCommandsBase {
         }
 
         AsyncCommandBuilder.wrap(task, sender)
-                .registerWithSupervisor(WorldGuard.getInstance().getSupervisor(), Msg.REGION_LIST_FETCHING.get())
-                .sendMessageAfterDelay(Msg.REGION_LIST_WAIT.get())
-                .onFailure(Msg.REGION_LIST_FAIL.get(), WorldGuard.getInstance().getExceptionConverter())
+                .registerWithSupervisor(WorldGuard.getInstance().getSupervisor(), Msg.REGION__LIST__FETCHING.get())
+                .sendMessageAfterDelay(Msg.REGION__LIST__WAIT.get())
+                .onFailure(Msg.REGION__LIST__FAIL.get(), WorldGuard.getInstance().getExceptionConverter())
                 .buildAndExec(WorldGuard.getInstance().getExecutorService());
     }
 
@@ -519,7 +519,7 @@ public final class RegionCommands extends RegionCommandsBase {
 
         if (args.hasFlag('e')) {
             if (value != null) {
-                throw new CommandException(Msg.REGION_FLAG_ERROR_EMPTY.get());
+                throw new CommandException(Msg.REGION__FLAG__ERROR__EMPTY.get());
             }
 
             value = "";
@@ -542,7 +542,7 @@ public final class RegionCommands extends RegionCommandsBase {
         if (foundFlag == null) {
             AsyncCommandBuilder.wrap(new FlagListBuilder(flagRegistry, permModel, existing, world,
                                                          regionId, sender, flagName), sender)
-                    .registerWithSupervisor(WorldGuard.getInstance().getSupervisor(), Msg.REGION_FLAG_LIST_FETCHING.get())
+                    .registerWithSupervisor(WorldGuard.getInstance().getSupervisor(), Msg.REGION__FLAG__LIST__FETCHING.get())
                     .onSuccess((Component) null, sender::print)
                     .onFailure((Component) null, WorldGuard.getInstance().getExceptionConverter())
                     .buildAndExec(WorldGuard.getInstance().getExecutorService());
@@ -574,7 +574,7 @@ public final class RegionCommands extends RegionCommandsBase {
             RegionGroupFlag groupFlag = foundFlag.getRegionGroupFlag();
 
             if (groupFlag == null) {
-                throw new CommandException(Msg.REGION_FLAG_ERROR_NOGROUP.get(foundFlag.getName()));
+                throw new CommandException(Msg.REGION__FLAG__ERROR__NO_GROUP.get(foundFlag.getName()));
             }
 
             // Parse the [-g group] separately so entire command can abort if parsing
@@ -597,7 +597,7 @@ public final class RegionCommands extends RegionCommandsBase {
             }
 
             if (!args.hasFlag('h')) {
-                sender.print(Msg.REGION_FLAG_SET.get(foundFlag.getName(), regionId, value));
+                sender.print(Msg.REGION__FLAG__SET.get(foundFlag.getName(), regionId, value));
             }
 
         // No value? Clear the flag, if -g isn't specified
@@ -612,7 +612,7 @@ public final class RegionCommands extends RegionCommandsBase {
             }
 
             if (!args.hasFlag('h')) {
-                sender.print(Msg.REGION_FLAG_REMOVED.get(foundFlag.getName(), regionId));
+                sender.print(Msg.REGION__FLAG__REMOVED.get(foundFlag.getName(), regionId));
             }
         }
 
@@ -623,10 +623,10 @@ public final class RegionCommands extends RegionCommandsBase {
             // If group set to the default, then clear the group flag
             if (groupValue == groupFlag.getDefault()) {
                 existing.setFlag(groupFlag, null);
-                sender.print(Msg.REGION_FLAG_GROUP_RESET.get(foundFlag.getName()));
+                sender.print(Msg.REGION__FLAG__GROUP__RESET.get(foundFlag.getName()));
             } else {
                 existing.setFlag(groupFlag, groupValue);
-                sender.print(Msg.REGION_FLAG_GROUP_SET.get(foundFlag.getName()));
+                sender.print(Msg.REGION__FLAG__GROUP__SET.get(foundFlag.getName()));
             }
         }
 
@@ -636,9 +636,9 @@ public final class RegionCommands extends RegionCommandsBase {
             sendFlagHelper(sender, world, existing, permModel, page);
         } else {
             RegionPrintoutBuilder printout = new RegionPrintoutBuilder(world.getName(), existing, null, sender);
-            printout.append(SubtleFormat.wrap(Msg.REGION_FLAG_CURRENT_FLAGS.get()));
+            printout.append(SubtleFormat.wrap(Msg.REGION__FLAG__CURRENT__FLAGS.get()));
             printout.appendFlagsList(false);
-            printout.append(SubtleFormat.wrap(Msg.REGION_FLAG_CURRENT_FLAGSEND.get()));
+            printout.append(SubtleFormat.wrap(Msg.REGION__FLAG__CURRENT__FLAGS_END.get()));
             printout.send(sender);
             checkSpawnOverlap(sender, world, existing);
         }
@@ -657,7 +657,7 @@ public final class RegionCommands extends RegionCommandsBase {
         ProtectedRegion region;
         if (args.argsLength() == 0) { // Get region from where the player is
             if (!(sender instanceof LocalPlayer)) {
-                throw new CommandException(Msg.REGION_FLAGS_SPECIFY.get());
+                throw new CommandException(Msg.REGION__FLAGS__SPECIFY.get());
             }
 
             region = checkRegionStandingIn(manager, (LocalPlayer) sender, true,
@@ -688,7 +688,7 @@ public final class RegionCommands extends RegionCommandsBase {
                     return flagHelperBox.create(page);
                 }, sender)
                 .onSuccess((Component) null, sender::print)
-                .onFailure(Msg.REGION_FLAGS_FAIL.get(), WorldGuard.getInstance().getExceptionConverter())
+                .onFailure(Msg.REGION__FLAGS__FAIL.get(), WorldGuard.getInstance().getExceptionConverter())
                 .buildAndExec(WorldGuard.getInstance().getExecutorService());
     }
 
@@ -721,7 +721,7 @@ public final class RegionCommands extends RegionCommandsBase {
 
         existing.setPriority(priority);
 
-        sender.print(Msg.REGION_PRIORITY_SET.get(existing.getId(), priority));
+        sender.print(Msg.REGION__PRIORITY__SET.get(existing.getId(), priority));
         checkSpawnOverlap(sender, world, existing);
     }
 
@@ -766,27 +766,27 @@ public final class RegionCommands extends RegionCommandsBase {
             // Tell the user what's wrong
             RegionPrintoutBuilder printout = new RegionPrintoutBuilder(world.getName(), parent, null, sender);
             assert parent != null;
-            printout.append(ErrorFormat.wrap(Msg.REGION_PARENT_ERROR_CIRCULAR.get(parent.getId(), child.getId())));
+            printout.append(ErrorFormat.wrap(Msg.REGION__PARENT__ERROR__CIRCULAR.get(parent.getId(), child.getId())));
             printout.newline();
-            printout.append(SubtleFormat.wrap(Msg.REGION_PARENT_CURRENT_INHERITANCE_INFO.get(parent.getId())));
+            printout.append(SubtleFormat.wrap(Msg.REGION__PARENT__CURRENT__INHERITANCE__INFO.get(parent.getId())));
             printout.newline();
             printout.appendParentTree(true);
-            printout.append(SubtleFormat.wrap(Msg.REGION_PARENT_CURRENT_INHERITANCE_INFOEND.get()));
+            printout.append(SubtleFormat.wrap(Msg.REGION__PARENT__CURRENT__INHERITANCE__INFOEND.get()));
             printout.send(sender);
             return;
         }
 
         // Tell the user the current inheritance
         RegionPrintoutBuilder printout = new RegionPrintoutBuilder(world.getName(), child, null, sender);
-        printout.append(TextComponent.of(Msg.REGION_PARENT_SET.get(child.getId()), TextColor.LIGHT_PURPLE));
+        printout.append(TextComponent.of(Msg.REGION__PARENT__SET.get(child.getId()), TextColor.LIGHT_PURPLE));
         if (parent != null) {
             printout.newline();
-            printout.append(SubtleFormat.wrap(Msg.REGION_PARENT_CURRENT_INHERITANCE_SHORT.get()));
+            printout.append(SubtleFormat.wrap(Msg.REGION__PARENT__CURRENT__INHERITANCE__SHORT.get()));
             printout.newline();
             printout.appendParentTree(true);
-            printout.append(SubtleFormat.wrap(Msg.REGION_PARENT_CURRENT_INHERITANCE_SHORTEND.get()));
+            printout.append(SubtleFormat.wrap(Msg.REGION__PARENT__CURRENT__INHERITANCE__SHORTEND.get()));
         } else {
-            printout.append(LabelFormat.wrap(Msg.REGION_PARENT_ORPHANED.get()));
+            printout.append(LabelFormat.wrap(Msg.REGION__PARENT__ORPHANED.get()));
         }
         printout.send(sender);
     }
@@ -822,21 +822,21 @@ public final class RegionCommands extends RegionCommandsBase {
         RegionRemover task = new RegionRemover(manager, existing);
 
         if (removeChildren && unsetParent) {
-            throw new CommandException(Msg.REGION_REMOVE_ERROR_FLAGS.get());
+            throw new CommandException(Msg.REGION__REMOVE__ERROR__FLAGS.get());
         } else if (removeChildren) {
             task.setRemovalStrategy(RemovalStrategy.REMOVE_CHILDREN);
         } else if (unsetParent) {
             task.setRemovalStrategy(RemovalStrategy.UNSET_PARENT_IN_CHILDREN);
         }
 
-        final String description = Msg.REGION_REMOVE_REMOVING.get(existing.getId(), world.getName());
+        final String description = Msg.REGION__REMOVE__REMOVING.get(existing.getId(), world.getName());
         AsyncCommandBuilder.wrap(task, sender)
                 .registerWithSupervisor(WorldGuard.getInstance().getSupervisor(), description)
-                .sendMessageAfterDelay(Msg.REGION_REMOVE_WAIT.get())
+                .sendMessageAfterDelay(Msg.REGION__REMOVE__WAIT.get())
                 .onSuccess((Component) null, removed -> sender.print(TextComponent.of(
-                        Msg.REGION_REMOVE_SUCCESS.get(removed.stream().map(ProtectedRegion::getId).collect(Collectors.joining(", "))),
+                        Msg.REGION__REMOVE__SUCCESS.get(removed.stream().map(ProtectedRegion::getId).collect(Collectors.joining(", "))),
                         TextColor.LIGHT_PURPLE)))
-                .onFailure(Msg.REGION_REMOVE_FAIL.get(), WorldGuard.getInstance().getExceptionConverter())
+                .onFailure(Msg.REGION__REMOVE__FAIL.get(), WorldGuard.getInstance().getExceptionConverter())
                 .buildAndExec(WorldGuard.getInstance().getExecutorService());
     }
 
@@ -870,15 +870,15 @@ public final class RegionCommands extends RegionCommandsBase {
             RegionManager manager = checkRegionManager(world);
 
             if (manager == null) {
-                throw new CommandException(Msg.REGION_LOAD_NOMANAGER.get(world.getName()));
+                throw new CommandException(Msg.REGION__LOAD__NO_MANAGER.get(world.getName()));
             }
 
-            final String description = Msg.REGION_LOAD_LOADING.get(world.getName());
+            final String description = Msg.REGION__LOAD__LOADING.get(world.getName());
             AsyncCommandBuilder.wrap(new RegionManagerLoader(manager), sender)
                     .registerWithSupervisor(worldGuard.getSupervisor(), description)
-                    .sendMessageAfterDelay(Msg.REGION_LOAD_WAIT.get(description))
-                    .onSuccess(Msg.REGION_LOAD_SUCCESS.get(world.getName()), null)
-                    .onFailure(Msg.REGION_LOAD_FAIL.get(world.getName()), worldGuard.getExceptionConverter())
+                    .sendMessageAfterDelay(Msg.REGION__LOAD__WAIT.get(description))
+                    .onSuccess(Msg.REGION__LOAD__SUCCESS.get(world.getName()), null)
+                    .onFailure(Msg.REGION__LOAD__FAIL.get(world.getName()), worldGuard.getExceptionConverter())
                     .buildAndExec(worldGuard.getExecutorService());
         } else {
             List<RegionManager> managers = new ArrayList<>();
@@ -891,10 +891,10 @@ public final class RegionCommands extends RegionCommandsBase {
             }
 
             AsyncCommandBuilder.wrap(new RegionManagerLoader(managers), sender)
-                    .registerWithSupervisor(worldGuard.getSupervisor(), Msg.REGION_LOAD_ALL_LOADING.get())
-                    .sendMessageAfterDelay(Msg.REGION_LOAD_ALL_WAIT.get())
-                    .onSuccess(Msg.REGION_LOAD_ALL_SUCCESS.get(), null)
-                    .onFailure(Msg.REGION_LOAD_ALL_FAIL.get(), worldGuard.getExceptionConverter())
+                    .registerWithSupervisor(worldGuard.getSupervisor(), Msg.REGION__LOAD__ALL__LOADING.get())
+                    .sendMessageAfterDelay(Msg.REGION__LOAD__ALL__WAIT.get())
+                    .onSuccess(Msg.REGION__LOAD__ALL__SUCCESS.get(), null)
+                    .onFailure(Msg.REGION__LOAD__ALL__FAIL.get(), worldGuard.getExceptionConverter())
                     .buildAndExec(worldGuard.getExecutorService());
         }
     }
@@ -929,15 +929,15 @@ public final class RegionCommands extends RegionCommandsBase {
             RegionManager manager = checkRegionManager(world);
 
             if (manager == null) {
-                throw new CommandException(Msg.REGION_SAVE_NOMANAGER.get(world.getName()));
+                throw new CommandException(Msg.REGION__SAVE__NO_MANAGER.get(world.getName()));
             }
 
-            final String description = Msg.REGION_SAVE_SAVING.get(world.getName());
+            final String description = Msg.REGION__SAVE__SAVING.get(world.getName());
             AsyncCommandBuilder.wrap(new RegionManagerSaver(manager), sender)
                     .registerWithSupervisor(worldGuard.getSupervisor(), description)
-                    .sendMessageAfterDelay(Msg.REGION_SAVE_WAIT.get(description))
-                    .onSuccess(Msg.REGION_SAVE_SUCCESS.get(world.getName()), null)
-                    .onFailure(Msg.REGION_SAVE_FAIL.get(world.getName()), worldGuard.getExceptionConverter())
+                    .sendMessageAfterDelay(Msg.REGION__SAVE__WAIT.get(description))
+                    .onSuccess(Msg.REGION__SAVE__SUCCESS.get(world.getName()), null)
+                    .onFailure(Msg.REGION__SAVE__FAIL.get(world.getName()), worldGuard.getExceptionConverter())
                     .buildAndExec(worldGuard.getExecutorService());
         } else {
             // Save for all worlds
@@ -952,10 +952,10 @@ public final class RegionCommands extends RegionCommandsBase {
             }
 
             AsyncCommandBuilder.wrap(new RegionManagerSaver(managers), sender)
-                    .registerWithSupervisor(worldGuard.getSupervisor(), Msg.REGION_SAVE_ALL_SAVING.get())
-                    .sendMessageAfterDelay(Msg.REGION_SAVE_ALL_WAIT.get())
-                    .onSuccess(Msg.REGION_SAVE_ALL_SUCCESS.get(), null)
-                    .onFailure(Msg.REGION_SAVE_ALL_FAIL.get(), worldGuard.getExceptionConverter())
+                    .registerWithSupervisor(worldGuard.getSupervisor(), Msg.REGION__SAVE__ALL__SAVING.get())
+                    .sendMessageAfterDelay(Msg.REGION__SAVE__ALL__WAIT.get())
+                    .onSuccess(Msg.REGION__SAVE__ALL__SUCCESS.get(), null)
+                    .onFailure(Msg.REGION__SAVE__ALL__FAIL.get(), worldGuard.getExceptionConverter())
                     .buildAndExec(worldGuard.getExecutorService());
         }
     }
@@ -980,19 +980,19 @@ public final class RegionCommands extends RegionCommandsBase {
         DriverType to = Enums.findFuzzyByValue(DriverType.class, args.getString(1));
 
         if (from == null) {
-            throw new CommandException(Msg.REGION_MIGRATEDB_ERROR_INVALID_FROM.get());
+            throw new CommandException(Msg.REGION__MIGRATEDB__ERROR__INVALID__FROM.get());
         }
 
         if (to == null) {
-            throw new CommandException(Msg.REGION_MIGRATEDB_ERROR_INVALID_TO.get());
+            throw new CommandException(Msg.REGION__MIGRATEDB__ERROR__INVALID__TO.get());
         }
 
         if (from == to) {
-            throw new CommandException(Msg.REGION_MIGRATEDB_ERROR_SAME.get());
+            throw new CommandException(Msg.REGION__MIGRATEDB__ERROR__SAME.get());
         }
 
         if (!args.hasFlag('y')) {
-            throw new CommandException(Msg.REGION_MIGRATEDB_CONFIRM.get());
+            throw new CommandException(Msg.REGION__MIGRATEDB__CONFIRM.get());
         }
 
         ConfigurationManager config = WorldGuard.getInstance().getPlatform().getGlobalStateManager();
@@ -1000,11 +1000,11 @@ public final class RegionCommands extends RegionCommandsBase {
         RegionDriver toDriver = config.regionStoreDriverMap.get(to);
 
         if (fromDriver == null) {
-            throw new CommandException(Msg.REGION_MIGRATEDB_ERROR_UNSUPPORTED_FROM.get());
+            throw new CommandException(Msg.REGION__MIGRATEDB__ERROR__UNSUPPORTED__FROM.get());
         }
 
         if (toDriver == null) {
-            throw new CommandException(Msg.REGION_MIGRATEDB_ERROR_UNSUPPORTED_TO.get());
+            throw new CommandException(Msg.REGION__MIGRATEDB__ERROR__UNSUPPORTED__TO.get());
         }
 
         DriverMigration migration = new DriverMigration(fromDriver, toDriver, WorldGuard.getInstance().getFlagRegistry());
@@ -1021,12 +1021,12 @@ public final class RegionCommands extends RegionCommandsBase {
 
         try {
             RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-            sender.print(Msg.REGION_MIGRATEDB_PERFORMING.get());
+            sender.print(Msg.REGION__MIGRATEDB__PERFORMING.get());
             container.migrate(migration);
-            sender.print(Msg.REGION_MIGRATEDB_COMPLETE.get());
+            sender.print(Msg.REGION__MIGRATEDB__COMPLETE.get());
         } catch (MigrationException e) {
             log.log(Level.WARNING, "Failed to migrate", e);
-            throw new CommandException(Msg.REGION_MIGRATEDB_ERROR_BASE.get(e.getMessage()));
+            throw new CommandException(Msg.REGION__MIGRATEDB__ERROR__BASE.get(e.getMessage()));
         } finally {
             if (minecraftLogger != null) {
                 minecraftLogger.removeHandler(handler);
@@ -1065,12 +1065,12 @@ public final class RegionCommands extends RegionCommandsBase {
             RegionDriver driver = container.getDriver();
             UUIDMigration migration = new UUIDMigration(driver, WorldGuard.getInstance().getProfileService(), WorldGuard.getInstance().getFlagRegistry());
             migration.setKeepUnresolvedNames(config.keepUnresolvedNames);
-            sender.print(Msg.REGION_MIGRATEUUID_PERFORMING.get());
+            sender.print(Msg.REGION__MIGRATEUUID__PERFORMING.get());
             container.migrate(migration);
-            sender.print(Msg.REGION_MIGRATEUUID_COMPLETE.get());
+            sender.print(Msg.REGION__MIGRATEUUID__COMPLETE.get());
         } catch (MigrationException e) {
             log.log(Level.WARNING, "Failed to migrate", e);
-            throw new CommandException(Msg.REGION_MIGRATEUUID_ERROR.get(e.getMessage()));
+            throw new CommandException(Msg.REGION__MIGRATEUUID__ERROR.get(e.getMessage()));
         } finally {
             if (minecraftLogger != null) {
                 minecraftLogger.removeHandler(handler);
@@ -1097,7 +1097,7 @@ public final class RegionCommands extends RegionCommandsBase {
         }
 
         if (!args.hasFlag('y')) {
-            throw new CommandException(Msg.REGION_MIGRATEHEIGHTS_CONFIRM.get());
+            throw new CommandException(Msg.REGION__MIGRATEHEIGHTS__CONFIRM.get());
         }
 
         World world = null;
@@ -1121,10 +1121,10 @@ public final class RegionCommands extends RegionCommandsBase {
             RegionDriver driver = container.getDriver();
             WorldHeightMigration migration = new WorldHeightMigration(driver, WorldGuard.getInstance().getFlagRegistry(), world);
             container.migrate(migration);
-            sender.print(Msg.REGION_MIGRATEHEIGHTS_COMPLETE.get());
+            sender.print(Msg.REGION__MIGRATEHEIGHTS__COMPLETE.get());
         } catch (MigrationException e) {
             log.log(Level.WARNING, "Failed to migrate", e);
-            throw new CommandException(Msg.REGION_MIGRATEHEIGHTS_ERROR.get(e.getMessage()));
+            throw new CommandException(Msg.REGION__MIGRATEHEIGHTS__ERROR.get(e.getMessage()));
         } finally {
             if (minecraftLogger != null) {
                 minecraftLogger.removeHandler(handler);
@@ -1164,7 +1164,7 @@ public final class RegionCommands extends RegionCommandsBase {
             teleportLocation = FlagValueCalculator.getEffectiveFlagOf(existing, Flags.SPAWN_LOC, player);
             
             if (teleportLocation == null) {
-                throw new CommandException(Msg.REGION_TELEPORT_NOSPAWN.get());
+                throw new CommandException(Msg.REGION__TELEPORT__NO_SPAWN.get());
             }
         } else if (args.hasFlag('c')) {
             // Check permissions
@@ -1173,7 +1173,7 @@ public final class RegionCommands extends RegionCommandsBase {
             }
             Region region = WorldEditRegionConverter.convertToRegion(existing);
             if (region == null || region.getCenter() == null) {
-                throw new CommandException(Msg.REGION_TELEPORT_NOCENTER.get());
+                throw new CommandException(Msg.REGION__TELEPORT__NO_CENTER.get());
             }
             if (player.getGameMode() == GameModes.SPECTATOR) {
                 teleportLocation = new Location(world, region.getCenter(), 0, 0);
@@ -1181,13 +1181,13 @@ public final class RegionCommands extends RegionCommandsBase {
                 // TODO: Add some method to create a safe teleport location.
                 // The method AbstractPlayerActor$findFreePoisition(Location loc) is no good way for this.
                 // It doesn't return the found location and it can't be checked if the location is inside the region.
-                throw new CommandException(Msg.REGION_TELEPORT_SPECTATOR_ONLY.get());
+                throw new CommandException(Msg.REGION__TELEPORT__SPECTATOR_ONLY.get());
             }
         } else {
             teleportLocation = FlagValueCalculator.getEffectiveFlagOf(existing, Flags.TELE_LOC, player);
             
             if (teleportLocation == null) {
-                throw new CommandException(Msg.REGION_TELEPORT_NOTELEPORT.get());
+                throw new CommandException(Msg.REGION__TELEPORT__NO_TELEPORT.get());
             }
         }
 
@@ -1201,7 +1201,7 @@ public final class RegionCommands extends RegionCommandsBase {
 
         player.teleport(teleportLocation,
                 message.replace("%id%", existing.getId()),
-                Msg.REGION_TELEPORT_FAIL.get(existing.getId()));
+                Msg.REGION__TELEPORT__FAIL.get(existing.getId()));
     }
 
     @Command(aliases = {"toggle-bypass", "bypass"},
@@ -1217,7 +1217,7 @@ public final class RegionCommands extends RegionCommandsBase {
         if (args.argsLength() > 0) {
             String arg1 = args.getString(0);
             if (!arg1.equalsIgnoreCase("on") && !arg1.equalsIgnoreCase("off")) {
-                throw new CommandException(Msg.REGION_BYPASS_INVALID.get());
+                throw new CommandException(Msg.REGION__BYPASS__INVALID.get());
             }
             shouldEnableBypass = arg1.equalsIgnoreCase("on");
         } else {
@@ -1225,10 +1225,10 @@ public final class RegionCommands extends RegionCommandsBase {
         }
         if (shouldEnableBypass) {
             session.setBypassDisabled(false);
-            player.print(Msg.REGION_BYPASS_ENABLED.get());
+            player.print(Msg.REGION__BYPASS__ENABLED.get());
         } else {
             session.setBypassDisabled(true);
-            player.print(Msg.REGION_BYPASS_DISABLED.get());
+            player.print(Msg.REGION__BYPASS__DISABLED.get());
         }
     }
 
@@ -1268,9 +1268,9 @@ public final class RegionCommands extends RegionCommandsBase {
 
             Collections.sort(flagList);
 
-            final TextComponent.Builder builder = TextComponent.builder(Msg.REGION_FLAG_LIST_AVAILABLE.get());
+            final TextComponent.Builder builder = TextComponent.builder(Msg.REGION__FLAG__LIST__AVAILABLE.get());
 
-            final HoverEvent clickToSet = HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION_FLAGS_CHANGE.get()));
+            final HoverEvent clickToSet = HoverEvent.of(HoverEvent.Action.SHOW_TEXT, TextComponent.of(Msg.REGION__FLAGS__CHANGE.get()));
             for (int i = 0; i < flagList.size(); i++) {
                 String flag = flagList.get(i);
 
@@ -1282,12 +1282,12 @@ public final class RegionCommands extends RegionCommandsBase {
                 }
             }
 
-            Component ret = ErrorFormat.wrap(Msg.REGION_FLAG_LIST_UNKNOWN.get(flagName))
+            Component ret = ErrorFormat.wrap(Msg.REGION__FLAG__LIST__UNKNOWN.get(flagName))
                     .append(TextComponent.newline())
                     .append(builder.build());
             if (sender.isPlayer()) {
-                return ret.append(TextComponent.of(Msg.REGION_FLAG_LIST_OR_USE.get(), TextColor.LIGHT_PURPLE)
-                                .append(TextComponent.of(Msg.REGION_FLAG_LIST_COMMAND.get(regionId), TextColor.AQUA)
+                return ret.append(TextComponent.of(Msg.REGION__FLAG__LIST__OR_USE.get(), TextColor.LIGHT_PURPLE)
+                                .append(TextComponent.of(Msg.REGION__FLAG__LIST__COMMAND.get(regionId), TextColor.AQUA)
                                     .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND,
                                         "/rg flags -w \"" + world.getName() + "\" " + regionId))));
             }

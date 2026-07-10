@@ -41,8 +41,12 @@ public class I18n implements CommandExecutor {
         List<String> errors = new ArrayList<>();
         for (Msg msg : Msg.values()) {
             String section = msg.asSection();
+
+            if (!cfg.isString(section)) {
+                section = msg.asLegacySection();
+            }
             if (!cfg.isString(section) || !msg.setMessage(cfg.getString(section))) {
-                errors.add(section);
+                errors.add(msg.asSection());
             }
         }
         Logger log = Bukkit.getLogger();
@@ -51,7 +55,7 @@ public class I18n implements CommandExecutor {
             return true;
         } else {
             log.warning("[WGTranslator] Some messages don't have its translation in translator.yml. " +
-                    "Using default ones for these: " + String.join(", ", errors) + ".");
+                    "Using default ones for: " + String.join(", ", errors) + ".");
             return false;
         }
     }

@@ -41,7 +41,7 @@ public final class BlockInteractBlacklistEvent extends BlockBlacklistEvent {
 
     @Override
     public String getDescription() {
-        return Msg.BLACKLIST_ACTION_INTERACT.get();
+        return Msg.BLACKLIST__ACTION__INTERACT.get();
     }
 
     @Override

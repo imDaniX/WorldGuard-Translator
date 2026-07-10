@@ -107,7 +107,7 @@ class RegionCommandsBase {
             if (sender instanceof LocalPlayer) {
                 return ((LocalPlayer) sender).getWorld();
             } else {
-                throw new CommandException(Msg.REGION_COMMANDS_WORLDSPECIFY.get(flag));
+                throw new CommandException(Msg.REGION__COMMANDS__WORLD_SPECIFY.get(flag));
             }
         }
     }
@@ -122,11 +122,11 @@ class RegionCommandsBase {
      */
     protected static String checkRegionId(String id, boolean allowGlobal) throws CommandException {
         if (!ProtectedRegion.isValidId(id)) {
-            throw new CommandException(Msg.REGION_COMMANDS_REGIONINVALIDID.get(id));
+            throw new CommandException(Msg.REGION__COMMANDS__REGION_INVALID_ID.get(id));
         }
 
         if (!allowGlobal && id.equalsIgnoreCase("__global__")) { // Sorry, no global
-            throw new CommandException(Msg.REGION_COMMANDS_REGIONNOGLOBAL.get());
+            throw new CommandException(Msg.REGION__COMMANDS__REGION_NO_GLOBAL.get());
         }
 
         return id;
@@ -158,7 +158,7 @@ class RegionCommandsBase {
                 return region;
             }
 
-            throw new CommandException(Msg.REGION_COMMANDS_REGIONNOTFOUND.get(id));
+            throw new CommandException(Msg.REGION__COMMANDS__REGION_NOT_FOUND.get(id));
         }
 
         return region;
@@ -205,12 +205,12 @@ class RegionCommandsBase {
                         "regions. Using the global region for this world instead.");
                 return global;
             }
-            throw new CommandException(Msg.REGION_COMMANDS_NOTSTANDINGINREGION.get());
+            throw new CommandException(Msg.REGION__COMMANDS__NOT_STANDING_IN_REGION.get());
         } else if (set.size() > 1) {
             boolean first = true;
 
             final TextComponent.Builder builder = TextComponent.builder("");
-            builder.append(Msg.REGION_COMMANDS_CURRENTREGIONS.text());
+            builder.append(Msg.REGION__COMMANDS__CURRENT_REGIONS.text());
             for (ProtectedRegion region : set) {
                 if (!first) {
                     builder.append(TextComponent.of(", "));
@@ -218,13 +218,13 @@ class RegionCommandsBase {
                 first = false;
                 TextComponent regionComp = TextComponent.of(region.getId(), TextColor.AQUA);
                 if (rgCmd != null && rgCmd.contains("%id%")) {
-                    regionComp = regionComp.hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, Msg.REGION_COMMANDS_CLICKTOPICK.text()))
+                    regionComp = regionComp.hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, Msg.REGION__COMMANDS__CLICK_TO_PICK.text()))
                             .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND, rgCmd.replace("%id%", region.getId())));
                 }
                 builder.append(regionComp);
             }
             player.print(builder.build());
-            throw new CommandException(Msg.REGION_COMMANDS_STANDINGINMULTIPLE.get());
+            throw new CommandException(Msg.REGION__COMMANDS__STANDING_IN_MULTIPLE.get());
         }
 
         return set.iterator().next();
@@ -246,7 +246,7 @@ class RegionCommandsBase {
             }
             return localSession.getRegionSelector(localSession.getSelectionWorld()).getRegion();
         } catch (IncompleteRegionException e) {
-            throw new CommandException(Msg.REGION_COMMANDS_SELECTAREAFIRST.get());
+            throw new CommandException(Msg.REGION__COMMANDS__SELECT_AREA_FIRST.get());
         }
     }
 
@@ -259,8 +259,8 @@ class RegionCommandsBase {
      */
     protected static void checkRegionDoesNotExist(RegionManager manager, String id, boolean mayRedefine) throws CommandException {
         if (manager.hasRegion(id)) {
-            throw new CommandException(Msg.REGION_COMMANDS_REGIONEXISTS.get() +
-                    (mayRedefine ? Msg.REGION_COMMANDS_REGIONEXISTSREDEFINE.get(id) : ""));
+            throw new CommandException(Msg.REGION__COMMANDS__REGION_EXISTS.get() +
+                    (mayRedefine ? Msg.REGION__COMMANDS__REGION_EXISTS_REDEFINE.get(id) : ""));
         }
     }
 
@@ -272,12 +272,12 @@ class RegionCommandsBase {
      */
     protected static RegionManager checkRegionManager(World world) throws CommandException {
         if (!WorldGuard.getInstance().getPlatform().getGlobalStateManager().get(world).useRegions) {
-            throw new CommandException(Msg.REGION_COMMANDS_REGIONSDISABLED.get());
+            throw new CommandException(Msg.REGION__COMMANDS__REGIONS_DISABLED.get());
         }
 
         RegionManager manager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(world);
         if (manager == null) {
-            throw new CommandException(Msg.REGION_COMMANDS_REGIONDATALOADFAIL.get());
+            throw new CommandException(Msg.REGION__COMMANDS__REGION_DATA_LOAD_FAIL.get());
         }
         return manager;
     }
@@ -304,7 +304,7 @@ class RegionCommandsBase {
             BlockVector3 max = selection.getMaximumPoint();
             return new ProtectedCuboidRegion(id, min, max);
         } else {
-            throw new CommandException(Msg.REGION_COMMANDS_UNSUPPORTEDSHAPE.get());
+            throw new CommandException(Msg.REGION__COMMANDS__UNSUPPORTED_SHAPE.get());
         }
     }
 
@@ -321,7 +321,7 @@ class RegionCommandsBase {
             String failingList = Joiner.on(", ").join(failures.stream()
                     .map(regionManager -> "'" + regionManager.getName() + "'").collect(Collectors.toList()));
 
-            sender.print(Msg.REGION_COMMANDS_SAVEFAILURES.text(failingList));
+            sender.print(Msg.REGION__COMMANDS__SAVE_FAILURES.text(failingList));
         }
     }
 
@@ -337,7 +337,7 @@ class RegionCommandsBase {
         }
         int height = region.getMaximumPoint().y() - region.getMinimumPoint().y();
         if (height <= 2) {
-            sender.printDebug(Msg.REGION_COMMANDS_HEIGHTWARNING.get(height + 1));
+            sender.printDebug(Msg.REGION__COMMANDS__HEIGHT_WARNING.get(height + 1));
         }
     }
 
@@ -350,9 +350,9 @@ class RegionCommandsBase {
      */
     protected static void informNewUser(Actor sender, RegionManager manager, ProtectedRegion region) {
         if (manager.size() <= 2) {
-            sender.print(SubtleFormat.wrap(Msg.REGION_COMMANDS_NEWUSERINFO1.get())
+            sender.print(SubtleFormat.wrap(Msg.REGION__COMMANDS__NEW_USER_INFO1.get())
                             .append(TextComponent.of("/rg flag " + region.getId() + " passthrough allow", TextColor.AQUA))
-                            .append(Msg.REGION_COMMANDS_NEWUSERINFO2.text()));
+                            .append(Msg.REGION__COMMANDS__NEW_USER_INFO2.text()));
         }
     }
 
@@ -367,8 +367,8 @@ class RegionCommandsBase {
         ProtectedRegion spawn = WorldGuard.getInstance().getPlatform().getSpawnProtection(world);
         if (spawn != null) {
             if (!spawn.getIntersectingRegions(ImmutableList.of(region)).isEmpty()) {
-                sender.print(ErrorFormat.wrap(Msg.REGION_COMMANDS_SPAWNOVERLAPWARNING.get())
-                        .append(Msg.REGION_COMMANDS_SPAWNOVERLAPINFO.text()));
+                sender.print(ErrorFormat.wrap(Msg.REGION__COMMANDS__SPAWN_OVERLAP_WARNING.get())
+                        .append(Msg.REGION__COMMANDS__SPAWN_OVERLAP_INFO.text()));
                 return true;
             }
         }
@@ -390,9 +390,9 @@ class RegionCommandsBase {
             selector.setWorld(world);
             session.setRegionSelector(world, selector);
             selector.explainRegionAdjust(actor, session);
-            actor.print(Msg.REGION_COMMANDS_SELECTED.text(region.getType().getName()));
+            actor.print(Msg.REGION__SELECT__SELECTED.text(region.getType().getName()));
         } else {
-            throw new CommandException(Msg.REGION_COMMANDS_TYPEFAIL.get(region.getType().getName()));
+            throw new CommandException(Msg.REGION__SELECT__TYPE_FAIL.get(region.getType().getName()));
         }
     }
 

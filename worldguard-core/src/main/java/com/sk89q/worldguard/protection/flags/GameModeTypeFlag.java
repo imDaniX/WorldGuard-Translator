@@ -46,7 +46,7 @@ public class GameModeTypeFlag extends Flag<GameMode> {
         input = input.trim();
         GameMode gamemode = unmarshal(input);
         if (gamemode == null) {
-            throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_GAMEMODE.get(input));
+            throw new InvalidFlagFormat(Msg.REGION__FLAGS__VALUE__INVALID__GAMEMODE.get(input));
         }
         return gamemode;
     }

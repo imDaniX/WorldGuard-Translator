@@ -47,7 +47,7 @@ public class BooleanFlag extends Flag<Boolean> {
                 || input.equalsIgnoreCase("0")) {
             return false;
         } else {
-            throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_BOOLEAN.get(input));
+            throw new InvalidFlagFormat(Msg.REGION__FLAGS__VALUE__INVALID__BOOLEAN.get(input));
         }
     }
 

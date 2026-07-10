@@ -46,7 +46,7 @@ public class EntityTypeFlag extends Flag<EntityType> {
         input = input.trim();
         EntityType entityType = unmarshal(input);
         if (entityType == null) {
-            throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_ENTITYTYPE.get(input));
+            throw new InvalidFlagFormat(Msg.REGION__FLAGS__VALUE__INVALID__ENTITY_TYPE.get(input));
         }
         return entityType;
     }

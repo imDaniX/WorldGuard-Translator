@@ -41,7 +41,7 @@ public final class BlockBreakBlacklistEvent extends BlockBlacklistEvent {
 
     @Override
     public String getDescription() {
-        return Msg.BLACKLIST_ACTION_BREAK.get();
+        return Msg.BLACKLIST__ACTION__BREAK.get();
     }
 
     @Override

@@ -34,7 +34,7 @@ public class UnknownFlag extends Flag<Object> {
 
     @Override
     public Object parseInput(FlagContext context) throws InvalidFlagFormat {
-        throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_PLUGIN.get());
+        throw new InvalidFlagFormat(Msg.REGION__FLAGS__VALUE__INVALID__PLUGIN.get());
     }
 
     @Override

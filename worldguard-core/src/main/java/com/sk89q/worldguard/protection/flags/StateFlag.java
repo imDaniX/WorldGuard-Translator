@@ -90,7 +90,7 @@ public class StateFlag extends Flag<StateFlag.State> {
         } else if (input.equalsIgnoreCase("none")) {
             return null;
         } else {
-            throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_STATE.get(input));
+            throw new InvalidFlagFormat(Msg.REGION__FLAGS__VALUE__INVALID__STATE.get(input));
         }
     }
 

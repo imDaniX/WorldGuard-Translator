@@ -77,7 +77,7 @@ public class LocationFlag extends Flag<Location> {
                             player.printDebug("WARNING: Flag location is outside of region.");
                         } else {
                             // no permission
-                            throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_OUTSIDE.get());
+                            throw new InvalidFlagFormat(Msg.REGION__FLAGS__VALUE__INVALID__OUTSIDE.get());
                         }
                     }
                     // clamp height to world limits
@@ -87,7 +87,7 @@ public class LocationFlag extends Flag<Location> {
             }
             return loc;
         }
-        throw new InvalidFlagFormat(Msg.REGION_FLAGS_VALUE_INVALID_LOCATION.get());
+        throw new InvalidFlagFormat(Msg.REGION__FLAGS__VALUE__INVALID__LOCATION.get());
     }
 
     @Override

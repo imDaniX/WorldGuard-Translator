@@ -47,9 +47,9 @@ public class BanAction implements Action {
             String friendlyName = PlainComponentSerializer.INSTANCE.serialize(event.getTarget().getFriendlyNameComponent());
 
             if (message != null) {
-                event.getPlayer().ban(Msg.BLACKLIST_PUNISHMENT_BAN_REASONED.get(String.format(message, friendlyName)));
+                event.getPlayer().ban(Msg.BLACKLIST__PUNISHMENT__BAN__REASONED.get(String.format(message, friendlyName)));
             } else {
-                event.getPlayer().ban(Msg.BLACKLIST_PUNISHMENT_BAN_DEFAULT.get(event.getDescription(), friendlyName));
+                event.getPlayer().ban(Msg.BLACKLIST__PUNISHMENT__BAN__DEFAULT.get(event.getDescription(), friendlyName));
             }
         }
 
