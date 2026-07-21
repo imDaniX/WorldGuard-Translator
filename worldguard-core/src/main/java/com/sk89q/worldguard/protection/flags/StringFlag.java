@@ -29,32 +29,34 @@ import java.util.function.Supplier;
  */
 public class StringFlag extends Flag<String> {
 
-    private final Supplier<String> defaultValue;
+    private final String defaultValue;
+    private final Supplier<String> defaultValueGetter;
 
     public StringFlag(String name) {
-        super(name);
-        this.defaultValue = () -> null;
+        this(name, (String) null);
     }
 
     public StringFlag(String name, String defaultValue) {
         super(name);
-        this.defaultValue = () -> defaultValue;
+        this.defaultValue = defaultValue;
+        this.defaultValueGetter = () -> this.defaultValue;
     }
 
     public StringFlag(String name, RegionGroup defaultGroup) {
-        super(name, defaultGroup);
-        this.defaultValue = () -> null;
+        this(name, defaultGroup, null);
     }
 
     public StringFlag(String name, RegionGroup defaultGroup, String defaultValue) {
         super(name, defaultGroup);
-        this.defaultValue = () -> defaultValue;
+        this.defaultValue = defaultValue;
+        this.defaultValueGetter = () -> this.defaultValue;
     }
 
-    // Making this for compatibility reasons
-    private StringFlag(String name, Supplier<String> defaultValue) {
+    // Making this private for compatibility reasons
+    private StringFlag(String name, Supplier<String> defaultValueGetter) {
         super(name);
-        this.defaultValue = defaultValue;
+        this.defaultValue = null;
+        this.defaultValueGetter = defaultValueGetter;
     }
 
     public static StringFlag of(String name, Supplier<String> defaultValue) {
@@ -64,7 +66,7 @@ public class StringFlag extends Flag<String> {
     @Nullable
     @Override
     public String getDefault() {
-        return defaultValue.get();
+        return defaultValueGetter.get();
     }
 
     @Override
