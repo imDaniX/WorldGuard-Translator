@@ -1,6 +1,6 @@
 <div align="center">
 
-**WorldGuard** 7.0.17 | **Minecraft** <u>1.21.11 - 26.2</u>
+**WorldGuard** 7.0.17 | **Minecraft** <ins>1.21.11 - 26.2</ins>
 
 ![WGTranslator](wgtranslator-logo.png)
 
@@ -14,7 +14,7 @@
 
 # Description
 
-**WGTranslator** is a WorldGuard fork that allows you to freely translate the plugin at your discretion <u>without</u> 
+**WGTranslator** is a WorldGuard fork that allows you to freely translate the plugin at your discretion <ins>without</ins> 
 using InJarTranslator or similar tools - everything is done through good old configs. Most of the plugin's strings are 
 available for translation. Logging strings and various debug messages were omitted 
 *(so I wouldn't go crazy editing those too)*.
@@ -24,11 +24,9 @@ I decided to revive it because no alternatives have appeared.
 
 Pretranslated files for Russian are available at this [GitHub Gist](https://gist.github.com/imDaniX/7a23930c29c05fd7b7a4687d6ccafc7b).
 
----
-
 # Translation Process
 
-Since this is a fork, the original WorldGuard <u>must be replaced</u> with this one.
+Since this is a fork, the original WorldGuard <ins>must be replaced</ins> with this one.
 
 On startup, the plugin will automatically create two files in the `./plugins/WorldGuard` folder:
 * `translator.yml` - contains all the main translatable strings of the plugin;
@@ -37,8 +35,6 @@ On startup, the plugin will automatically create two files in the `./plugins/Wor
 After editing, you need to execute the command `/wgtranslator` (permission `wgtranslator.reload`) - 
 it will reload the strings from the `translator.yml` file. 
 Some strings may require a server restart due to how WG works.
-
----
 
 # Translation Challenges
 
@@ -53,7 +49,7 @@ they were formed based on WorldGuard's code and only occasionally grouped into s
 
 Some blocks of text strangely consist of multiple lines. 
 This isn't my whim - WorldGuard itself assembles such text pieces into something coherent. 
-It's all because of its poor integration with adventure. Moreover, the adventure version used is <u>very</u> old, 
+It's all because of its poor integration with adventure. Moreover, the adventure version used is <ins>very</ins> old, 
 making it almost impossible to embed something like MiniMessage without rewriting the plugin's fundamental workings.
 
 Technically, some of the stuff mentioned can be fixed using various tricks and Java's reflection, 
