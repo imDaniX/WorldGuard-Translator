@@ -123,7 +123,7 @@ public class MemberCommands extends RegionCommandsBase {
                             .get(world).getMaxRegionCount(player);
                     if (maxRegionCount >= 0 && manager.getRegionCountOfPlayer(player)
                             >= maxRegionCount) {
-                        throw new CommandException(Msg.REGION__MEMBERSHIP__ADDOWNER__MAXIMUM.get());
+                        throw Msg.REGION__MEMBERSHIP__ADDOWNER__MAXIMUM.exception();
                     }
                 }
             }
@@ -167,7 +167,7 @@ public class MemberCommands extends RegionCommandsBase {
             callable = region::getMembers;
         } else {
             if (args.argsLength() < 2) {
-                throw new CommandException(Msg.REGION__MEMBERSHIP__REMOVEMEMBER__LIST.get());
+                throw Msg.REGION__MEMBERSHIP__REMOVEMEMBER__LIST.exception();
             }
 
             // Resolve members asynchronously
@@ -210,7 +210,7 @@ public class MemberCommands extends RegionCommandsBase {
             callable = region::getOwners;
         } else {
             if (args.argsLength() < 2) {
-                throw new CommandException(Msg.REGION__MEMBERSHIP__REMOVEOWNER__LIST.get());
+                throw Msg.REGION__MEMBERSHIP__REMOVEOWNER__LIST.exception();
             }
 
             // Resolve owners asynchronously

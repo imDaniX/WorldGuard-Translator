@@ -107,7 +107,7 @@ class RegionCommandsBase {
             if (sender instanceof LocalPlayer) {
                 return ((LocalPlayer) sender).getWorld();
             } else {
-                throw new CommandException(Msg.REGION__COMMANDS__WORLD_SPECIFY.get(flag));
+                throw Msg.REGION__COMMANDS__WORLD_SPECIFY.exception(flag);
             }
         }
     }
@@ -122,11 +122,11 @@ class RegionCommandsBase {
      */
     protected static String checkRegionId(String id, boolean allowGlobal) throws CommandException {
         if (!ProtectedRegion.isValidId(id)) {
-            throw new CommandException(Msg.REGION__COMMANDS__REGION_INVALID_ID.get(id));
+            throw Msg.REGION__COMMANDS__REGION_INVALID_ID.exception(id);
         }
 
         if (!allowGlobal && id.equalsIgnoreCase("__global__")) { // Sorry, no global
-            throw new CommandException(Msg.REGION__COMMANDS__REGION_NO_GLOBAL.get());
+            throw Msg.REGION__COMMANDS__REGION_NO_GLOBAL.exception();
         }
 
         return id;
@@ -158,7 +158,7 @@ class RegionCommandsBase {
                 return region;
             }
 
-            throw new CommandException(Msg.REGION__COMMANDS__REGION_NOT_FOUND.get(id));
+            throw Msg.REGION__COMMANDS__REGION_NOT_FOUND.exception(id);
         }
 
         return region;
@@ -204,7 +204,7 @@ class RegionCommandsBase {
                 player.printDebug(Msg.REGION__COMMANDS__NOT_STANDING_GLOBAL.get());
                 return global;
             }
-            throw new CommandException(Msg.REGION__COMMANDS__NOT_STANDING_IN_REGION.get());
+            throw Msg.REGION__COMMANDS__NOT_STANDING_IN_REGION.exception();
         } else if (set.size() > 1) {
             boolean first = true;
 
@@ -223,7 +223,7 @@ class RegionCommandsBase {
                 builder.append(regionComp);
             }
             player.print(builder.build());
-            throw new CommandException(Msg.REGION__COMMANDS__STANDING_IN_MULTIPLE.get());
+            throw Msg.REGION__COMMANDS__STANDING_IN_MULTIPLE.exception();
         }
 
         return set.iterator().next();
@@ -245,7 +245,7 @@ class RegionCommandsBase {
             }
             return localSession.getRegionSelector(localSession.getSelectionWorld()).getRegion();
         } catch (IncompleteRegionException e) {
-            throw new CommandException(Msg.REGION__COMMANDS__SELECT_AREA_FIRST.get());
+            throw Msg.REGION__COMMANDS__SELECT_AREA_FIRST.exception();
         }
     }
 
@@ -271,12 +271,12 @@ class RegionCommandsBase {
      */
     protected static RegionManager checkRegionManager(World world) throws CommandException {
         if (!WorldGuard.getInstance().getPlatform().getGlobalStateManager().get(world).useRegions) {
-            throw new CommandException(Msg.REGION__COMMANDS__REGIONS_DISABLED.get());
+            throw Msg.REGION__COMMANDS__REGIONS_DISABLED.exception();
         }
 
         RegionManager manager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(world);
         if (manager == null) {
-            throw new CommandException(Msg.REGION__COMMANDS__REGION_DATA_LOAD_FAIL.get());
+            throw Msg.REGION__COMMANDS__REGION_DATA_LOAD_FAIL.exception();
         }
         return manager;
     }
@@ -303,7 +303,7 @@ class RegionCommandsBase {
             BlockVector3 max = selection.getMaximumPoint();
             return new ProtectedCuboidRegion(id, min, max);
         } else {
-            throw new CommandException(Msg.REGION__COMMANDS__UNSUPPORTED_SHAPE.get());
+            throw Msg.REGION__COMMANDS__UNSUPPORTED_SHAPE.exception();
         }
     }
 
@@ -391,7 +391,7 @@ class RegionCommandsBase {
             selector.explainRegionAdjust(actor, session);
             actor.print(Msg.REGION__SELECT__SELECTED.text(region.getType().getName()));
         } else {
-            throw new CommandException(Msg.REGION__SELECT__TYPE_FAIL.get(region.getType().getName()));
+            throw Msg.REGION__SELECT__TYPE_FAIL.exception(region.getType().getName());
         }
     }
 

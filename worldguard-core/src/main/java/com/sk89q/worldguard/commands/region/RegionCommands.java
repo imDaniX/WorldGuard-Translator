@@ -269,7 +269,7 @@ public final class RegionCommands extends RegionCommandsBase {
             int maxRegionCount = wcfg.getMaxRegionCount(player);
             if (maxRegionCount >= 0
                     && manager.getRegionCountOfPlayer(player) >= maxRegionCount) {
-                throw new CommandException(Msg.REGION__CLAIM__ERROR__TOO_MANY.get());
+                throw Msg.REGION__CLAIM__ERROR__TOO_MANY.exception();
             }
         }
 
@@ -278,7 +278,7 @@ public final class RegionCommands extends RegionCommandsBase {
         // Check for an existing region
         if (existing != null) {
             if (!existing.getOwners().contains(player)) {
-                throw new CommandException(Msg.REGION__CLAIM__ERROR__ALREADY_EXIST.get());
+                throw Msg.REGION__CLAIM__ERROR__ALREADY_EXIST.exception();
             }
         }
 
@@ -288,22 +288,22 @@ public final class RegionCommands extends RegionCommandsBase {
         // Check if this region overlaps any other region
         if (regions.size() > 0) {
             if (!regions.isOwnerOfAll(player)) {
-                throw new CommandException(Msg.REGION__CLAIM__ERROR__OVERLAPS.get());
+                throw Msg.REGION__CLAIM__ERROR__OVERLAPS.exception();
             }
         } else {
             if (wcfg.claimOnlyInsideExistingRegions) {
-                throw new CommandException(Msg.REGION__CLAIM__ERROR__ONLY_INSIDE.get());
+                throw Msg.REGION__CLAIM__ERROR__ONLY_INSIDE.exception();
             }
         }
 
         if (wcfg.maxClaimVolume >= Integer.MAX_VALUE) {
-            throw new CommandException(Msg.REGION__CLAIM__ERROR__MAX_INTEGER.get());
+            throw Msg.REGION__CLAIM__ERROR__MAX_INTEGER.exception();
         }
 
         // Check claim volume
         if (!permModel.mayClaimRegionsUnbounded()) {
             if (region instanceof ProtectedPolygonalRegion) {
-                throw new CommandException(Msg.REGION__CLAIM__ERROR__NO_POLYGONS.get());
+                throw Msg.REGION__CLAIM__ERROR__NO_POLYGONS.exception();
             }
 
             if (region.volume() > wcfg.maxClaimVolume) {
@@ -351,7 +351,7 @@ public final class RegionCommands extends RegionCommandsBase {
         if (args.argsLength() == 0) {
             LocalPlayer player = worldGuard.checkPlayer(sender);
             if (!player.getWorld().equals(world)) { // confusing to get current location regions in another world
-                throw new CommandException(Msg.REGION__SELECT__SPECIFY.get()); // just don't allow that
+                throw Msg.REGION__SELECT__SPECIFY.exception(); // just don't allow that
             }
             world = player.getWorld();
             existing = checkRegionStandingIn(manager, player, "/rg select -w \"" + world.getName() + "\" %id%");
@@ -392,7 +392,7 @@ public final class RegionCommands extends RegionCommandsBase {
 
         if (args.argsLength() == 0) { // Get region from where the player is
             if (!(sender instanceof LocalPlayer)) {
-                throw new CommandException(Msg.REGION__INFO__SPECIFY.get());
+                throw Msg.REGION__INFO__SPECIFY.exception();
             }
 
             existing = checkRegionStandingIn(manager, (LocalPlayer) sender, true,
@@ -519,7 +519,7 @@ public final class RegionCommands extends RegionCommandsBase {
 
         if (args.hasFlag('e')) {
             if (value != null) {
-                throw new CommandException(Msg.REGION__FLAG__ERROR__EMPTY.get());
+                throw Msg.REGION__FLAG__ERROR__EMPTY.exception();
             }
 
             value = "";
@@ -574,7 +574,7 @@ public final class RegionCommands extends RegionCommandsBase {
             RegionGroupFlag groupFlag = foundFlag.getRegionGroupFlag();
 
             if (groupFlag == null) {
-                throw new CommandException(Msg.REGION__FLAG__ERROR__NO_GROUP.get(foundFlag.getName()));
+                throw Msg.REGION__FLAG__ERROR__NO_GROUP.exception(foundFlag.getName());
             }
 
             // Parse the [-g group] separately so entire command can abort if parsing
@@ -657,7 +657,7 @@ public final class RegionCommands extends RegionCommandsBase {
         ProtectedRegion region;
         if (args.argsLength() == 0) { // Get region from where the player is
             if (!(sender instanceof LocalPlayer)) {
-                throw new CommandException(Msg.REGION__FLAGS__SPECIFY.get());
+                throw Msg.REGION__FLAGS__SPECIFY.exception();
             }
 
             region = checkRegionStandingIn(manager, (LocalPlayer) sender, true,
@@ -822,7 +822,7 @@ public final class RegionCommands extends RegionCommandsBase {
         RegionRemover task = new RegionRemover(manager, existing);
 
         if (removeChildren && unsetParent) {
-            throw new CommandException(Msg.REGION__REMOVE__ERROR__FLAGS.get());
+            throw Msg.REGION__REMOVE__ERROR__FLAGS.exception();
         } else if (removeChildren) {
             task.setRemovalStrategy(RemovalStrategy.REMOVE_CHILDREN);
         } else if (unsetParent) {
@@ -870,7 +870,7 @@ public final class RegionCommands extends RegionCommandsBase {
             RegionManager manager = checkRegionManager(world);
 
             if (manager == null) {
-                throw new CommandException(Msg.REGION__LOAD__NO_MANAGER.get(world.getName()));
+                throw Msg.REGION__LOAD__NO_MANAGER.exception(world.getName());
             }
 
             final String description = Msg.REGION__LOAD__LOADING.get(world.getName());
@@ -929,7 +929,7 @@ public final class RegionCommands extends RegionCommandsBase {
             RegionManager manager = checkRegionManager(world);
 
             if (manager == null) {
-                throw new CommandException(Msg.REGION__SAVE__NO_MANAGER.get(world.getName()));
+                throw Msg.REGION__SAVE__NO_MANAGER.exception(world.getName());
             }
 
             final String description = Msg.REGION__SAVE__SAVING.get(world.getName());
@@ -980,19 +980,19 @@ public final class RegionCommands extends RegionCommandsBase {
         DriverType to = Enums.findFuzzyByValue(DriverType.class, args.getString(1));
 
         if (from == null) {
-            throw new CommandException(Msg.REGION__MIGRATEDB__ERROR__INVALID__FROM.get());
+            throw Msg.REGION__MIGRATEDB__ERROR__INVALID__FROM.exception();
         }
 
         if (to == null) {
-            throw new CommandException(Msg.REGION__MIGRATEDB__ERROR__INVALID__TO.get());
+            throw Msg.REGION__MIGRATEDB__ERROR__INVALID__TO.exception();
         }
 
         if (from == to) {
-            throw new CommandException(Msg.REGION__MIGRATEDB__ERROR__SAME.get());
+            throw Msg.REGION__MIGRATEDB__ERROR__SAME.exception();
         }
 
         if (!args.hasFlag('y')) {
-            throw new CommandException(Msg.REGION__MIGRATEDB__CONFIRM.get());
+            throw Msg.REGION__MIGRATEDB__CONFIRM.exception();
         }
 
         ConfigurationManager config = WorldGuard.getInstance().getPlatform().getGlobalStateManager();
@@ -1000,11 +1000,11 @@ public final class RegionCommands extends RegionCommandsBase {
         RegionDriver toDriver = config.regionStoreDriverMap.get(to);
 
         if (fromDriver == null) {
-            throw new CommandException(Msg.REGION__MIGRATEDB__ERROR__UNSUPPORTED__FROM.get());
+            throw Msg.REGION__MIGRATEDB__ERROR__UNSUPPORTED__FROM.exception();
         }
 
         if (toDriver == null) {
-            throw new CommandException(Msg.REGION__MIGRATEDB__ERROR__UNSUPPORTED__TO.get());
+            throw Msg.REGION__MIGRATEDB__ERROR__UNSUPPORTED__TO.exception();
         }
 
         DriverMigration migration = new DriverMigration(fromDriver, toDriver, WorldGuard.getInstance().getFlagRegistry());
@@ -1026,7 +1026,7 @@ public final class RegionCommands extends RegionCommandsBase {
             sender.print(Msg.REGION__MIGRATEDB__COMPLETE.get());
         } catch (MigrationException e) {
             log.log(Level.WARNING, "Failed to migrate", e);
-            throw new CommandException(Msg.REGION__MIGRATEDB__ERROR__BASE.get(e.getMessage()));
+            throw Msg.REGION__MIGRATEDB__ERROR__BASE.exception(e.getMessage());
         } finally {
             if (minecraftLogger != null) {
                 minecraftLogger.removeHandler(handler);
@@ -1070,7 +1070,7 @@ public final class RegionCommands extends RegionCommandsBase {
             sender.print(Msg.REGION__MIGRATEUUID__COMPLETE.get());
         } catch (MigrationException e) {
             log.log(Level.WARNING, "Failed to migrate", e);
-            throw new CommandException(Msg.REGION__MIGRATEUUID__ERROR.get(e.getMessage()));
+            throw Msg.REGION__MIGRATEUUID__ERROR.exception(e.getMessage());
         } finally {
             if (minecraftLogger != null) {
                 minecraftLogger.removeHandler(handler);
@@ -1097,7 +1097,7 @@ public final class RegionCommands extends RegionCommandsBase {
         }
 
         if (!args.hasFlag('y')) {
-            throw new CommandException(Msg.REGION__MIGRATEHEIGHTS__CONFIRM.get());
+            throw Msg.REGION__MIGRATEHEIGHTS__CONFIRM.exception();
         }
 
         World world = null;
@@ -1124,7 +1124,7 @@ public final class RegionCommands extends RegionCommandsBase {
             sender.print(Msg.REGION__MIGRATEHEIGHTS__COMPLETE.get());
         } catch (MigrationException e) {
             log.log(Level.WARNING, "Failed to migrate", e);
-            throw new CommandException(Msg.REGION__MIGRATEHEIGHTS__ERROR.get(e.getMessage()));
+            throw Msg.REGION__MIGRATEHEIGHTS__ERROR.exception(e.getMessage());
         } finally {
             if (minecraftLogger != null) {
                 minecraftLogger.removeHandler(handler);
@@ -1164,7 +1164,7 @@ public final class RegionCommands extends RegionCommandsBase {
             teleportLocation = FlagValueCalculator.getEffectiveFlagOf(existing, Flags.SPAWN_LOC, player);
             
             if (teleportLocation == null) {
-                throw new CommandException(Msg.REGION__TELEPORT__NO_SPAWN.get());
+                throw Msg.REGION__TELEPORT__NO_SPAWN.exception();
             }
         } else if (args.hasFlag('c')) {
             // Check permissions
@@ -1173,7 +1173,7 @@ public final class RegionCommands extends RegionCommandsBase {
             }
             Region region = WorldEditRegionConverter.convertToRegion(existing);
             if (region == null || region.getCenter() == null) {
-                throw new CommandException(Msg.REGION__TELEPORT__NO_CENTER.get());
+                throw Msg.REGION__TELEPORT__NO_CENTER.exception();
             }
             if (player.getGameMode() == GameModes.SPECTATOR) {
                 teleportLocation = new Location(world, region.getCenter(), 0, 0);
@@ -1181,13 +1181,13 @@ public final class RegionCommands extends RegionCommandsBase {
                 // TODO: Add some method to create a safe teleport location.
                 // The method AbstractPlayerActor$findFreePoisition(Location loc) is no good way for this.
                 // It doesn't return the found location and it can't be checked if the location is inside the region.
-                throw new CommandException(Msg.REGION__TELEPORT__SPECTATOR_ONLY.get());
+                throw Msg.REGION__TELEPORT__SPECTATOR_ONLY.exception();
             }
         } else {
             teleportLocation = FlagValueCalculator.getEffectiveFlagOf(existing, Flags.TELE_LOC, player);
             
             if (teleportLocation == null) {
-                throw new CommandException(Msg.REGION__TELEPORT__NO_TELEPORT.get());
+                throw Msg.REGION__TELEPORT__NO_TELEPORT.exception();
             }
         }
 
@@ -1217,7 +1217,7 @@ public final class RegionCommands extends RegionCommandsBase {
         if (args.argsLength() > 0) {
             String arg1 = args.getString(0);
             if (!arg1.equalsIgnoreCase("on") && !arg1.equalsIgnoreCase("off")) {
-                throw new CommandException(Msg.REGION__BYPASS__INVALID.get());
+                throw Msg.REGION__BYPASS__INVALID.exception();
             }
             shouldEnableBypass = arg1.equalsIgnoreCase("on");
         } else {
