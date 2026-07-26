@@ -201,8 +201,7 @@ class RegionCommandsBase {
         if (set.size() == 0) {
             if (allowGlobal) {
                 ProtectedRegion global = checkExistingRegion(regionManager, "__global__", true);
-                player.printDebug("You're not standing in any " +
-                        "regions. Using the global region for this world instead.");
+                player.printDebug(Msg.REGION__COMMANDS__NOT_STANDING_GLOBAL.get());
                 return global;
             }
             throw new CommandException(Msg.REGION__COMMANDS__NOT_STANDING_IN_REGION.get());

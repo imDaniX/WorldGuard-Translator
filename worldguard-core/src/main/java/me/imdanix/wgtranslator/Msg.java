@@ -1,5 +1,6 @@
 package me.imdanix.wgtranslator;
 
+import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.serializer.legacy.LegacyComponentSerializer;
 
@@ -120,7 +121,6 @@ public enum Msg {
     REGION__CLAIM__ERROR__TOO_MANY("You own too many regions, delete one first to claim a new one."),
     REGION__CLAIM__FAIL("Failed to claim region"),
     REGION__CLAIM__SUCCESS("A new region has been claimed named '{region}'", "region"),
-    REGION__CLAIM__WAIT("(Please wait... {description})", "description"),
 
     REGION__COMMANDS__CLICK_TO_PICK("Click to pick this region"),
     REGION__COMMANDS__CURRENT_REGIONS("Current regions: "),
@@ -128,6 +128,7 @@ public enum Msg {
     REGION__COMMANDS__NEW_USER_INFO1("(This region is NOW PROTECTED from modification from others. Don't want that? Use "),
     REGION__COMMANDS__NEW_USER_INFO2(")"),
     REGION__COMMANDS__NOT_STANDING_IN_REGION("You're not standing in a region. Specify an ID if you want to select a specific region."),
+    REGION__COMMANDS__NOT_STANDING_GLOBAL("You're not standing in any regions. Using the global region for this world instead."),
     REGION__COMMANDS__REGIONS_DISABLED("Region support is disabled in the target world. It can be enabled per-world in WorldGuard's configuration files. However, you may need to restart your server afterwards."),
     REGION__COMMANDS__REGION_DATA_LOAD_FAIL("Region data failed to load for this world. Please ask a server administrator to read the logs to identify the reason."),
     REGION__COMMANDS__REGION_EXISTS("A region with that name already exists. Please choose another name."),
@@ -276,6 +277,20 @@ public enum Msg {
     REGION__LIST__FAIL("Failed to fetch region list"),
     REGION__LIST__FETCHING("Getting region list"),
     REGION__LIST__WAIT("(Please wait... fetching region list...)"),
+
+    REGION__LIST__INFO__HEADER__ALL("Regions"),
+    REGION__LIST__INFO__HEADER__PLAYER("Regions for {player}", "player"),
+    REGION__LIST__INFO__OWNER("Region Owner"),
+    REGION__LIST__INFO__MEMBER("Region Member"),
+    REGION__LIST__INFO__BUTTON__INFO("[Info]"),
+    REGION__LIST__INFO__BUTTON__INFO_CLICK("Click for info"),
+    REGION__LIST__INFO__BUTTON__TP("[TP]"),
+    REGION__LIST__INFO__BUTTON__TP_CLICK("Click to teleport"),
+    REGION__LIST__INFO__BUTTON__TP_CENTER("[TP-Center]"),
+    REGION__LIST__INFO__BUTTON__TP_CENTER_CLICK("Click to teleport to the center"),
+    REGION__LIST__INFO__ERROR__UUID_IO("Failed to lookup the UUID of '{name}'", "name"),
+    REGION__LIST__INFO__ERROR__UUID_INTERRUPT("The lookup the UUID of '{name}' was interrupted", "name"),
+    REGION__LIST__INFO__ERROR__DOESNT_EXIST("A user by the name of '{name}' does not seem to exist.", "name"),
 
     REGION__LOAD__ALL__FAIL("Failed to load regions for all worlds"),
     REGION__LOAD__ALL__LOADING("Loading regions for all worlds"),
@@ -429,30 +444,20 @@ public enum Msg {
         return currentMsg;
     }
 
-    public String get(Object arg) {
-        return currentMsg
-                .replace(placeholders[0], String.valueOf(arg));
-    }
-
-    public String get(Object arg1, Object arg2) {
-        return currentMsg
-                .replace(placeholders[0], String.valueOf(arg1))
-                .replace(placeholders[1], String.valueOf(arg2));
-    }
-
-    public String get(Object arg1, Object arg2, Object arg3) {
-        return currentMsg
-                .replace(placeholders[0], String.valueOf(arg1))
-                .replace(placeholders[1], String.valueOf(arg2))
-                .replace(placeholders[2], String.valueOf(arg3));
-    }
-
     public String get(Object... args) {
         String result = currentMsg;
         for (int i = 0; i < placeholders.length; i++) {
             result = result.replace(placeholders[i], String.valueOf(args[i]));
         }
         return result;
+    }
+
+    public CommandException exception() {
+        return new CommandException(currentMsg);
+    }
+
+    public CommandException exception(Object... args) {
+        return new CommandException(get(args));
     }
 
     public Component text() {
