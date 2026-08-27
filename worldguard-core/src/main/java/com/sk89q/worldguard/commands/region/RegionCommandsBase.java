@@ -98,7 +98,7 @@ class RegionCommandsBase {
                     World override = WorldEdit.getInstance().getSessionManager().get(sender).getWorldOverride();
                     if (override != null) {
                         if (sender instanceof LocalPlayer && !override.equals(((LocalPlayer) sender).getWorld())) {
-                            sender.printDebug(TextComponent.of("Using //world override for region command: " + override.getName()));
+                            sender.printDebug(Msg.REGION__COMMANDS__USING_WORLD.text(override.getName()));
                         }
                         return override;
                     }
@@ -231,11 +231,11 @@ class RegionCommandsBase {
                     builder.append(regionComp);
                 }
                 if (hiddenRegions > 0) {
-                    builder.append(TextComponent.of(", and " + hiddenRegions + " hidden regions", TextColor.GRAY)); // TODO WGTranslator
+                    builder.append(TextComponent.of(Msg.REGION__COMMANDS__CURRENT_REGIONS_WITH_HIDDEN.get(hiddenRegions), TextColor.GRAY));
                 }
             } else {
-                builder.append(TextComponent.of("Current regions: ", TextColor.GOLD));
-                builder.append(TextComponent.of(hiddenRegions + " hidden regions", TextColor.GRAY));
+                builder.append(TextComponent.of(Msg.REGION__COMMANDS__CURRENT_REGIONS.get(), TextColor.GOLD));
+                builder.append(TextComponent.of(Msg.REGION__COMMANDS__CURRENT_REGIONS_HIDDEN.get(hiddenRegions), TextColor.GRAY));
             }
             player.print(builder.build());
             throw Msg.REGION__COMMANDS__STANDING_IN_MULTIPLE.exception();
