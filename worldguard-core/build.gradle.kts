@@ -1,5 +1,4 @@
 plugins {
-    `java-library`
     id("buildlogic.core-and-platform")
 }
 

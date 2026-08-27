@@ -57,6 +57,7 @@ import com.sk89q.worldguard.protection.util.WorldEditRegionConverter;
 import me.imdanix.wgtranslator.Msg;
 
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 class RegionCommandsBase {
@@ -173,11 +174,13 @@ class RegionCommandsBase {
      *
      * @param regionManager the region manager
      * @param player the player
+     * @param rgCmd the command to construct when clicking one of multiple items
+     * @param permissionPredicate a predicate to filter regions based on permission access
      * @return a region
      * @throws CommandException thrown if no region was found
      */
-    protected static ProtectedRegion checkRegionStandingIn(RegionManager regionManager, LocalPlayer player, String rgCmd) throws CommandException {
-        return checkRegionStandingIn(regionManager, player, false, rgCmd);
+    protected static ProtectedRegion checkRegionStandingIn(RegionManager regionManager, LocalPlayer player, String rgCmd, Predicate<ProtectedRegion> permissionPredicate) throws CommandException {
+        return checkRegionStandingIn(regionManager, player, false, rgCmd, permissionPredicate);
     }
 
     /**
@@ -192,10 +195,12 @@ class RegionCommandsBase {
      * @param regionManager the region manager
      * @param player the player
      * @param allowGlobal whether to search for a global region if no others are found
+     * @param rgCmd the command to construct when clicking one of multiple items
+     * @param permissionPredicate a predicate to filter regions based on permission access
      * @return a region
      * @throws CommandException thrown if no region was found
      */
-    protected static ProtectedRegion checkRegionStandingIn(RegionManager regionManager, LocalPlayer player, boolean allowGlobal, String rgCmd) throws CommandException {
+    protected static ProtectedRegion checkRegionStandingIn(RegionManager regionManager, LocalPlayer player, boolean allowGlobal, String rgCmd, Predicate<ProtectedRegion> permissionPredicate) throws CommandException {
         ApplicableRegionSet set = regionManager.getApplicableRegions(player.getLocation().toVector().toBlockPoint(), QueryOption.SORT);
 
         if (set.size() == 0) {
@@ -207,20 +212,30 @@ class RegionCommandsBase {
             throw Msg.REGION__COMMANDS__NOT_STANDING_IN_REGION.exception();
         } else if (set.size() > 1) {
             boolean first = true;
+            Set<ProtectedRegion> filteredRegions = set.getRegions().stream().filter(permissionPredicate).collect(Collectors.toSet());
+            int hiddenRegions = set.size() - filteredRegions.size();
 
             final TextComponent.Builder builder = TextComponent.builder("");
-            builder.append(Msg.REGION__COMMANDS__CURRENT_REGIONS.text());
-            for (ProtectedRegion region : set) {
-                if (!first) {
-                    builder.append(TextComponent.of(", "));
+            if (!filteredRegions.isEmpty()) {
+                builder.append(Msg.REGION__COMMANDS__CURRENT_REGIONS.text());
+                for (ProtectedRegion region : filteredRegions) {
+                    if (!first) {
+                        builder.append(TextComponent.of(", "));
+                    }
+                    first = false;
+                    TextComponent regionComp = TextComponent.of(region.getId(), TextColor.AQUA);
+                    if (rgCmd != null && rgCmd.contains("%id%")) {
+                        regionComp = regionComp.hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, Msg.REGION__COMMANDS__CLICK_TO_PICK.text()))
+                                .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND, rgCmd.replace("%id%", region.getId())));
+                    }
+                    builder.append(regionComp);
                 }
-                first = false;
-                TextComponent regionComp = TextComponent.of(region.getId(), TextColor.AQUA);
-                if (rgCmd != null && rgCmd.contains("%id%")) {
-                    regionComp = regionComp.hoverEvent(HoverEvent.of(HoverEvent.Action.SHOW_TEXT, Msg.REGION__COMMANDS__CLICK_TO_PICK.text()))
-                            .clickEvent(ClickEvent.of(ClickEvent.Action.RUN_COMMAND, rgCmd.replace("%id%", region.getId())));
+                if (hiddenRegions > 0) {
+                    builder.append(TextComponent.of(", and " + hiddenRegions + " hidden regions", TextColor.GRAY)); // TODO WGTranslator
                 }
-                builder.append(regionComp);
+            } else {
+                builder.append(TextComponent.of("Current regions: ", TextColor.GOLD));
+                builder.append(TextComponent.of(hiddenRegions + " hidden regions", TextColor.GRAY));
             }
             player.print(builder.build());
             throw Msg.REGION__COMMANDS__STANDING_IN_MULTIPLE.exception();

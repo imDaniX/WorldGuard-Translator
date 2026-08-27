@@ -346,6 +346,7 @@ public final class RegionCommands extends RegionCommandsBase {
         World world = checkWorld(args, sender, 'w');
         RegionManager manager = checkRegionManager(world);
         ProtectedRegion existing;
+        RegionPermissionModel permissionModel = getPermissionModel(sender);
 
         // If no arguments were given, get the region that the player is inside
         if (args.argsLength() == 0) {
@@ -354,13 +355,13 @@ public final class RegionCommands extends RegionCommandsBase {
                 throw Msg.REGION__SELECT__SPECIFY.exception(); // just don't allow that
             }
             world = player.getWorld();
-            existing = checkRegionStandingIn(manager, player, "/rg select -w \"" + world.getName() + "\" %id%");
+            existing = checkRegionStandingIn(manager, player, "/rg select -w \"" + world.getName() + "\" %id%", permissionModel::maySelect);
         } else {
             existing = checkExistingRegion(manager, args.getString(0), false);
         }
 
         // Check permissions
-        if (!getPermissionModel(sender).maySelect(existing)) {
+        if (!permissionModel.maySelect(existing)) {
             throw new CommandPermissionsException();
         }
 
@@ -396,7 +397,7 @@ public final class RegionCommands extends RegionCommandsBase {
             }
 
             existing = checkRegionStandingIn(manager, (LocalPlayer) sender, true,
-                    "/rg info -w \"" + world.getName() + "\" %id%" + (args.hasFlag('u') ? " -u" : "") + (args.hasFlag('s') ? " -s" : ""));
+                    "/rg info -w \"" + world.getName() + "\" %id%" + (args.hasFlag('u') ? " -u" : "") + (args.hasFlag('s') ? " -s" : ""), permModel::mayLookup);
         } else { // Get region from the ID
             existing = checkExistingRegion(manager, args.getString(0), true);
         }
@@ -655,18 +656,19 @@ public final class RegionCommands extends RegionCommandsBase {
         // Lookup the existing region
         RegionManager manager = checkRegionManager(world);
         ProtectedRegion region;
+        final RegionPermissionModel perms = getPermissionModel(sender);
+
         if (args.argsLength() == 0) { // Get region from where the player is
             if (!(sender instanceof LocalPlayer)) {
                 throw Msg.REGION__FLAGS__SPECIFY.exception();
             }
 
             region = checkRegionStandingIn(manager, (LocalPlayer) sender, true,
-                    "/rg flags -w \"" + world.getName() + "\" %id%");
+                    "/rg flags -w \"" + world.getName() + "\" %id%", perms::mayLookup);
         } else { // Get region from the ID
             region = checkExistingRegion(manager, args.getString(0), true);
         }
 
-        final RegionPermissionModel perms = getPermissionModel(sender);
         if (!perms.mayLookup(region)) {
             throw new CommandPermissionsException();
         }
