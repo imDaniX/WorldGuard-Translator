@@ -1,6 +1,6 @@
 <div align="center">
 
-**WorldGuard** 7.0.17 | **Minecraft** <ins>1.21.11 - 26.2</ins>
+**WorldGuard** 7.0.18 | **Minecraft** <ins>26.1 - 26.2</ins>
 
 ![WGTranslator](wgtranslator-logo.png)
 
